@@ -7,8 +7,8 @@ layout (location = 2) in vec3 norm; // Normal of each vertice (used for diffused
 //Out variable are going to be used on the fragment shader
 out vec4 vColour;  
 out vec2 TexCoord;   
-
 out vec3 Normal;
+out vec4 WorldPosition;
 
 //Uniform variables are hadled equaly for all the vertices.
 uniform mat4 model;                                                         
@@ -16,8 +16,10 @@ uniform mat4 projection;
 uniform mat4 view;                                                         
                                                                             
 void main()                                                                 
-{                                                                           
-    gl_Position = projection * view * model * vec4(pos, 1.0);     
+{                                     
+    WorldPosition = model * vec4(pos, 1.0);
+
+    gl_Position = projection * view * WorldPosition;     
 
     //Colour and texture are being set to be used on the fragment shader. There it can choose what to use (or combine them.)                              
     vColour = vec4(clamp(pos, 0.0f, 1.0f), 1.0f);  
