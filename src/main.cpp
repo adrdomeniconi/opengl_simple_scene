@@ -20,6 +20,7 @@
 #include "Texture.h"
 #include "Light.h"
 #include "Material.h"
+#include "Line.h"
 
 const float toRadians = 3.14159265 / 180.0f;
 
@@ -195,25 +196,34 @@ int main()
         glUniformMatrix4fv(uniformView, 1, GL_FALSE, glm::value_ptr(camera.calculateViewMatrix()));
         glUniform3f(uniformCameraPosition, camera.GetPosition().x, camera.GetPosition().y, camera.GetPosition().z);
 
-        glm::mat4 model(1.0f);       
-        model = glm::translate(model, glm::vec3(0.0f, -.3, -2.0f));
-        model = glm::scale(model, glm::vec3(0.4f, 0.4f, 0.4f));
+        // glm::mat4 model(1.0f);       
+        // model = glm::translate(model, glm::vec3(0.0f, -.3, -2.0f));
+        // model = glm::scale(model, glm::vec3(0.4f, 0.4f, 0.4f));
 
-        glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-        shinyMaterial.Use(uniformSpecularIntensity, uniformSpecularShininess);
-        brickTexture.UseTexture();
+        // glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+        // shinyMaterial.Use(uniformSpecularIntensity, uniformSpecularShininess);
+        // brickTexture.UseTexture();
 
-        meshList[0] -> RenderMesh();
+        // meshList[0] -> RenderMesh();
 
-        model = glm::mat4(1.0f);     
-        model = glm::translate(model, glm::vec3(0.0f, .3, -1.5f));
-        model = glm::scale(model, glm::vec3(0.2f, 0.2f, 0.2f));
+        // model = glm::mat4(1.0f);     
+        // model = glm::translate(model, glm::vec3(0.0f, .3, -1.5f));
+        // model = glm::scale(model, glm::vec3(0.2f, 0.2f, 0.2f));
 
-        glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-        dullMaterial.Use(uniformSpecularIntensity, uniformSpecularShininess);
-        dirtTexture.UseTexture();
+        // glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+        // dullMaterial.Use(uniformSpecularIntensity, uniformSpecularShininess);
+        // dirtTexture.UseTexture();
 
-        meshList[1] -> RenderMesh();
+        // meshList[1] -> RenderMesh();
+
+        GLfloat lineVertices[] = {
+        //   x      y      z    
+            0.0f, 0.0f, 0.0f,
+            1.0f, 1.0f, 1.0f
+        };
+
+        Line *line = new Line();
+        line -> Create(lineVertices, 2);
 
         glUseProgram(0);
 

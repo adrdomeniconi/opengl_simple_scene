@@ -7,7 +7,6 @@ public:
 
 void CreateMesh(GLfloat *vertices, unsigned int *indices, unsigned int numOfVertices, unsigned int numberOfIndices);
 void UnbindAll();
-void configureVerticesAttribute(unsigned int index, unsigned int vertexAttributesLength, GLfloat *vertices, int VERTEX_LENGTH, unsigned int offset);
 void RenderMesh();
 void ClearMesh();
 
@@ -16,4 +15,6 @@ void ClearMesh();
 private:
     GLuint VAO, VBO, IBO;
     GLsizei indexCount;
+
+    void configureVerticesAttribute(unsigned int index, unsigned int vertexAttributesLength, GLfloat *vertices, int VERTEX_LENGTH, unsigned int offset);
 };

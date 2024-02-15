@@ -13,7 +13,7 @@ Mesh::Mesh()
 
     // VAO (Vertex Array Object) 
     //Purpose: The VAO stores configurations of vertex attributes (such as positions, texture coordinates, normals, etc.) and which VBOs to use when attributes are specified. It also remembers which IBO (if any) is bound when you bind the VAO. 
-    //Data: When you bind a VAO and then set vertex attribute pointers (e.g., with glVertexAttribPointer) and enable them (e.g., with glEnableVertexAttribArray), the VAO stores this configuration. However, the actual vertex attribute data is stored in the VBOs.
+    //Data: When you bind a VAO and then set vertex attribute pointers (e.g., with glVertexAttribPointer) and enable them (e.g., with glEnableVertexAttribArray()), the VAO stores this configuration. However, the actual vertex attribute data is stored in the VBOs.
     VAO = 0;
 
     //VBO (Vertex Buffer Object)
