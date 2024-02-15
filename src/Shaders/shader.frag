@@ -42,9 +42,15 @@ vec4 CalculateSpecularColour(float diffuseFactor)
         if(specularFactor > 0.0f)
         {
             specularFactor = pow(specularFactor, material.shininess);
+
             specularColour = vec4(directionalLight.colour * material.specularIntensity * specularFactor, 1.0);
+
+            //DEBUG
+            // specularColour = vec4(vec3(1.0f, 0.0f, 0.0f) * material.specularIntensity * specularFactor, 1.0);
+
         }
     }
+    
 
     return specularColour;
 }
@@ -64,4 +70,11 @@ void main()
     //colour = texture(input_texture, TexCoord);                
     //colour = texture(input_texture, TexCoord) * vColour;  //Combining the effect from the texture and the colour                                          
     colour = texture(input_texture, TexCoord) * (ambientColour + diffuseColour + specularColour);    
+
+    //DEBUG
+    // vec4 ambientColour = vec4(vec3(0.0f, 1.0f, 0.0f), 1.0f) * directionalLight.ambientIntensity;
+    // vec4 diffuseColour = vec4(vec3(0.0f, 0.0f, 1.0f), 1.0f) * directionalLight.diffuseIntensity * diffuseFactor;
+    // colour = vec4(Normal, 1.0);
+    // colour = texture(input_texture, TexCoord) * (ambientColour + diffuseColour + specularColour);  
+
 } 

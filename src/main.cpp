@@ -140,10 +140,10 @@ int main()
     dirtTexture = Texture("../textures/dirt.png");
     dirtTexture.LoadTexture();
 
-    mainLight = Light(1.0f, 1.0f, 1.0f, 0.2f, 2.0f, -1.0f, -2.0f, 1.0f);
+    mainLight = Light(1.0f, 1.0f, 1.0f, 0.2f, 1.0f, -.5f, -2.0f, 1.0f);
 
-    shinyMaterial = Material(1.0f, 32);
-    dullMaterial = Material(0.3f, 4);
+    shinyMaterial = Material(1.0f, 64);
+    dullMaterial = Material(1.0f, 32);
 
     GLuint uniformProjection = 0, 
            uniformModel = 0, 
