@@ -17,17 +17,6 @@ public:
 
     std::string ReadFile(const char* fileLocation); 
 
-    // GLuint GetProjectionLocation();
-    // GLuint GetModelLocation();
-    // GLuint GetViewLocation();
-    // GLuint GetAmbientIntensityLocation();
-    // GLuint GetAmbientColourLocation();
-    // GLuint GetDiffuseIntensityLocation();
-    // GLuint GetDirectionLocation();
-    // GLuint GetCameraPositionLocation();
-    // GLuint GetSpecularIntensityLocation();
-    // GLuint GetSpecularShininessLocation();
-
     void UseShader();
     void ClearShader();
 
@@ -35,8 +24,6 @@ public:
 
 private:
     GLuint shaderID;
-    // , uniformProjection, uniformModel, uniformView, uniformAmbientIntesity, uniformAmbientColour, uniformDiffuseIntesity, uniformDirection, uniformCameraPosition, uniformSpecularIntensity, uniformSpecularShininess;
-
     GLuint CompileShader(const char* vertexCode, const char* fragmentCode);
     void AddShader(GLuint theProgram, const char* shaderCode, GLenum shaderType);
 };

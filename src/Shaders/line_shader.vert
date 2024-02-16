@@ -11,10 +11,8 @@ uniform mat4 view;
                                                    
 void main()                                                                 
 {            
-    // WorldPosition = model * vec4(pos, 1.0);                                               
-    // gl_Position = projection * view * WorldPosition; 
-
-    gl_Position = vec4(pos, 1.0);    
+    WorldPosition = model * vec4(pos, 1.0);                                               
+    gl_Position = projection * view * WorldPosition; 
                          
-    vColour = vec4(0.0f, 1.0f, 0.0f, 1.0f); 
+    vColour = vec4(1.0f, 0.0f, 0.0f, 1.0f); 
 }                                                                           
