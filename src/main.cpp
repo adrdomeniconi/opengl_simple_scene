@@ -15,7 +15,7 @@
 
 #include "MainWindow.h"
 #include "Mesh.h"
-#include "Shader.h"
+#include "MeshShader.h"
 #include "Camera.h"
 #include "Texture.h"
 #include "Light.h"
@@ -26,7 +26,7 @@ const float toRadians = 3.14159265 / 180.0f;
 
 MainWindow mainWindow;
 std::vector<Mesh*> meshList;
-std::vector<Shader*> shaderList;
+MeshShader *meshShader;
 Camera camera;
 
 Texture brickTexture;
@@ -118,13 +118,6 @@ void CreateObject()
     meshList.push_back(mesh);
 }
 
-void CreateShaders()
-{
-    Shader *shader = new Shader();
-    shader->CreateFromFiles(vertexShader, fragmentShader);
-    shaderList.push_back(shader);
-}
-
 int main() 
 {
     mainWindow = MainWindow(800, 600);
@@ -132,7 +125,7 @@ int main()
 
     CreateObject();
     CreateObject();
-    CreateShaders();
+    meshShader = new MeshShader(vertexShader, fragmentShader);
     camera = Camera(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f), -90.0f, 0.0f, 5.0f, 0.1f);
 
     brickTexture = Texture("../textures/brick.png");
@@ -176,25 +169,24 @@ int main()
         glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        //Run the program using the specified shader
-        shaderList[0]->UseShader();
+        // meshShader->UseShader();
 
-        uniformModel = shaderList[0]->GetModelLocation();
-        uniformProjection = shaderList[0]->GetProjectionLocation();
-        uniformView = shaderList[0]->GetViewLocation();
-        uniformAmbientColour = shaderList[0]->GetAmbientColourLocation();
-        uniformAmbientIntensity = shaderList[0]->GetAmbientIntensityLocation();
-        uniformDiffuseIntensity = shaderList[0]->GetDiffuseIntensityLocation();
-        uniformDirection = shaderList[0]->GetDirectionLocation();
-        uniformCameraPosition = shaderList[0]->GetCameraPositionLocation();
-        uniformSpecularIntensity = shaderList[0]->GetSpecularIntensityLocation();
-        uniformSpecularShininess = shaderList[0]->GetSpecularShininessLocation();
+        // uniformModel = meshShader->GetModelLocation();
+        // uniformProjection = meshShader->GetProjectionLocation();
+        // uniformView = meshShader->GetViewLocation();
+        // uniformAmbientColour = meshShader->GetAmbientColourLocation();
+        // uniformAmbientIntensity = meshShader->GetAmbientIntensityLocation();
+        // uniformDiffuseIntensity = meshShader->GetDiffuseIntensityLocation();
+        // uniformDirection = meshShader->GetDirectionLocation();
+        // uniformCameraPosition = meshShader->GetCameraPositionLocation();
+        // uniformSpecularIntensity = meshShader->GetSpecularIntensityLocation();
+        // uniformSpecularShininess = meshShader->GetSpecularShininessLocation();
 
-        mainLight.UseLight(uniformAmbientIntensity, uniformAmbientColour, uniformDiffuseIntensity, uniformDirection);
+        // mainLight.UseLight(uniformAmbientIntensity, uniformAmbientColour, uniformDiffuseIntensity, uniformDirection);
 
-        glUniformMatrix4fv(uniformProjection, 1, GL_FALSE, glm::value_ptr(projection));
-        glUniformMatrix4fv(uniformView, 1, GL_FALSE, glm::value_ptr(camera.calculateViewMatrix()));
-        glUniform3f(uniformCameraPosition, camera.GetPosition().x, camera.GetPosition().y, camera.GetPosition().z);
+        // glUniformMatrix4fv(uniformProjection, 1, GL_FALSE, glm::value_ptr(projection));
+        // glUniformMatrix4fv(uniformView, 1, GL_FALSE, glm::value_ptr(camera.calculateViewMatrix()));
+        // glUniform3f(uniformCameraPosition, camera.GetPosition().x, camera.GetPosition().y, camera.GetPosition().z);
 
         // glm::mat4 model(1.0f);       
         // model = glm::translate(model, glm::vec3(0.0f, -.3, -2.0f));

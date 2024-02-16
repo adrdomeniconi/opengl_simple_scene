@@ -3,16 +3,14 @@
 Shader::Shader()
 {
     shaderID = 0;
-    uniformModel = 0;
-    uniformProjection = 0;
 }
 
-void Shader::CreateFromString(const char* vertexCode, const char* fragmentCode)
+GLuint Shader::CreateFromString(const char* vertexCode, const char* fragmentCode)
 {
-    CompileShader(vertexCode, fragmentCode);
+    return CompileShader(vertexCode, fragmentCode);
 }
 
-void Shader::CreateFromFiles(const char* vertexLocation, const char* fragmentLocation)
+GLuint Shader::CreateFromFiles(const char* vertexLocation, const char* fragmentLocation)
 {
     std::string vertexString = ReadFile(vertexLocation);
     std::string fragmentString = ReadFile(fragmentLocation);
@@ -20,7 +18,7 @@ void Shader::CreateFromFiles(const char* vertexLocation, const char* fragmentLoc
     const char* vertexCode = vertexString.c_str();
     const char* fragmentCode = fragmentString.c_str();
 
-    CompileShader(vertexCode, fragmentCode);
+    return CompileShader(vertexCode, fragmentCode);
 }
 
 std::string Shader::ReadFile(const char* fileLocation)
@@ -45,12 +43,12 @@ std::string Shader::ReadFile(const char* fileLocation)
     return content;
 }
 
-void Shader::CompileShader(const char* vertexCode, const char* fragmentCode)
+GLuint Shader::CompileShader(const char* vertexCode, const char* fragmentCode)
 {
     shaderID = glCreateProgram();
     if(!shaderID) {
         printf("Error creating shader program.\n");
-        return;
+        return 0;
     }
 
     AddShader(shaderID, vertexCode, GL_VERTEX_SHADER);
@@ -66,7 +64,7 @@ void Shader::CompileShader(const char* vertexCode, const char* fragmentCode)
     {
         glGetProgramInfoLog(shaderID, sizeof(eLog), NULL, eLog);
         printf("Error linking program: '%s'\n", eLog);
-        return;
+        return 0;
     }
 
     //Just validate if it worked
@@ -78,47 +76,9 @@ void Shader::CompileShader(const char* vertexCode, const char* fragmentCode)
         printf("Error validating program: '%s'\n", eLog);
     }
 
-    // Access a variable of the shader
-    uniformModel = glGetUniformLocation(shaderID, "model");
-    uniformProjection = glGetUniformLocation(shaderID, "projection");
-    uniformView = glGetUniformLocation(shaderID, "view");
-    uniformAmbientColour = glGetUniformLocation(shaderID, "directionalLight.colour");
-    uniformAmbientIntesity = glGetUniformLocation(shaderID, "directionalLight.ambientIntensity");
-    uniformDiffuseIntesity = glGetUniformLocation(shaderID, "directionalLight.diffuseIntensity");
-    uniformDirection = glGetUniformLocation(shaderID, "directionalLight.direction");
-    uniformCameraPosition = glGetUniformLocation(shaderID, "cameraPosition");
-    uniformSpecularIntensity = glGetUniformLocation(shaderID, "material.specularIntensity");
-    uniformSpecularShininess = glGetUniformLocation(shaderID, "material.shininess");
+    return shaderID;
 }
 
-GLuint Shader::GetProjectionLocation() { return uniformProjection; }
-
-GLuint Shader::GetModelLocation() { return uniformModel; }
-
-GLuint Shader::GetViewLocation() { return uniformView; }
-
-GLuint Shader::GetAmbientIntensityLocation() { return uniformAmbientIntesity; }
-
-GLuint Shader::GetAmbientColourLocation() { return uniformAmbientColour; }
-
-GLuint Shader::GetDiffuseIntensityLocation()  { return uniformDiffuseIntesity; }
-
-GLuint Shader::GetDirectionLocation()  { return uniformDirection; }
-
-GLuint Shader::GetCameraPositionLocation()
-{
-    return uniformCameraPosition;
-}
-
-GLuint Shader::GetSpecularIntensityLocation()
-{
-    return uniformSpecularIntensity;
-}
-
-GLuint Shader::GetSpecularShininessLocation()
-{
-    return uniformSpecularShininess;
-}
 
 void Shader::UseShader()
 {
@@ -133,8 +93,6 @@ void Shader::ClearShader()
         shaderID = 0;
     }
 
-    uniformModel = 0;
-    uniformProjection = 0;
 }
 
 void Shader::AddShader(GLuint program, const char* shaderCode, GLenum shaderType)
