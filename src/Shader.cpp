@@ -82,6 +82,7 @@ GLuint Shader::CompileShader(const char* vertexCode, const char* fragmentCode)
 
 void Shader::UseShader()
 {
+    std::cout << "Using shader: " << shaderID << std::endl;
     glUseProgram(shaderID);
 }
 

@@ -16,6 +16,7 @@
 #include "MainWindow.h"
 #include "Mesh.h"
 #include "MeshShader.h"
+#include "LineShader.h"
 #include "Camera.h"
 #include "Texture.h"
 #include "Light.h"
@@ -27,6 +28,7 @@ const float toRadians = 3.14159265 / 180.0f;
 MainWindow mainWindow;
 std::vector<Mesh*> meshList;
 MeshShader *meshShader;
+LineShader *lineShader;
 Camera camera;
 
 Texture brickTexture;
@@ -152,6 +154,21 @@ int main()
 
     glm::mat4 projection = glm::perspective(45.0f, (GLfloat)mainWindow.getBufferWidth()/(GLfloat)mainWindow.getBufferHeight(), 0.1f, 100.0f);
 
+
+    GLfloat lineVertices[] = {
+    //   x      y      z    
+        0.0f, 0.0f, 0.0f,
+        50.0f, 50.0f, 50.0f
+    };
+
+    static const char* vertexLineShader = "Shaders/line_shader.vert";
+    static const char* fragmentLineShader = "Shaders/line_shader.frag";
+
+    lineShader = new LineShader(vertexLineShader, fragmentLineShader);
+
+    Line *line = new Line();
+    line -> Create(lineVertices, 2);
+
     //Main while
     while(!mainWindow.getShouldClose())
     {
@@ -166,8 +183,10 @@ int main()
         camera.mouseControl(mainWindow.getDeltaX(), mainWindow.getDeltaY());
 
         // Clear window
-        glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+        glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+
 
         // meshShader->UseShader();
 
@@ -208,14 +227,25 @@ int main()
 
         // meshList[1] -> RenderMesh();
 
-        GLfloat lineVertices[] = {
-        //   x      y      z    
-            0.0f, 0.0f, 0.0f,
-            1.0f, 1.0f, 1.0f
-        };
+        lineShader->UseShader();
 
-        Line *line = new Line();
-        line -> Create(lineVertices, 2);
+        uniformModel = lineShader->GetModelLocation();
+        uniformProjection = lineShader->GetProjectionLocation();
+        uniformView = lineShader->GetViewLocation();
+
+        glUniformMatrix4fv(uniformProjection, 1, GL_FALSE, glm::value_ptr(projection));
+        glUniformMatrix4fv(uniformView, 1, GL_FALSE, glm::value_ptr(camera.calculateViewMatrix()));
+
+        glm::mat4 model(1.0f);
+        //Apply transformations
+
+        //
+
+        glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+
+        line -> Render();
+
+
 
         glUseProgram(0);
 

@@ -1,11 +1,8 @@
 #pragma once
 
-#pragma once
-
 #include <stdio.h>
 #include <string>
 #include <iostream>
-#include <fstream>
 #include <stdexcept> 
 
 #include <GL/glew.h>
