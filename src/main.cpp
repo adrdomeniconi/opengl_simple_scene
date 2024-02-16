@@ -27,6 +27,7 @@ const float toRadians = 3.14159265 / 180.0f;
 
 MainWindow mainWindow;
 std::vector<Mesh*> meshList;
+std::vector<std::vector<Line*>> normalsList;
 MeshShader *meshShader;
 LineShader *lineShader;
 Camera camera;
@@ -44,6 +45,8 @@ GLfloat lastTime = 0.0f;
 
 static const char* vertexShader = "Shaders/shader.vert";
 static const char* fragmentShader = "Shaders/shader.frag";
+static const char* vertexLineShader = "Shaders/line_shader.vert";
+static const char* fragmentLineShader = "Shaders/line_shader.frag";
 
 void updateVerticeNormal(GLfloat *vertices, unsigned int verticeIdx, glm::vec3 normal, unsigned int normalOffset)
 {
@@ -110,14 +113,34 @@ void CreateObject()
          0.0f,  1.0f,  0.0f, 0.5f, 1.0f, 0.0f, 0.0f, 0.0f
     };
 
-    int indicesCount = sizeof(indices)/sizeof(indices[0]);
-    int verticesCount = sizeof(vertices)/sizeof(vertices[0]);
+    const unsigned int indicesCount = sizeof(indices)/sizeof(indices[0]);
+    const unsigned int verticesDataCount = sizeof(vertices)/sizeof(vertices[0]);
+    const unsigned int VERTICES_LENGTH = 8;
+    const unsigned int NORMALS_OFFSET = 5;
+    const unsigned int verticesCount = verticesDataCount/VERTICES_LENGTH;
 
-    calculateAverageNormals(indices, indicesCount, vertices, verticesCount, 8, 5);
+    calculateAverageNormals(indices, indicesCount, vertices, verticesDataCount, VERTICES_LENGTH, NORMALS_OFFSET);
 
     Mesh *mesh = new Mesh();
-    mesh -> CreateMesh(vertices, indices, verticesCount, indicesCount);
+    mesh -> CreateMesh(vertices, indices, verticesDataCount, indicesCount);
     meshList.push_back(mesh);
+
+    std::vector<Line*> normals;
+    for(int i = 0; i < verticesCount; i ++)
+    {
+        GLfloat normalVertices[] {
+            normalVertices[0] = vertices[i * VERTICES_LENGTH],
+            normalVertices[1] = vertices[i * VERTICES_LENGTH + 1],
+            normalVertices[2] = vertices[i * VERTICES_LENGTH + 2],
+            normalVertices[3] = vertices[i * VERTICES_LENGTH + NORMALS_OFFSET],
+            normalVertices[4] = vertices[i * VERTICES_LENGTH + 1 + NORMALS_OFFSET],
+            normalVertices[5] = vertices[i * VERTICES_LENGTH + 2 + NORMALS_OFFSET]
+        };
+        Line *line = new Line();
+        line->Create(normalVertices, 2);
+        normals.push_back(line);
+    }
+    normalsList.push_back(normals);
 }
 
 int main() 
@@ -128,6 +151,7 @@ int main()
     CreateObject();
     CreateObject();
     meshShader = new MeshShader(vertexShader, fragmentShader);
+    lineShader = new LineShader(vertexLineShader, fragmentLineShader);
     camera = Camera(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f), -90.0f, 0.0f, 5.0f, 0.1f);
 
     brickTexture = Texture("../textures/brick.png");
@@ -154,20 +178,14 @@ int main()
 
     glm::mat4 projection = glm::perspective(45.0f, (GLfloat)mainWindow.getBufferWidth()/(GLfloat)mainWindow.getBufferHeight(), 0.1f, 100.0f);
 
-
-    GLfloat lineVertices[] = {
+    GLfloat normalVertices[] {
     //   x      y      z    
         0.0f, 0.0f, 0.0f,
-        0.0f, 0.9f, 0.0f
+        50.0f, 50.0f, 50.0f
     };
-
-    static const char* vertexLineShader = "Shaders/line_shader.vert";
-    static const char* fragmentLineShader = "Shaders/line_shader.frag";
-
-    lineShader = new LineShader(vertexLineShader, fragmentLineShader);
-
+    
     Line *line = new Line();
-    line -> Create(lineVertices, 2);
+    line->Create(normalVertices, 2);
 
     //Main while
     while(!mainWindow.getShouldClose())
@@ -183,10 +201,8 @@ int main()
         camera.mouseControl(mainWindow.getDeltaX(), mainWindow.getDeltaY());
 
         // Clear window
-        glClearColor(.2f, 0.0f, .2f, 1.0f);
+        glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-
 
         // meshShader->UseShader();
 
@@ -216,6 +232,29 @@ int main()
         // brickTexture.UseTexture();
 
         // meshList[0] -> RenderMesh();
+        
+        lineShader->UseShader();
+
+        uniformModel = lineShader->GetModelLocation();
+        uniformProjection = lineShader->GetProjectionLocation();
+        uniformView = lineShader->GetViewLocation();
+
+        glUniformMatrix4fv(uniformProjection, 1, GL_FALSE, glm::value_ptr(projection));
+        glUniformMatrix4fv(uniformView, 1, GL_FALSE, glm::value_ptr(camera.calculateViewMatrix()));
+
+        glm::mat4 model(1.0f);
+        glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+
+        line -> Render();
+
+        // for(Line* normal : normalsList[0])
+        // {
+        //     normal->Render();
+        // }
+        // lineShader->UseShader();
+
+
+        // meshShader->UseShader();
 
         // model = glm::mat4(1.0f);     
         // model = glm::translate(model, glm::vec3(0.0f, .3, -1.5f));
@@ -227,21 +266,6 @@ int main()
 
         // meshList[1] -> RenderMesh();
 
-        lineShader->UseShader();
-
-        uniformModel = lineShader->GetModelLocation();
-        uniformProjection = lineShader->GetProjectionLocation();
-        uniformView = lineShader->GetViewLocation();
-
-        glUniformMatrix4fv(uniformProjection, 1, GL_FALSE, glm::value_ptr(projection));
-        glUniformMatrix4fv(uniformView, 1, GL_FALSE, glm::value_ptr(camera.calculateViewMatrix()));
-
-        glm::mat4 model(1.0f);
-        model = glm::translate(model, glm::vec3(0.0f, 0.0f, -2.0f));
-
-        glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-
-        line -> Render();
 
         glUseProgram(0);
 
