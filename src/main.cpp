@@ -72,7 +72,6 @@ void calculateAverageNormals(unsigned int *indices, unsigned int indicesCount, G
     //For each verex the normals are calculated as the average of the triangles of the surfaces that the vertex is part.
     for(size_t i = 0; i < indicesCount; i += 3)
     {
-        //Access the position on the vertices array by taking the vertice index on the indices array, and multiplying it by the lenght of entries for each vertice.
         unsigned int vertice0Idx = indices[i] * verticesLength;
         unsigned int vertice1Idx = indices[i+1] * verticesLength;
         unsigned int vertice2Idx = indices[i+2] * verticesLength;
@@ -98,10 +97,10 @@ void calculateAverageNormals(unsigned int *indices, unsigned int indicesCount, G
 void CreateObject()
 {
     unsigned int indices[] = {
-        0, 1, 4,
-        1, 2, 4,
-        2, 3, 4,
-        3, 0, 4
+        4, 1, 0,
+        4, 2, 1,
+        4, 3, 2,
+        4, 0, 3
     };
 
     GLfloat vertices[] = {
