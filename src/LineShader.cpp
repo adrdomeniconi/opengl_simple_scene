@@ -4,6 +4,7 @@ LineShader::LineShader(const char *vertexShaderLocation, const char *fragmentSha
 {
     GLuint shaderID = shader.CreateFromFiles(vertexShaderLocation, fragmentShaderLocation);
     std::cout << "Shader program created: " << shaderID << std::endl;
+    
     if(shaderID == 0)
     {
         throw std::runtime_error("Error creating shader.");

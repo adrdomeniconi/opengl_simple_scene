@@ -6,9 +6,7 @@ void Line::Create(GLfloat *vertices, unsigned int numOfVertices)
 {
     int VERTEX_LENGTH = 3; //x, y, z
 
-    std::cout << "** New normal ** " << std::endl;
-    std::cout << "Vertex position: " << vertices[0] << ", " << vertices[1] << ", " << vertices[2] << std::endl;
-    std::cout << "Vertex normal: " << vertices[3] << ", " << vertices[4] << ", " << vertices[5] << std::endl;
+    std::cout << "Vertex position: " << vertices[0] << ", " << vertices[1] << ", " << vertices[2] << ". Vertex normal: " << vertices[3] << ", " << vertices[4] << ", " << vertices[5] << std::endl;
 
     int POS_OFFSET = 0;
     int POS_LENGTH = 3;
