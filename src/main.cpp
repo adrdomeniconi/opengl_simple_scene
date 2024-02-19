@@ -51,27 +51,17 @@ static const char* fragmentLineShader = "Shaders/line_shader.frag";
 void accumulateVerticeNormal(GLfloat *vertices, unsigned int verticeIdx, glm::vec3 normal, unsigned int normalOffset)
 {
     unsigned int verticeNormalsIdx = verticeIdx + normalOffset;
-    
-    std::cout << "Accumulating v" << verticeIdx << ":" << std::endl;
-
-    std::cout << "Vertice normals initial value: " << vertices[verticeNormalsIdx] << ", " << vertices[verticeNormalsIdx + 1] << ", " << vertices[verticeNormalsIdx + 2] << std::endl;
     vertices[verticeNormalsIdx] += normal.x;
     vertices[verticeNormalsIdx + 1] += normal.y;
     vertices[verticeNormalsIdx + 2] += normal.z;
-    std::cout << "Vertice normals ACCUMULATED value: " << vertices[verticeNormalsIdx] << ", " << vertices[verticeNormalsIdx + 1] << ", " << vertices[verticeNormalsIdx + 2] << std::endl;
 }
 
 void updateVerticeNormal(GLfloat *vertices, unsigned int verticeIdx, glm::vec3 normal, unsigned int normalOffset)
 {
     unsigned int verticeNormalsIdx = verticeIdx + normalOffset;
-    
-    std::cout << "Updating v" << verticeIdx << ":" << std::endl;
-
-    std::cout << "Vertice normals initial value: " << vertices[verticeNormalsIdx] << ", " << vertices[verticeNormalsIdx + 1] << ", " << vertices[verticeNormalsIdx + 2] << std::endl;
     vertices[verticeNormalsIdx] = normal.x;
     vertices[verticeNormalsIdx + 1] = normal.y;
     vertices[verticeNormalsIdx + 2] = normal.z;
-    std::cout << "Vertice normals UPDATED value: " << vertices[verticeNormalsIdx] << ", " << vertices[verticeNormalsIdx + 1] << ", " << vertices[verticeNormalsIdx + 2] << std::endl;
 }
 
 void normalizeVerticesNormals(GLfloat *vertices, unsigned int verticesCount, unsigned int verticesLength, unsigned int normalOffset)
@@ -80,12 +70,8 @@ void normalizeVerticesNormals(GLfloat *vertices, unsigned int verticesCount, uns
     {
         unsigned int verticeNormalsIdx = i * verticesLength + normalOffset;
 
-        std::cout << "Normalizing v" << i << ":" << std::endl;
-
         glm::vec3 normal(vertices[verticeNormalsIdx], vertices[verticeNormalsIdx + 1], vertices[verticeNormalsIdx + 2]);
-        std::cout << "Normal before normalizing: " << normal[0] << ", " << normal[1] << ", " << normal[2] << std::endl;
         normal = glm::normalize(normal);
-        std::cout << "Normal after normalizing: " << normal[0] << ", " << normal[1] << ", " << normal[2] << std::endl;
 
         updateVerticeNormal(vertices, i * verticesLength, normal, normalOffset);
     }
