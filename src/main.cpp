@@ -19,7 +19,7 @@
 #include "LineShader.h"
 #include "Camera.h"
 #include "Texture.h"
-#include "Light.h"
+#include "DirectionalLight.h"
 #include "Material.h"
 #include "Line.h"
 
@@ -35,7 +35,7 @@ Camera camera;
 Texture brickTexture;
 Texture dirtTexture;
 
-Light mainLight;
+DirectionalLight mainLight;
 
 Material shinyMaterial;
 Material dullMaterial;
@@ -170,7 +170,7 @@ int main()
     dirtTexture = Texture("../textures/dirt.png");
     dirtTexture.LoadTexture();
 
-    mainLight = Light(1.0f, 1.0f, 1.0f, 0.2f, .5f, 1.0f, 1.5f, 1.0f);
+    mainLight = DirectionalLight(1.0f, 1.0f, 1.0f, 0.2f, .5f, 1.0f, 1.5f, .4f);
 
     shinyMaterial = Material(1.0f, 64);
     dullMaterial = Material(1.0f, 32);
@@ -242,8 +242,6 @@ int main()
         brickTexture.UseTexture();
 
         meshList[0] -> RenderMesh();
-
-        //
 
         // Normals
         lineShader->UseShader();
