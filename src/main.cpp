@@ -159,7 +159,7 @@ int main()
     dirtTexture = Texture("../textures/dirt.png");
     dirtTexture.LoadTexture();
 
-    mainLight = Light(1.0f, 1.0f, 1.0f, 0.2f, 1.0f, -.5f, -2.0f, 1.0f);
+    mainLight = Light(1.0f, 1.0f, 1.0f, 0.2f, .5f, 1.0f, 1.5f, 1.0f);
 
     shinyMaterial = Material(1.0f, 64);
     dullMaterial = Material(1.0f, 32);
@@ -186,7 +186,6 @@ int main()
     Line *line = new Line();
     line -> Create(lineVertices, 2);
 
-    //Main while
     while(!mainWindow.getShouldClose())
     {
         GLfloat now = glfwGetTime();
@@ -200,11 +199,10 @@ int main()
         camera.mouseControl(mainWindow.getDeltaX(), mainWindow.getDeltaY());
 
         // Clear window
-        glClearColor(.2f, 0.0f, .2f, 1.0f);
+        glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-
-
+        //Run the program using the specified shader
         meshShader->UseShader();
 
         uniformModel = meshShader->GetModelLocation();
@@ -234,18 +232,14 @@ int main()
 
         meshList[0] -> RenderMesh();
 
+        //
 
         // Normals
-
         lineShader->UseShader();
 
-        uniformModel = lineShader->GetModelLocation();
-        uniformProjection = lineShader->GetProjectionLocation();
-        uniformView = lineShader->GetViewLocation();
-
-        glUniformMatrix4fv(uniformProjection, 1, GL_FALSE, glm::value_ptr(projection));
-        glUniformMatrix4fv(uniformView, 1, GL_FALSE, glm::value_ptr(camera.calculateViewMatrix()));
-        glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+        glUniformMatrix4fv(lineShader->GetProjectionLocation(), 1, GL_FALSE, glm::value_ptr(projection));
+        glUniformMatrix4fv(lineShader->GetViewLocation(), 1, GL_FALSE, glm::value_ptr(camera.calculateViewMatrix()));
+        glUniformMatrix4fv(lineShader->GetModelLocation(), 1, GL_FALSE, glm::value_ptr(model));
 
         for(Line *normal : normalsList[0])
         {
@@ -253,39 +247,29 @@ int main()
         }
 
         //
+        meshShader->UseShader();
 
+        model = glm::mat4(1.0f);     
+        model = glm::translate(model, glm::vec3(0.0f, .3, -1.5f));
+        model = glm::scale(model, glm::vec3(0.2f, 0.2f, 0.2f));
 
-        // meshShader->UseShader();
+        glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+        dullMaterial.Use(uniformSpecularIntensity, uniformSpecularShininess);
+        dirtTexture.UseTexture();
 
-        // model = glm::mat4(1.0f);     
-        // model = glm::translate(model, glm::vec3(0.0f, .3, -1.5f));
-        // model = glm::scale(model, glm::vec3(0.2f, 0.2f, 0.2f));
+        meshList[1] -> RenderMesh();
 
-        // glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-        // dullMaterial.Use(uniformSpecularIntensity, uniformSpecularShininess);
-        // dirtTexture.UseTexture();
+        // Normals
+        lineShader->UseShader();
 
-        // meshList[1] -> RenderMesh();
+        glUniformMatrix4fv(lineShader->GetProjectionLocation(), 1, GL_FALSE, glm::value_ptr(projection));
+        glUniformMatrix4fv(lineShader->GetViewLocation(), 1, GL_FALSE, glm::value_ptr(camera.calculateViewMatrix()));
+        glUniformMatrix4fv(lineShader->GetModelLocation(), 1, GL_FALSE, glm::value_ptr(model));
 
-        // Line test
-
-        // lineShader->UseShader();
-
-        // uniformModel = lineShader->GetModelLocation();
-        // uniformProjection = lineShader->GetProjectionLocation();
-        // uniformView = lineShader->GetViewLocation();
-
-        // glUniformMatrix4fv(uniformProjection, 1, GL_FALSE, glm::value_ptr(projection));
-        // glUniformMatrix4fv(uniformView, 1, GL_FALSE, glm::value_ptr(camera.calculateViewMatrix()));
-
-        // model = glm::mat4(1.0f);
-        // model = glm::translate(model, glm::vec3(0.0f, 0.0f, -2.0f));
-
-        // glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-
-        // line -> Render();
-
-        //
+        for(Line *normal : normalsList[1])
+        {
+            normal->Render();
+        }
 
         glUseProgram(0);
 
