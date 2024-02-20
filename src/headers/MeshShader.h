@@ -14,9 +14,10 @@
 class MeshShader
 {
 public:
-    static const unsigned int MAX_POINT_LIGHT_COUNT = 3;
+    static const unsigned int MAX_POINT_LIGHTS_COUNT = 3;
 
     MeshShader(const char* vertexShaderLocation, const char* fragmentShaderLocation);
+
 
     GLuint GetProjectionLocation();
     GLuint GetModelLocation();
@@ -30,17 +31,38 @@ public:
     GLuint GetSpecularShininessLocation();
 
     void SetDirectionalLight(DirectionalLight *directionalLight);
-    // void AddPointLight(PointLight *pointLight);
+    void AddPointLight(PointLight *pointLight);
 
     void UseShader();
     void ClearShader();
 
-    ~MeshShader();
+~MeshShader();
 
 private:
     Shader shader;
-    DirectionalLight *directionalLight;
-    PointLight pointLights[MAX_POINT_LIGHT_COUNT];
     unsigned int pointLightsCount;
-    GLuint uniformProjection, uniformModel, uniformView, uniformAmbientIntesity, uniformAmbientColour, uniformDiffuseIntesity, uniformDirection, uniformCameraPosition, uniformSpecularIntensity, uniformSpecularShininess;
+
+    struct {
+        GLfloat ambientIntesity;
+        GLfloat ambientColour;
+        GLfloat diffuseIntesity;
+        GLfloat direction;
+
+    } uniformDirectionalLight;
+
+    struct {
+        GLfloat ambientIntesity;
+        GLfloat ambientColour;
+        GLfloat diffuseIntesity;
+        GLfloat position; 
+        GLfloat constant; 
+        GLfloat linear; 
+        GLfloat exponent;
+
+    } uniformPointLight[MAX_POINT_LIGHTS_COUNT];
+
+    GLuint uniformProjection, uniformModel, uniformView, uniformCameraPosition, uniformSpecularIntensity, uniformSpecularShininess;
+
+    void getPointLightUniformLocations(GLuint shaderID);
+    void getDirectionalLightUniformLocations(GLuint shaderID);
 };
