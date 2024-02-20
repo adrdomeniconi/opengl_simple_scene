@@ -7,12 +7,17 @@ in vec4 WorldPosition;
 
 out vec4 colour;  
 
-struct DirectionalLight 
+struct Light
 {
     vec3 colour;
     float ambientIntensity;
-    vec3 direction;
     float diffuseIntensity;
+};
+
+struct DirectionalLight 
+{
+    Light base;
+    vec3 direction;
 };
 
 struct Material
@@ -43,38 +48,31 @@ vec4 CalculateSpecularColour(float diffuseFactor)
         {
             specularFactor = pow(specularFactor, material.shininess);
 
-            specularColour = vec4(directionalLight.colour * material.specularIntensity * specularFactor, 1.0);
-
-            //DEBUG
-            // specularColour = vec4(vec3(1.0f, 0.0f, 0.0f) * material.specularIntensity * specularFactor, 1.0);
-
+            specularColour = vec4(directionalLight.base.colour * material.specularIntensity * specularFactor, 1.0);
         }
     }
-    
-
     return specularColour;
 }
-                                                                            
-void main()                                                                 
-{                                           
+
+vec4 CalcLightByDirection(Light light, vec3 direction)
+{
     //Calculate the diffuse light
     //A.B = |A||B|cos(angle) -> A.B = cos(angle) So diffuseFactor is the cos on the Angle [0,1]. If angle = 90, cos = 1. Angle = 0, cos = 0.
     // The max is to esure that we'll not have negative numbers.
-    float diffuseFactor = max(dot(normalize(Normal), normalize(directionalLight.direction)), 0.0f);
+    float diffuseFactor = max(dot(normalize(Normal), normalize(direction)), 0.0f);
 
-    vec4 ambientColour = vec4(directionalLight.colour, 1.0f) * directionalLight.ambientIntensity;
-    vec4 diffuseColour = vec4(directionalLight.colour, 1.0f) * directionalLight.diffuseIntensity * diffuseFactor;
+    vec4 ambientColour = vec4(light.colour, 1.0f) * light.ambientIntensity;
+    vec4 diffuseColour = vec4(light.colour, 1.0f) * light.diffuseIntensity * diffuseFactor;
     vec4 specularColour = CalculateSpecularColour(diffuseFactor);
-
-    //colour = vec4(vColour); // Use just colour.            
-    //colour = texture(input_texture, TexCoord);                
-    //colour = texture(input_texture, TexCoord) * vColour;  //Combining the effect from the texture and the colour                                          
-    colour = texture(input_texture, TexCoord) * (ambientColour + diffuseColour + specularColour);    
+                                  
+    return (ambientColour + diffuseColour + specularColour); 
+}
+                                                                            
+void main()                                                                 
+{                                                            
+    colour = texture(input_texture, TexCoord) * CalcLightByDirection(directionalLight.base, directionalLight.direction);    
 
     //DEBUG
-    // vec4 ambientColour = vec4(vec3(0.0f, 1.0f, 0.0f), 1.0f) * directionalLight.ambientIntensity;
-    // vec4 diffuseColour = vec4(vec3(0.0f, 0.0f, 1.0f), 1.0f) * directionalLight.diffuseIntensity * diffuseFactor;
     // colour = vec4(Normal, 1.0);
-    // colour = texture(input_texture, TexCoord) * (ambientColour + diffuseColour + specularColour);  
 
 } 

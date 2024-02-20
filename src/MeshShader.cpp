@@ -21,9 +21,9 @@ MeshShader::MeshShader(const char* vertexShaderLocation, const char* fragmentSha
 
 void MeshShader::getDirectionalLightUniformLocations(GLuint shaderID)
 {
-    uniformDirectionalLight.ambientColour = glGetUniformLocation(shaderID, "directionalLight.colour");
-    uniformDirectionalLight.ambientIntesity = glGetUniformLocation(shaderID, "directionalLight.ambientIntensity");
-    uniformDirectionalLight.diffuseIntesity = glGetUniformLocation(shaderID, "directionalLight.diffuseIntensity");
+    uniformDirectionalLight.ambientColour = glGetUniformLocation(shaderID, "directionalLight.base.colour");
+    uniformDirectionalLight.ambientIntesity = glGetUniformLocation(shaderID, "directionalLight.base.ambientIntensity");
+    uniformDirectionalLight.diffuseIntesity = glGetUniformLocation(shaderID, "directionalLight.base.diffuseIntensity");
     uniformDirectionalLight.direction = glGetUniformLocation(shaderID, "directionalLight.direction");
 }
 
