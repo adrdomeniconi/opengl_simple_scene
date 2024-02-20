@@ -52,6 +52,11 @@ GLuint MeshShader::GetSpecularIntensityLocation() { return uniformSpecularIntens
 
 GLuint MeshShader::GetSpecularShininessLocation() { return uniformSpecularShininess; }
 
+void MeshShader::SetDirectionalLight(DirectionalLight *directionalLight)
+{
+    directionalLight->UseLight(uniformAmbientIntesity, uniformAmbientColour, uniformDiffuseIntesity, uniformDirection);
+}
+
 MeshShader::~MeshShader()
 {
     ClearShader();

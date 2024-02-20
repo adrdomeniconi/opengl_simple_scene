@@ -178,10 +178,6 @@ int main()
     GLuint uniformProjection = 0, 
            uniformModel = 0, 
            uniformView = 0, 
-           uniformAmbientIntensity = 0, 
-           uniformAmbientColour = 0, 
-           uniformDiffuseIntensity = 0, 
-           uniformDirection = 0,
            uniformCameraPosition = 0,
            uniformSpecularIntensity = 0,
            uniformSpecularShininess = 0;
@@ -219,15 +215,11 @@ int main()
         uniformModel = meshShader->GetModelLocation();
         uniformProjection = meshShader->GetProjectionLocation();
         uniformView = meshShader->GetViewLocation();
-        uniformAmbientColour = meshShader->GetAmbientColourLocation();
-        uniformAmbientIntensity = meshShader->GetAmbientIntensityLocation();
-        uniformDiffuseIntensity = meshShader->GetDiffuseIntensityLocation();
-        uniformDirection = meshShader->GetDirectionLocation();
         uniformCameraPosition = meshShader->GetCameraPositionLocation();
         uniformSpecularIntensity = meshShader->GetSpecularIntensityLocation();
         uniformSpecularShininess = meshShader->GetSpecularShininessLocation();
 
-        mainLight.UseLight(uniformAmbientIntensity, uniformAmbientColour, uniformDiffuseIntensity, uniformDirection);
+        meshShader->SetDirectionalLight(&mainLight);
 
         glUniformMatrix4fv(uniformProjection, 1, GL_FALSE, glm::value_ptr(projection));
         glUniformMatrix4fv(uniformView, 1, GL_FALSE, glm::value_ptr(camera.calculateViewMatrix()));
