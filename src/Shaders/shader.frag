@@ -88,7 +88,7 @@ vec4 CalcPointLight(PointLight pointLight)
 {
     vec4 pointLightFactor = vec4(0.0f, 0.0f, 0.0f, 0.0f);
 
-    vec3 direction = WorldPosition.xyz - pointLight.position;
+    vec3 direction = normalize(WorldPosition.xyz - pointLight.position);
     pointLightFactor += CalcLightByDirection(pointLight.base, direction);
 
     return pointLightFactor;
@@ -97,10 +97,10 @@ vec4 CalcPointLight(PointLight pointLight)
 void main()                                                                 
 {                              
     vec4 lightColour = CalcDirectionalLight();
-    // for(int i = 0; i < pointLightsCount; i++)
-    // {
-    //     lightColour += CalcPointLight(pointLights[i]);
-    // }
+    for(int i = 0; i < pointLightsCount; i++)
+    {
+        lightColour += CalcPointLight(pointLights[i]);
+    }
 
     colour = texture(input_texture, TexCoord) * lightColour;
 

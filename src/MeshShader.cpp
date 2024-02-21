@@ -31,13 +31,13 @@ void MeshShader::getPointLightUniformLocations(GLuint shaderID)
 {
     for (size_t i = 0; i < MAX_POINT_LIGHTS_COUNT; i++)
     {
-        uniformPointLight[i].ambientColour = glGetUniformLocation(shaderID, ("pointLight[" + std::to_string(i) + "].base.colour").c_str());
-        uniformPointLight[i].ambientIntesity = glGetUniformLocation(shaderID, ("pointLight[" + std::to_string(i) + "].base.ambientIntensity").c_str());
-        uniformPointLight[i].diffuseIntesity = glGetUniformLocation(shaderID, ("pointLight[" + std::to_string(i) + "].base.diffuseIntensity").c_str());
-        uniformPointLight[i].position = glGetUniformLocation(shaderID, ("pointLight[" + std::to_string(i) + "].base.position").c_str());
-        uniformPointLight[i].constant = glGetUniformLocation(shaderID, ("pointLight[" + std::to_string(i) + "].base.constant").c_str());
-        uniformPointLight[i].linear = glGetUniformLocation(shaderID, ("pointLight[" + std::to_string(i) + "].base.linear").c_str());
-        uniformPointLight[i].exponent = glGetUniformLocation(shaderID, ("pointLight[" + std::to_string(i) + "].base.exponent").c_str());
+        uniformPointLight[i].ambientColour = glGetUniformLocation(shaderID, ("pointLights[" + std::to_string(i) + "].base.colour").c_str());
+        uniformPointLight[i].ambientIntesity = glGetUniformLocation(shaderID, ("pointLights[" + std::to_string(i) + "].base.ambientIntensity").c_str());
+        uniformPointLight[i].diffuseIntesity = glGetUniformLocation(shaderID, ("pointLights[" + std::to_string(i) + "].base.diffuseIntensity").c_str());
+        uniformPointLight[i].position = glGetUniformLocation(shaderID, ("pointLights[" + std::to_string(i) + "].base.position").c_str());
+        uniformPointLight[i].constant = glGetUniformLocation(shaderID, ("pointLights[" + std::to_string(i) + "].base.constant").c_str());
+        uniformPointLight[i].linear = glGetUniformLocation(shaderID, ("pointLights[" + std::to_string(i) + "].base.linear").c_str());
+        uniformPointLight[i].exponent = glGetUniformLocation(shaderID, ("pointLights[" + std::to_string(i) + "].base.exponent").c_str());
     }
     uniformPointLightsCount = glGetUniformLocation(shaderID, "pointLightsCount");
 
@@ -77,6 +77,7 @@ void MeshShader::SetPointLights(const std::vector<PointLight*>& pointLights)
     
     for(const PointLight* pointLight : pointLights)
     {
+        std::cout << pointLightsCount << std::endl;
         pointLight->UseLight(uniformPointLight[pointLightsCount].ambientIntesity, 
                             uniformPointLight[pointLightsCount].ambientColour, 
                             uniformPointLight[pointLightsCount].diffuseIntesity, 

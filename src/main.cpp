@@ -174,7 +174,7 @@ int main()
 
     mainLight = DirectionalLight(1.0f, 1.0f, 1.0f, 0.2f, .5f, 1.0f, 1.5f, .4f);
 
-    PointLight pointLight1 = PointLight(1.0f, 0.0f, 0.0f, 0.2f, 0.6f, 1.0f, 0.5f, 0.0f, 0.3f, 0.2f, 0.1f);
+    PointLight pointLight1 = PointLight(1.0f, 0.0f, 0.0f, 0.0f, 0.6f, 1.0f, 0.5f, 0.0f, 0.3f, 0.2f, 0.1f);
     pointLights.push_back(&pointLight1);
 
     shinyMaterial = Material(1.0f, 64);
@@ -218,7 +218,7 @@ int main()
         meshShader->UseShader();
 
         meshShader->SetDirectionalLight(&mainLight);
-        // meshShader->SetPointLights(pointLights);
+        meshShader->SetPointLights(pointLights);
 
         uniformModel = meshShader->GetModelLocation();
         uniformProjection = meshShader->GetProjectionLocation();
