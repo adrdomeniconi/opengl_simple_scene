@@ -26,6 +26,9 @@ struct PointLight
 {
     Light base;
     vec3 position;
+    float constant;
+    float linear;
+    float exponent;
 };
 
 struct Material
@@ -88,10 +91,16 @@ vec4 CalcPointLight(PointLight pointLight)
 {
     vec4 pointLightFactor = vec4(0.0f, 0.0f, 0.0f, 0.0f);
 
-    vec3 direction = normalize(WorldPosition.xyz - pointLight.position);
-    pointLightFactor += CalcLightByDirection(pointLight.base, direction);
+    vec3 direction = pointLight.position - WorldPosition.xyz;
+    float distance = length(direction);
+    direction = normalize(direction);
 
-    return pointLightFactor;
+    pointLightFactor += CalcLightByDirection(pointLight.base, direction);
+    // float attenuation = pointLight.exponent * distance * distance + pointLight.linear * distance + pointLight.constant;
+
+    float attenuation = 1.0f;
+
+    return pointLightFactor/attenuation;
 }
                                                                             
 void main()                                                                 

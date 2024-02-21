@@ -122,7 +122,7 @@ void CompileShaders() {
     uniformProjection = glGetUniformLocation(shader, "projection");
 }
 
-void CreateObject()
+void CreatePyramid()
 {
     unsigned int indices[] = {
         0, 1, 4,
@@ -215,7 +215,7 @@ int main()
     //Setup viewport size
     glViewport(0, 0, bufferWidth, bufferHeight);
 
-    CreateObject();
+    CreatePyramid();
     CompileShaders();
 
     glm::mat4 projection = glm::perspective(45.0f, (GLfloat)bufferWidth/(GLfloat)bufferHeight, 0.1f, 100.0f);

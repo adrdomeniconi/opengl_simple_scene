@@ -2,6 +2,7 @@
 
 #include <GLM/glm.hpp>
 #include <GL/glew.h>
+#include <iostream>
 
 class Light
 {

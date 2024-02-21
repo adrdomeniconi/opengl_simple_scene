@@ -35,6 +35,7 @@ Camera camera;
 
 Texture brickTexture;
 Texture dirtTexture;
+Texture floorTexture;
 
 DirectionalLight mainLight;
 std::vector<PointLight*> pointLights;
@@ -106,7 +107,7 @@ void calculateAverageNormals(unsigned int *indices, unsigned int indicesCount, G
     normalizeVerticesNormals(vertices, verticesCount, verticesLength, normalOffset);
 }
 
-void CreateObject()
+void CreatePyramid()
 {
     unsigned int indices[] = {
         4, 1, 0,
@@ -155,16 +156,40 @@ void CreateObject()
     normalsList.push_back(normals);
 }
 
+void CreateFloor()
+{
+    unsigned int indices[] = {
+        0, 1, 3,
+        3, 1, 2 
+    };
+
+    GLfloat vertices[] = {
+    //    x      y      z     u     v     nx    ny    nz
+        -10.0f, 0.0f, -10.0f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 
+        -10.0f, 0.0f, 10.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 
+        10.0f, 0.0f, 10.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f, 
+        10.0f, 0.0f, -10.0f, 1.0f, 1.0f, 0.0f, 1.0f, 0.0f, 
+    };
+
+    const unsigned int indicesCount = sizeof(indices)/sizeof(GLfloat);
+    const unsigned int verticesDataCount = sizeof(vertices)/sizeof(unsigned int);
+
+    Mesh *mesh = new Mesh();
+    mesh -> CreateMesh(vertices, indices, verticesDataCount, indicesCount);
+    meshList.push_back(mesh);
+}
+
 int main() 
 {
     mainWindow = MainWindow(800, 600);
     mainWindow.Initialize();
 
-    CreateObject();
-    CreateObject();
+    CreatePyramid();
+    CreatePyramid();
+    CreateFloor();
     meshShader = new MeshShader(vertexShader, fragmentShader);
     lineShader = new LineShader(vertexLineShader, fragmentLineShader);
-    camera = Camera(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f), -90.0f, 0.0f, 5.0f, 0.1f);
+    camera = Camera(glm::vec3(0.0f, 0.5f, 2.0f), glm::vec3(0.0f, 1.0f, 0.0f), -90.0f, 0.0f, 5.0f, 0.1f);
 
     brickTexture = Texture("../textures/brick.png");
     brickTexture.LoadTexture();
@@ -172,13 +197,16 @@ int main()
     dirtTexture = Texture("../textures/dirt.png");
     dirtTexture.LoadTexture();
 
-    mainLight = DirectionalLight(1.0f, 1.0f, 1.0f, 0.2f, .5f, 1.0f, 1.5f, .4f);
+    floorTexture = Texture("../textures/plain.png");
+    floorTexture.LoadTexture();
 
-    PointLight pointLight1 = PointLight(1.0f, 0.0f, 0.0f, 0.0f, 0.6f, 1.0f, 0.5f, 0.0f, 0.3f, 0.2f, 0.1f);
+    mainLight = DirectionalLight(0.0f, 1.0f, 0.0f, 0.2f, 0.5f, 1.0f, 1.5f, .4f);
+
+    PointLight pointLight1 = PointLight(1.0f, 0.0f, 0.0f, 0.2f, 0.6f, 2.0f, 2.0f, 2.0f, 0.3f, 0.2f, 0.1f);
     pointLights.push_back(&pointLight1);
 
-    shinyMaterial = Material(1.0f, 64);
-    dullMaterial = Material(1.0f, 32);
+    shinyMaterial = Material(1.0f, 256);
+    dullMaterial = Material(0.2f, 32);
 
     GLuint uniformProjection = 0, 
            uniformModel = 0, 
@@ -232,51 +260,63 @@ int main()
         glUniform3f(uniformCameraPosition, camera.GetPosition().x, camera.GetPosition().y, camera.GetPosition().z);
 
         glm::mat4 model(1.0f);       
-        model = glm::translate(model, glm::vec3(0.0f, -.3, -2.0f));
-        model = glm::scale(model, glm::vec3(0.4f, 0.4f, 0.4f));
+        // model = glm::translate(model, glm::vec3(0.0f, 0.0, 0.0f));
+        // model = glm::scale(model, glm::vec3(0.4f, 0.4f, 0.4f));
 
-        glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-        shinyMaterial.Use(uniformSpecularIntensity, uniformSpecularShininess);
-        brickTexture.UseTexture();
+        // glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+        // shinyMaterial.Use(uniformSpecularIntensity, uniformSpecularShininess);
+        // brickTexture.UseTexture();
 
-        meshList[0] -> RenderMesh();
+        // meshList[0] -> RenderMesh();
 
-        // Normals
-        lineShader->UseShader();
+        // // Normals
+        // lineShader->UseShader();
 
-        glUniformMatrix4fv(lineShader->GetProjectionLocation(), 1, GL_FALSE, glm::value_ptr(projection));
-        glUniformMatrix4fv(lineShader->GetViewLocation(), 1, GL_FALSE, glm::value_ptr(camera.calculateViewMatrix()));
-        glUniformMatrix4fv(lineShader->GetModelLocation(), 1, GL_FALSE, glm::value_ptr(model));
+        // glUniformMatrix4fv(lineShader->GetProjectionLocation(), 1, GL_FALSE, glm::value_ptr(projection));
+        // glUniformMatrix4fv(lineShader->GetViewLocation(), 1, GL_FALSE, glm::value_ptr(camera.calculateViewMatrix()));
+        // glUniformMatrix4fv(lineShader->GetModelLocation(), 1, GL_FALSE, glm::value_ptr(model));
 
-        for(Line *normal : normalsList[0])
-        {
-            normal->Render();
-        }
+        // for(Line *normal : normalsList[0])
+        // {
+        //     normal->Render();
+        // }
 
-        //
+        // // Second Pyramid
+        // meshShader->UseShader();
+
+        // model = glm::mat4(1.0f);     
+        // model = glm::translate(model, glm::vec3(0.0f, .3, -1.5f));
+        // model = glm::scale(model, glm::vec3(0.2f, 0.2f, 0.2f));
+
+        // glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+        // dullMaterial.Use(uniformSpecularIntensity, uniformSpecularShininess);
+        // dirtTexture.UseTexture();
+
+        // meshList[1] -> RenderMesh();
+
+        // // Normals
+        // lineShader->UseShader();
+
+        // glUniformMatrix4fv(lineShader->GetProjectionLocation(), 1, GL_FALSE, glm::value_ptr(projection));
+        // glUniformMatrix4fv(lineShader->GetViewLocation(), 1, GL_FALSE, glm::value_ptr(camera.calculateViewMatrix()));
+        // glUniformMatrix4fv(lineShader->GetModelLocation(), 1, GL_FALSE, glm::value_ptr(model));
+
+        // for(Line *normal : normalsList[1])
+        // {
+        //     normal->Render();
+        // }
+
+        // Floor
         meshShader->UseShader();
 
         model = glm::mat4(1.0f);     
-        model = glm::translate(model, glm::vec3(0.0f, .3, -1.5f));
-        model = glm::scale(model, glm::vec3(0.2f, 0.2f, 0.2f));
+        model = glm::translate(model, glm::vec3(0.0f, -2.0f, 0.0f));
 
         glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
         dullMaterial.Use(uniformSpecularIntensity, uniformSpecularShininess);
-        dirtTexture.UseTexture();
+        floorTexture.UseTexture();
 
-        meshList[1] -> RenderMesh();
-
-        // Normals
-        lineShader->UseShader();
-
-        glUniformMatrix4fv(lineShader->GetProjectionLocation(), 1, GL_FALSE, glm::value_ptr(projection));
-        glUniformMatrix4fv(lineShader->GetViewLocation(), 1, GL_FALSE, glm::value_ptr(camera.calculateViewMatrix()));
-        glUniformMatrix4fv(lineShader->GetModelLocation(), 1, GL_FALSE, glm::value_ptr(model));
-
-        for(Line *normal : normalsList[1])
-        {
-            normal->Render();
-        }
+        meshList[2] -> RenderMesh();
 
         glUseProgram(0);
 

@@ -105,7 +105,7 @@ void CompileShaders() {
     uniformModel = glGetUniformLocation(shader, "xMove");
 }
 
-void CreateObject()
+void CreatePyramid()
 {
     GLfloat vertices[] = {
         -1.0f, -1.0f, 0.0f,
@@ -183,7 +183,7 @@ int main()
     //Setup viewport size
     glViewport(0, 0, bufferWidth, bufferHeight);
 
-    CreateObject();
+    CreatePyramid();
     CompileShaders();
 
     //Main while

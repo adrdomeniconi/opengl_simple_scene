@@ -77,7 +77,6 @@ void MeshShader::SetPointLights(const std::vector<PointLight*>& pointLights)
     
     for(const PointLight* pointLight : pointLights)
     {
-        std::cout << pointLightsCount << std::endl;
         pointLight->UseLight(uniformPointLight[pointLightsCount].ambientIntesity, 
                             uniformPointLight[pointLightsCount].ambientColour, 
                             uniformPointLight[pointLightsCount].diffuseIntesity, 
