@@ -20,6 +20,12 @@ struct DirectionalLight
     vec3 direction;
 };
 
+struct PointLight 
+{
+    Light base;
+    vec3 position;
+};
+
 struct Material
 {
     float specularIntensity;
@@ -30,6 +36,7 @@ struct Material
 uniform sampler2D input_texture;
 
 uniform DirectionalLight directionalLight;
+uniform PointLight pointLight;
 uniform Material material;
 uniform vec3 cameraPosition;
 
@@ -67,10 +74,22 @@ vec4 CalcLightByDirection(Light light, vec3 direction)
                                   
     return (ambientColour + diffuseColour + specularColour); 
 }
+
+vec4 CalcDirectionalLight()
+{
+    return CalcLightByDirection(directionalLight.base, directionalLight.direction);    
+}
+
+vec4 CalcPointLight()
+{
+    return vec4(0.0f, 0.0f, 0.0f, 0.0f);
+}
                                                                             
 void main()                                                                 
-{                                                            
-    colour = texture(input_texture, TexCoord) * CalcLightByDirection(directionalLight.base, directionalLight.direction);    
+{                              
+    vec4 lightColour = CalcDirectionalLight() + CalcPointLight();  
+
+    colour = texture(input_texture, TexCoord) * lightColour;
 
     //DEBUG
     // colour = vec4(Normal, 1.0);
