@@ -9,7 +9,7 @@ DirectionalLight::DirectionalLight(GLfloat red, GLfloat green, GLfloat blue, GLf
         
 }
 
-void DirectionalLight::UseLight(GLfloat ambientIntesityLocation, GLfloat ambientColourLocation, GLfloat diffuseIntensityLocation, GLfloat directionLocation)
+void DirectionalLight::UseLight(GLuint ambientIntesityLocation, GLuint ambientColourLocation, GLuint diffuseIntensityLocation, GLuint directionLocation)
 {
     // Just passes these values to locations on the shader
     glUniform3f(ambientColourLocation, colour.x, colour.y, colour.z);

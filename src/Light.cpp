@@ -8,7 +8,7 @@ Light::Light(GLfloat red, GLfloat green, GLfloat blue, GLfloat intensity, GLfloa
     ambientIntensity(intensity),
     diffuseIntensity(diffuseIntensity)  { }
 
-void Light::UseLight(GLfloat ambientIntesityLocation, GLfloat ambientColourLocation, GLfloat diffuseIntensityLocation)
+void Light::UseLight(GLfloat ambientIntesityLocation, GLfloat ambientColourLocation, GLfloat diffuseIntensityLocation) const
 {
     // Just passes these values to locations on the shader
     glUniform3f(ambientColourLocation, colour.x, colour.y, colour.z);

@@ -18,20 +18,15 @@ public:
 
     MeshShader(const char* vertexShaderLocation, const char* fragmentShaderLocation);
 
-
     GLuint GetProjectionLocation();
     GLuint GetModelLocation();
     GLuint GetViewLocation();
-    GLuint GetAmbientIntensityLocation();
-    GLuint GetAmbientColourLocation();
-    GLuint GetDiffuseIntensityLocation();
-    GLuint GetDirectionLocation();
     GLuint GetCameraPositionLocation();
     GLuint GetSpecularIntensityLocation();
     GLuint GetSpecularShininessLocation();
 
     void SetDirectionalLight(DirectionalLight *directionalLight);
-    void AddPointLight(PointLight *pointLight);
+    void SetPointLights(const std::vector<PointLight*>& pointLights);
 
     void UseShader();
     void ClearShader();
@@ -61,7 +56,7 @@ private:
 
     } uniformPointLight[MAX_POINT_LIGHTS_COUNT];
 
-    GLuint uniformProjection, uniformModel, uniformView, uniformCameraPosition, uniformSpecularIntensity, uniformSpecularShininess;
+    GLuint uniformProjection, uniformModel, uniformView, uniformCameraPosition, uniformSpecularIntensity, uniformSpecularShininess, uniformPointLightsCount;
 
     void getPointLightUniformLocations(GLuint shaderID);
     void getDirectionalLightUniformLocations(GLuint shaderID);

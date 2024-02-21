@@ -39,6 +39,8 @@ void MeshShader::getPointLightUniformLocations(GLuint shaderID)
         uniformPointLight[i].linear = glGetUniformLocation(shaderID, ("pointLight[" + std::to_string(i) + "].base.linear").c_str());
         uniformPointLight[i].exponent = glGetUniformLocation(shaderID, ("pointLight[" + std::to_string(i) + "].base.exponent").c_str());
     }
+    uniformPointLightsCount = glGetUniformLocation(shaderID, "pointLightsCount");
+
 }
 
 void MeshShader::UseShader()
@@ -49,8 +51,6 @@ void MeshShader::UseShader()
 void MeshShader::ClearShader()
 {
     shader.ClearShader();
-    uniformModel = 0;
-    uniformProjection = 0;
 }
 
 GLuint MeshShader::GetProjectionLocation() { return uniformProjection; }
@@ -70,21 +70,25 @@ void MeshShader::SetDirectionalLight(DirectionalLight *directionalLight)
     directionalLight->UseLight(uniformDirectionalLight.ambientIntesity, uniformDirectionalLight.ambientColour, uniformDirectionalLight.diffuseIntesity, uniformDirectionalLight.direction);
 }
 
-void MeshShader::AddPointLight(PointLight *pointLight)
+void MeshShader::SetPointLights(const std::vector<PointLight*>& pointLights)
 {
-    if(pointLightsCount >= MAX_POINT_LIGHTS_COUNT) 
+    if(pointLights.size() > MAX_POINT_LIGHTS_COUNT) 
         throw std::runtime_error("Max point light count reached. Cannot add nother point light.");
     
+    for(const PointLight* pointLight : pointLights)
+    {
+        pointLight->UseLight(uniformPointLight[pointLightsCount].ambientIntesity, 
+                            uniformPointLight[pointLightsCount].ambientColour, 
+                            uniformPointLight[pointLightsCount].diffuseIntesity, 
+                            uniformPointLight[pointLightsCount].position, 
+                            uniformPointLight[pointLightsCount].constant, 
+                            uniformPointLight[pointLightsCount].linear, 
+                            uniformPointLight[pointLightsCount].exponent);
+    }
     
-    pointLight->UseLight(uniformPointLight[pointLightsCount].ambientIntesity, 
-                         uniformPointLight[pointLightsCount].ambientColour, 
-                         uniformPointLight[pointLightsCount].diffuseIntesity, 
-                         uniformPointLight[pointLightsCount].position, 
-                         uniformPointLight[pointLightsCount].constant, 
-                         uniformPointLight[pointLightsCount].linear, 
-                         uniformPointLight[pointLightsCount].exponent);
 
-    pointLightsCount++;
+    pointLightsCount = pointLights.size();
+    glUniform1i(uniformPointLightsCount, pointLightsCount);
 }
 
 MeshShader::~MeshShader()

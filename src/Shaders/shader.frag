@@ -7,6 +7,8 @@ in vec4 WorldPosition;
 
 out vec4 colour;  
 
+const int MAX_POINT_LIGHTS_COUNT = 3;
+
 struct Light
 {
     vec3 colour;
@@ -36,7 +38,9 @@ struct Material
 uniform sampler2D input_texture;
 
 uniform DirectionalLight directionalLight;
-uniform PointLight pointLight;
+uniform PointLight pointLights[MAX_POINT_LIGHTS_COUNT];
+uniform int pointLightsCount;
+
 uniform Material material;
 uniform vec3 cameraPosition;
 
@@ -80,14 +84,23 @@ vec4 CalcDirectionalLight()
     return CalcLightByDirection(directionalLight.base, directionalLight.direction);    
 }
 
-vec4 CalcPointLight()
+vec4 CalcPointLight(PointLight pointLight)
 {
-    return vec4(0.0f, 0.0f, 0.0f, 0.0f);
+    vec4 pointLightFactor = vec4(0.0f, 0.0f, 0.0f, 0.0f);
+
+    vec3 direction = WorldPosition.xyz - pointLight.position;
+    pointLightFactor += CalcLightByDirection(pointLight.base, direction);
+
+    return pointLightFactor;
 }
                                                                             
 void main()                                                                 
 {                              
-    vec4 lightColour = CalcDirectionalLight() + CalcPointLight();  
+    vec4 lightColour = CalcDirectionalLight();
+    // for(int i = 0; i < pointLightsCount; i++)
+    // {
+    //     lightColour += CalcPointLight(pointLights[i]);
+    // }
 
     colour = texture(input_texture, TexCoord) * lightColour;
 

@@ -20,6 +20,7 @@
 #include "Camera.h"
 #include "Texture.h"
 #include "DirectionalLight.h"
+#include "PointLight.h"
 #include "Material.h"
 #include "Line.h"
 
@@ -36,6 +37,7 @@ Texture brickTexture;
 Texture dirtTexture;
 
 DirectionalLight mainLight;
+std::vector<PointLight*> pointLights;
 
 Material shinyMaterial;
 Material dullMaterial;
@@ -172,6 +174,9 @@ int main()
 
     mainLight = DirectionalLight(1.0f, 1.0f, 1.0f, 0.2f, .5f, 1.0f, 1.5f, .4f);
 
+    PointLight pointLight1 = PointLight(1.0f, 0.0f, 0.0f, 0.2f, 0.6f, 1.0f, 0.5f, 0.0f, 0.3f, 0.2f, 0.1f);
+    pointLights.push_back(&pointLight1);
+
     shinyMaterial = Material(1.0f, 64);
     dullMaterial = Material(1.0f, 32);
 
@@ -212,14 +217,15 @@ int main()
         //Run the program using the specified shader
         meshShader->UseShader();
 
+        meshShader->SetDirectionalLight(&mainLight);
+        // meshShader->SetPointLights(pointLights);
+
         uniformModel = meshShader->GetModelLocation();
         uniformProjection = meshShader->GetProjectionLocation();
         uniformView = meshShader->GetViewLocation();
         uniformCameraPosition = meshShader->GetCameraPositionLocation();
         uniformSpecularIntensity = meshShader->GetSpecularIntensityLocation();
         uniformSpecularShininess = meshShader->GetSpecularShininessLocation();
-
-        meshShader->SetDirectionalLight(&mainLight);
 
         glUniformMatrix4fv(uniformProjection, 1, GL_FALSE, glm::value_ptr(projection));
         glUniformMatrix4fv(uniformView, 1, GL_FALSE, glm::value_ptr(camera.calculateViewMatrix()));
