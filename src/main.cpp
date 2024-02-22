@@ -200,13 +200,13 @@ int main()
     floorTexture = Texture("../textures/plain.png");
     floorTexture.LoadTexture();
 
-    mainLight = DirectionalLight(0.0f, 1.0f, 0.0f, 0.2f, 0.5f, 1.0f, 1.5f, .4f);
+    mainLight = DirectionalLight(0.0f, 1.0f, 0.0f, 0.2f, 0.5f, -1.0f, 1.5f, 0.4f);
 
     PointLight pointLight1 = PointLight(1.0f, 0.0f, 0.0f, 0.2f, 0.6f, 2.0f, 2.0f, 2.0f, 0.3f, 0.2f, 0.1f);
     pointLights.push_back(&pointLight1);
 
-    shinyMaterial = Material(1.0f, 256);
-    dullMaterial = Material(0.2f, 32);
+    shinyMaterial = Material(4.0f, 256);
+    dullMaterial = Material(0.3f, 4);
 
     GLuint uniformProjection = 0, 
            uniformModel = 0, 
@@ -260,51 +260,51 @@ int main()
         glUniform3f(uniformCameraPosition, camera.GetPosition().x, camera.GetPosition().y, camera.GetPosition().z);
 
         glm::mat4 model(1.0f);       
-        // model = glm::translate(model, glm::vec3(0.0f, 0.0, 0.0f));
-        // model = glm::scale(model, glm::vec3(0.4f, 0.4f, 0.4f));
+        model = glm::translate(model, glm::vec3(0.0f, 0.0, 0.0f));
+        model = glm::scale(model, glm::vec3(0.4f, 0.4f, 0.4f));
 
-        // glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-        // shinyMaterial.Use(uniformSpecularIntensity, uniformSpecularShininess);
-        // brickTexture.UseTexture();
+        glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+        shinyMaterial.Use(uniformSpecularIntensity, uniformSpecularShininess);
+        brickTexture.UseTexture();
 
-        // meshList[0] -> RenderMesh();
+        meshList[0] -> RenderMesh();
 
-        // // Normals
-        // lineShader->UseShader();
+        // Normals
+        lineShader->UseShader();
 
-        // glUniformMatrix4fv(lineShader->GetProjectionLocation(), 1, GL_FALSE, glm::value_ptr(projection));
-        // glUniformMatrix4fv(lineShader->GetViewLocation(), 1, GL_FALSE, glm::value_ptr(camera.calculateViewMatrix()));
-        // glUniformMatrix4fv(lineShader->GetModelLocation(), 1, GL_FALSE, glm::value_ptr(model));
+        glUniformMatrix4fv(lineShader->GetProjectionLocation(), 1, GL_FALSE, glm::value_ptr(projection));
+        glUniformMatrix4fv(lineShader->GetViewLocation(), 1, GL_FALSE, glm::value_ptr(camera.calculateViewMatrix()));
+        glUniformMatrix4fv(lineShader->GetModelLocation(), 1, GL_FALSE, glm::value_ptr(model));
 
-        // for(Line *normal : normalsList[0])
-        // {
-        //     normal->Render();
-        // }
+        for(Line *normal : normalsList[0])
+        {
+            normal->Render();
+        }
 
-        // // Second Pyramid
-        // meshShader->UseShader();
+        // Second Pyramid
+        meshShader->UseShader();
 
-        // model = glm::mat4(1.0f);     
-        // model = glm::translate(model, glm::vec3(0.0f, .3, -1.5f));
-        // model = glm::scale(model, glm::vec3(0.2f, 0.2f, 0.2f));
+        model = glm::mat4(1.0f);     
+        model = glm::translate(model, glm::vec3(0.0f, .3, -1.5f));
+        model = glm::scale(model, glm::vec3(0.2f, 0.2f, 0.2f));
 
-        // glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-        // dullMaterial.Use(uniformSpecularIntensity, uniformSpecularShininess);
-        // dirtTexture.UseTexture();
+        glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+        dullMaterial.Use(uniformSpecularIntensity, uniformSpecularShininess);
+        dirtTexture.UseTexture();
 
-        // meshList[1] -> RenderMesh();
+        meshList[1] -> RenderMesh();
 
-        // // Normals
-        // lineShader->UseShader();
+        // Normals
+        lineShader->UseShader();
 
-        // glUniformMatrix4fv(lineShader->GetProjectionLocation(), 1, GL_FALSE, glm::value_ptr(projection));
-        // glUniformMatrix4fv(lineShader->GetViewLocation(), 1, GL_FALSE, glm::value_ptr(camera.calculateViewMatrix()));
-        // glUniformMatrix4fv(lineShader->GetModelLocation(), 1, GL_FALSE, glm::value_ptr(model));
+        glUniformMatrix4fv(lineShader->GetProjectionLocation(), 1, GL_FALSE, glm::value_ptr(projection));
+        glUniformMatrix4fv(lineShader->GetViewLocation(), 1, GL_FALSE, glm::value_ptr(camera.calculateViewMatrix()));
+        glUniformMatrix4fv(lineShader->GetModelLocation(), 1, GL_FALSE, glm::value_ptr(model));
 
-        // for(Line *normal : normalsList[1])
-        // {
-        //     normal->Render();
-        // }
+        for(Line *normal : normalsList[1])
+        {
+            normal->Render();
+        }
 
         // Floor
         meshShader->UseShader();
@@ -313,7 +313,7 @@ int main()
         model = glm::translate(model, glm::vec3(0.0f, -2.0f, 0.0f));
 
         glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-        dullMaterial.Use(uniformSpecularIntensity, uniformSpecularShininess);
+        shinyMaterial.Use(uniformSpecularIntensity, uniformSpecularShininess);
         floorTexture.UseTexture();
 
         meshList[2] -> RenderMesh();

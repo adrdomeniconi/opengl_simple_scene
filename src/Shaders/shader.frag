@@ -42,6 +42,7 @@ uniform sampler2D input_texture;
 
 uniform DirectionalLight directionalLight;
 uniform PointLight pointLights[MAX_POINT_LIGHTS_COUNT];
+
 uniform int pointLightsCount;
 
 uniform Material material;
@@ -54,6 +55,7 @@ vec4 CalculateSpecularColour(float diffuseFactor)
     if(diffuseFactor > 0.0f)
     {
         vec3 fragmentPosition = WorldPosition.xyz;
+
         vec3 fragmentToCameraDirection = normalize(cameraPosition - fragmentPosition);
         vec3 reflectedVertexDirection = normalize(reflect(directionalLight.direction, normalize(Normal)));
 
@@ -96,9 +98,7 @@ vec4 CalcPointLight(PointLight pointLight)
     direction = normalize(direction);
 
     pointLightFactor += CalcLightByDirection(pointLight.base, direction);
-    // float attenuation = pointLight.exponent * distance * distance + pointLight.linear * distance + pointLight.constant;
-
-    float attenuation = 1.0f;
+    float attenuation = pointLight.exponent * distance * distance + pointLight.linear * distance + pointLight.constant;
 
     return pointLightFactor/attenuation;
 }

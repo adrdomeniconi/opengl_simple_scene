@@ -17,6 +17,7 @@ MeshShader::MeshShader(const char* vertexShaderLocation, const char* fragmentSha
 
     getDirectionalLightUniformLocations(shaderID);
     getPointLightUniformLocations(shaderID);
+    pointLightsCount = 0;
 }
 
 void MeshShader::getDirectionalLightUniformLocations(GLuint shaderID)
@@ -34,10 +35,10 @@ void MeshShader::getPointLightUniformLocations(GLuint shaderID)
         uniformPointLight[i].ambientColour = glGetUniformLocation(shaderID, ("pointLights[" + std::to_string(i) + "].base.colour").c_str());
         uniformPointLight[i].ambientIntesity = glGetUniformLocation(shaderID, ("pointLights[" + std::to_string(i) + "].base.ambientIntensity").c_str());
         uniformPointLight[i].diffuseIntesity = glGetUniformLocation(shaderID, ("pointLights[" + std::to_string(i) + "].base.diffuseIntensity").c_str());
-        uniformPointLight[i].position = glGetUniformLocation(shaderID, ("pointLights[" + std::to_string(i) + "].base.position").c_str());
-        uniformPointLight[i].constant = glGetUniformLocation(shaderID, ("pointLights[" + std::to_string(i) + "].base.constant").c_str());
-        uniformPointLight[i].linear = glGetUniformLocation(shaderID, ("pointLights[" + std::to_string(i) + "].base.linear").c_str());
-        uniformPointLight[i].exponent = glGetUniformLocation(shaderID, ("pointLights[" + std::to_string(i) + "].base.exponent").c_str());
+        uniformPointLight[i].position = glGetUniformLocation(shaderID, ("pointLights[" + std::to_string(i) + "].position").c_str());
+        uniformPointLight[i].constant = glGetUniformLocation(shaderID, ("pointLights[" + std::to_string(i) + "].constant").c_str());
+        uniformPointLight[i].linear = glGetUniformLocation(shaderID, ("pointLights[" + std::to_string(i) + "].linear").c_str());
+        uniformPointLight[i].exponent = glGetUniformLocation(shaderID, ("pointLights[" + std::to_string(i) + "].exponent").c_str());
     }
     uniformPointLightsCount = glGetUniformLocation(shaderID, "pointLightsCount");
 
@@ -75,15 +76,17 @@ void MeshShader::SetPointLights(const std::vector<PointLight*>& pointLights)
     if(pointLights.size() > MAX_POINT_LIGHTS_COUNT) 
         throw std::runtime_error("Max point light count reached. Cannot add nother point light.");
     
+    unsigned int idx = 0;
     for(const PointLight* pointLight : pointLights)
     {
-        pointLight->UseLight(uniformPointLight[pointLightsCount].ambientIntesity, 
-                            uniformPointLight[pointLightsCount].ambientColour, 
-                            uniformPointLight[pointLightsCount].diffuseIntesity, 
-                            uniformPointLight[pointLightsCount].position, 
-                            uniformPointLight[pointLightsCount].constant, 
-                            uniformPointLight[pointLightsCount].linear, 
-                            uniformPointLight[pointLightsCount].exponent);
+        pointLight->UseLight(uniformPointLight[idx].ambientIntesity, 
+                            uniformPointLight[idx].ambientColour, 
+                            uniformPointLight[idx].diffuseIntesity, 
+                            uniformPointLight[idx].position, 
+                            uniformPointLight[idx].constant, 
+                            uniformPointLight[idx].linear, 
+                            uniformPointLight[idx].exponent);
+        ++idx;
     }
     
 
