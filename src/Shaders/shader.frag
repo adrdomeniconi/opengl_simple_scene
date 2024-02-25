@@ -18,13 +18,13 @@ struct Light
 
 struct DirectionalLight 
 {
-    Light base;
+    Light light;
     vec3 direction;
 };
 
 struct PointLight 
 {
-    Light base;
+    Light light;
     vec3 position;
     float constant;
     float linear;
@@ -64,7 +64,7 @@ vec4 CalculateSpecularColour(float diffuseFactor)
         {
             specularFactor = pow(specularFactor, material.shininess);
 
-            specularColour = vec4(directionalLight.base.colour * material.specularIntensity * specularFactor, 1.0);
+            specularColour = vec4(directionalLight.light.colour * material.specularIntensity * specularFactor, 1.0);
         }
     }
     return specularColour;
@@ -86,7 +86,7 @@ vec4 CalcLightByDirection(Light light, vec3 direction)
 
 vec4 CalcDirectionalLight()
 {
-    return CalcLightByDirection(directionalLight.base, directionalLight.direction);    
+    return CalcLightByDirection(directionalLight.light, directionalLight.direction);    
 }
 
 vec4 CalcPointLight(PointLight pointLight)
@@ -97,7 +97,7 @@ vec4 CalcPointLight(PointLight pointLight)
     float distance = length(direction);
     direction = normalize(direction);
 
-    pointLightFactor += CalcLightByDirection(pointLight.base, direction);
+    pointLightFactor += CalcLightByDirection(pointLight.light, direction);
     float attenuation = pointLight.exponent * distance * distance + pointLight.linear * distance + pointLight.constant;
 
     return pointLightFactor/attenuation;

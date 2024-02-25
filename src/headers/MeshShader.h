@@ -10,11 +10,13 @@
 #include "Shader.h"
 #include "DirectionalLight.h"
 #include "PointLight.h"
+#include "SpotLight.h"
 
 class MeshShader
 {
 public:
     static const unsigned int MAX_POINT_LIGHTS_COUNT = 3;
+    static const unsigned int MAX_SPOT_LIGHTS_COUNT = 3;
 
     MeshShader(const char* vertexShaderLocation, const char* fragmentShaderLocation);
 
@@ -26,7 +28,8 @@ public:
     GLuint GetSpecularShininessLocation();
 
     void SetDirectionalLight(DirectionalLight *directionalLight);
-    void SetPointLights(const std::vector<PointLight*>& pointLights);
+    void SetPointLights(const std::vector<PointLight>& pointLights);
+    void SetSpotLights(const std::vector<SpotLight>& spotLights);
 
     void UseShader();
     void ClearShader();
@@ -36,6 +39,7 @@ public:
 private:
     Shader shader;
     unsigned int pointLightsCount;
+    unsigned int spotLightsCount;
 
     struct {
         GLfloat ambientIntesity;
@@ -54,10 +58,30 @@ private:
         GLfloat linear; 
         GLfloat exponent;
 
-    } uniformPointLight[MAX_POINT_LIGHTS_COUNT];
+    } uniformPointLights[MAX_POINT_LIGHTS_COUNT];
 
-    GLuint uniformProjection, uniformModel, uniformView, uniformCameraPosition, uniformSpecularIntensity, uniformSpecularShininess, uniformPointLightsCount;
+    GLfloat uniformPointLightsCount;
 
-    void getPointLightUniformLocations(GLuint shaderID);
-    void getDirectionalLightUniformLocations(GLuint shaderID);
+    struct {
+        GLfloat ambientIntesity;
+        GLfloat ambientColour;
+        GLfloat diffuseIntesity;
+
+        GLfloat position; 
+        GLfloat constant; 
+        GLfloat linear; 
+        GLfloat exponent;
+
+        GLfloat direction;
+        GLfloat coneAngle;
+    } uniformSpotLights[MAX_SPOT_LIGHTS_COUNT];
+
+    GLfloat uniformSpotLightsCount;
+
+    GLuint shaderID;
+    GLuint uniformProjection, uniformModel, uniformView, uniformCameraPosition, uniformSpecularIntensity, uniformSpecularShininess;
+
+    void getPointLightUniformLocations();
+    void getSpotLightUniformLocations();
+    void getDirectionalLightUniformLocations();
 };

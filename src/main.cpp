@@ -38,7 +38,7 @@ Texture dirtTexture;
 Texture floorTexture;
 
 DirectionalLight mainLight;
-std::vector<PointLight*> pointLights;
+std::vector<PointLight> pointLights;
 
 Material shinyMaterial;
 Material dullMaterial;
@@ -203,7 +203,7 @@ int main()
     mainLight = DirectionalLight(0.0f, 1.0f, 0.0f, 0.2f, 0.5f, -1.0f, 1.5f, 0.4f);
 
     PointLight pointLight1 = PointLight(1.0f, 0.0f, 0.0f, 0.2f, 0.7f, 2.0f, 1.5f, 2.0f, 0.3f, 0.2f, 0.1f);
-    pointLights.push_back(&pointLight1);
+    pointLights.push_back(pointLight1);
 
     shinyMaterial = Material(4.0f, 256);
     dullMaterial = Material(0.3f, 4);
