@@ -8,6 +8,7 @@ in vec4 WorldPosition;
 out vec4 colour;  
 
 const int MAX_POINT_LIGHTS_COUNT = 3;
+const int MAX_SPOT_LIGHTS_COUNT = 3;
 
 struct Light
 {
@@ -31,6 +32,13 @@ struct PointLight
     float exponent;
 };
 
+struct SpotLight 
+{
+    PointLight pointLight;
+    vec3 direction;
+    float coneAngle;
+};
+
 struct Material
 {
     float specularIntensity;
@@ -42,8 +50,10 @@ uniform sampler2D input_texture;
 
 uniform DirectionalLight directionalLight;
 uniform PointLight pointLights[MAX_POINT_LIGHTS_COUNT];
+uniform SpotLight spotLights[MAX_SPOT_LIGHTS_COUNT];
 
 uniform int pointLightsCount;
+uniform int spotLightsCount;
 
 uniform Material material;
 uniform vec3 cameraPosition;
@@ -102,6 +112,21 @@ vec4 CalcPointLight(PointLight pointLight)
 
     return pointLightFactor/attenuation;
 }
+
+vec4 CalcSpotLight(SpotLight spotLight)
+{
+    vec4 spotLightFactor = vec4(0.0f, 0.0f, 0.0f, 0.0f);
+
+    vec3 fragmentToLight = normalize(spotLight.pointLight.position - WorldPosition.xyz);
+    float directionFactor = dot(fragmentToLight, normalize(spotLight.direction));
+
+    if(directionFactor < spotLight.coneAngle)
+    {
+        spotLightFactor += CalcLightByDirection(spotLight.pointLight.light, spotLight.direction);
+    }
+
+    return spotLightFactor;
+}
                                                                             
 void main()                                                                 
 {                              
@@ -109,6 +134,11 @@ void main()
     for(int i = 0; i < pointLightsCount; i++)
     {
         lightColour += CalcPointLight(pointLights[i]);
+    }
+
+    for(int i = 0; i < spotLightsCount; i++)
+    {
+        lightColour += CalcSpotLight(spotLights[i]);
     }
 
     colour = texture(input_texture, TexCoord) * lightColour;

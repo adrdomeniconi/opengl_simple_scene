@@ -13,6 +13,8 @@ public:
 
     void UseLight(GLuint ambientIntensityLocation, GLuint ambientColourLocation, GLuint diffuseIntensityLocation, GLuint positionLocation, GLuint constantLocation, GLuint linearLocation, GLuint exponentLocation, GLuint directionLocation, GLuint coneAngleLocation) const;
 
+    void SetDirection(glm::vec3 dir);
+
     ~SpotLight();
 
 private:

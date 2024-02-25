@@ -17,6 +17,11 @@ void SpotLight::UseLight(GLuint ambientIntensityLocation, GLuint ambientColourLo
     glUniform1f(coneAngleLocation, coneAngleProcessed);
 }
 
+void SpotLight::SetDirection(glm::vec3 dir)
+{
+    direction = dir;
+}
+
 SpotLight::~SpotLight()
 {
 }

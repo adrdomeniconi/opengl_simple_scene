@@ -130,7 +130,6 @@ void MeshShader::SetSpotLights(const std::vector<SpotLight> &spotLights)
         ++idx;
     }
     
-
     spotLightsCount = spotLights.size();
     glUniform1i(uniformSpotLightsCount, spotLightsCount);
 }
