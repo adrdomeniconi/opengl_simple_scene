@@ -2,7 +2,7 @@
 
 PointLight::PointLight() : PointLight(1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f) { }
 
-PointLight::PointLight(GLfloat red, GLfloat green, GLfloat blue, GLfloat ambientIntensity, GLfloat diffuseIntensity, GLfloat xPos, GLfloat yPos, GLfloat zPos, GLfloat constant, GLfloat linear, GLfloat exponent) : 
+PointLight::PointLight(GLfloat red, GLfloat green, GLfloat blue, GLfloat ambientIntensity, GLfloat diffuseIntensity, GLfloat xPos, GLfloat yPos, GLfloat zPos, GLfloat exponent, GLfloat linear, GLfloat constant) : 
     Light(red, green, blue, ambientIntensity, diffuseIntensity), 
     position(glm::vec3(xPos, yPos, zPos)), 
     constant(constant), 

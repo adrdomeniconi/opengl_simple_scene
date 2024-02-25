@@ -2,8 +2,8 @@
 
 SpotLight::SpotLight() : SpotLight(1.0f, 1.0f, 1.0f, 0.0, 0.5, 0.0f, 0.0f, 0.0f, .3f, .2f, .1f, 0.0f, -1.0f, 0.0f, 45) { }
 
-SpotLight::SpotLight(GLfloat red, GLfloat green, GLfloat blue, GLfloat ambientIntensity, GLfloat diffuseIntensity, GLfloat xPos, GLfloat yPos, GLfloat zPos, GLfloat constant, GLfloat linear, GLfloat exponent, GLfloat xDir, GLfloat yDir, GLfloat zDir, GLfloat coneAngle) : 
-    PointLight(red, green, blue, ambientIntensity, diffuseIntensity, xPos, yPos, zPos, constant, linear, exponent), 
+SpotLight::SpotLight(GLfloat red, GLfloat green, GLfloat blue, GLfloat ambientIntensity, GLfloat diffuseIntensity, GLfloat xPos, GLfloat yPos, GLfloat zPos, GLfloat exponent, GLfloat linear, GLfloat constant, GLfloat xDir, GLfloat yDir, GLfloat zDir, GLfloat coneAngle) : 
+    PointLight(red, green, blue, ambientIntensity, diffuseIntensity, xPos, yPos, zPos, exponent, linear, constant), 
     coneAngle(coneAngle), 
     direction(glm::vec3(xDir, yDir, zDir)), 
     coneAngleProcessed(cosf(glm::radians(coneAngle)))

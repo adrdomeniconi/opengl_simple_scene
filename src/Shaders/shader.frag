@@ -58,6 +58,10 @@ uniform int spotLightsCount;
 uniform Material material;
 uniform vec3 cameraPosition;
 
+float mapValueInRange(float x, float in_min, float in_max, float out_min, float out_max) {
+    return out_min + (x - in_min) * (out_max - out_min) / (in_max - in_min);
+}
+
 vec4 CalculateSpecularColour(float diffuseFactor)
 {
     vec4 specularColour = vec4(0, 0, 0, 0);
@@ -120,18 +124,19 @@ vec4 CalcSpotLight(SpotLight spotLight)
     vec3 lightToFragment = normalize(WorldPosition.xyz - spotLight.pointLight.position);
     float directionFactor = dot(lightToFragment, normalize(spotLight.direction));
 
-    // if(directionFactor > spotLight.coneAngle)
-    // {
-    //     spotLightFactor += CalcPointLight(spotLight.pointLight);
-    // }
-
-    if (directionFactor > spotLight.coneAngle) {
-        spotLightFactor = vec4(1.0, 0.0, 0.0, 1.0); // Debug: Red for inside the cone
-    } else {
-        spotLightFactor = vec4(0.0, 0.0, 1.0, 1.0); // Debug: Blue for outside the cone
+    if(directionFactor > spotLight.coneAngle)
+    {
+        spotLightFactor += CalcPointLight(spotLight.pointLight);
     }
 
-    return spotLightFactor;
+    // if (directionFactor > spotLight.coneAngle) {
+    //     spotLightFactor = vec4(1.0, 0.0, 0.0, 1.0); // Debug: Red for inside the cone
+    // } else {
+    //     spotLightFactor = vec4(0.0, 0.0, 1.0, 1.0); // Debug: Blue for outside the cone
+    // }
+    // return spotLightFactor;
+
+    return spotLightFactor * mapValueInRange(directionFactor, spotLight.coneAngle, 1.0f, 0.0f, 1.0f);
 }
                                                                             
 void main()                                                                 
