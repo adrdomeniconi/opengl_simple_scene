@@ -202,7 +202,7 @@ int main()
 
     mainLight = DirectionalLight(0.0f, 1.0f, 0.0f, 0.2f, 0.5f, -1.0f, 1.5f, 0.4f);
 
-    PointLight pointLight1 = PointLight(1.0f, 0.0f, 0.0f, 0.2f, 0.6f, 2.0f, 2.0f, 2.0f, 0.3f, 0.2f, 0.1f);
+    PointLight pointLight1 = PointLight(1.0f, 0.0f, 0.0f, 0.2f, 0.7f, 2.0f, 1.5f, 2.0f, 0.3f, 0.2f, 0.1f);
     pointLights.push_back(&pointLight1);
 
     shinyMaterial = Material(4.0f, 256);
@@ -314,7 +314,7 @@ int main()
 
         glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
         shinyMaterial.Use(uniformSpecularIntensity, uniformSpecularShininess);
-        floorTexture.UseTexture();
+        dirtTexture.UseTexture();
 
         meshList[2] -> RenderMesh();
 
