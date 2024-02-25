@@ -5,7 +5,7 @@ SpotLight::SpotLight() : SpotLight(1.0f, 1.0f, 1.0f, 0.0, 0.5, 0.0f, 0.0f, 0.0f,
 SpotLight::SpotLight(GLfloat red, GLfloat green, GLfloat blue, GLfloat ambientIntensity, GLfloat diffuseIntensity, GLfloat xPos, GLfloat yPos, GLfloat zPos, GLfloat constant, GLfloat linear, GLfloat exponent, GLfloat xDir, GLfloat yDir, GLfloat zDir, GLfloat coneAngle) : 
     PointLight(red, green, blue, ambientIntensity, diffuseIntensity, xPos, yPos, zPos, constant, linear, exponent), 
     coneAngle(coneAngle), 
-    direction(glm::vec3(yDir, xDir, zDir)), 
+    direction(glm::vec3(xDir, yDir, zDir)), 
     coneAngleProcessed(cosf(glm::radians(coneAngle)))
 {
 }
@@ -23,15 +23,15 @@ void SpotLight::UseLight(GLuint ambientIntensityLocation, GLuint ambientColourLo
     // std::cout << "directionLocation: " << directionLocation << std::endl;
     // std::cout << "coneAngleLocation: " << coneAngleLocation << std::endl;
 
-    std::cout << "colour: " << colour.x << ", " << colour.y << ", " << colour.z << ", " << std::endl;
-    std::cout << "ambientIntensity: " << ambientIntensity << std::endl;
-    std::cout << "diffuseIntensity: " << diffuseIntensity << std::endl;
-    std::cout << "position: " << position.x << ", " << position.y << ", " << position.z << ", " << std::endl;
-    std::cout << "constant: " << constant << std::endl;
-    std::cout << "linear: " << linear << std::endl;
-    std::cout << "exponent: " << exponent << std::endl;
-    std::cout << "direction: " << direction.x << ", " << direction.y << ", " << direction.z << ", " << std::endl;
-    std::cout << "coneAngleProcessed: " << coneAngleProcessed << std::endl;
+    // std::cout << "colour: " << colour.x << ", " << colour.y << ", " << colour.z << ", " << std::endl;
+    // std::cout << "ambientIntensity: " << ambientIntensity << std::endl;
+    // std::cout << "diffuseIntensity: " << diffuseIntensity << std::endl;
+    // std::cout << "position: " << position.x << ", " << position.y << ", " << position.z << ", " << std::endl;
+    // std::cout << "constant: " << constant << std::endl;
+    // std::cout << "linear: " << linear << std::endl;
+    // std::cout << "exponent: " << exponent << std::endl;
+    // std::cout << "direction: " << direction.x << ", " << direction.y << ", " << direction.z << ", " << std::endl;
+    // std::cout << "coneAngleProcessed: " << coneAngleProcessed << std::endl;
 
     PointLight::UseLight(ambientIntensityLocation, ambientColourLocation, diffuseIntensityLocation, positionLocation, constantLocation, linearLocation, exponentLocation);
     glUniform3f(directionLocation, direction.x, direction.y, direction.z);
@@ -41,6 +41,10 @@ void SpotLight::UseLight(GLuint ambientIntensityLocation, GLuint ambientColourLo
 void SpotLight::SetDirection(glm::vec3 dir)
 {
     direction = dir;
+}
+void SpotLight::SetPosition(glm::vec3 pos)
+{
+    position = pos;
 }
 
 SpotLight::~SpotLight()

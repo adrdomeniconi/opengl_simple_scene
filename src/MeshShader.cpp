@@ -57,7 +57,7 @@ void MeshShader::getSpotLightUniformLocations()
         uniformSpotLights[i].direction = glGetUniformLocation(shaderID, ("spotLights[" + std::to_string(i) + "].direction").c_str());
         uniformSpotLights[i].coneAngle = glGetUniformLocation(shaderID, ("spotLights[" + std::to_string(i) + "].coneAngle").c_str());
     }
-    uniformSpotLightsCount = glGetUniformLocation(shaderID, "pointLightsCount");
+    uniformSpotLightsCount = glGetUniformLocation(shaderID, "spotLightsCount");
 }
 
 void MeshShader::UseShader()
@@ -131,6 +131,8 @@ void MeshShader::SetSpotLights(const std::vector<std::shared_ptr<SpotLight>> &sp
     }
     
     spotLightsCount = spotLights.size();
+
+    // std::cout << "Spotlights count: " << spotLightsCount << std::endl; 
     glUniform1i(uniformSpotLightsCount, spotLightsCount);
 }
 

@@ -209,7 +209,7 @@ int main()
     auto pointLight1 = std::make_shared<PointLight>(1.0f, 0.0f, 0.0f, 0.2f, 0.7f, 2.0f, 1.5f, 2.0f, 0.1f, 0.2f, 0.3f);
     pointLights.push_back(pointLight1);
 
-    auto cameraSpotLight = std::make_shared<SpotLight>(1.0f, 1.0f, 1.0f, 0.0f, 0.9f, 0.0f, 0.0f, 0.0f, .1f, .2f, .3f, 0.0f, 0.0f, 0.0f, 45);
+    auto cameraSpotLight = std::make_shared<SpotLight>(1.0f, 1.0f, 1.0f, 0.2f, 0.9f, 0.0f, 1.0f, -1.0f, .1f, .2f, .3f, 0.0f, -1.0f, 0.0f, 45);
     spotLights.push_back(cameraSpotLight);
 
     shinyMaterial = Material(4.0f, 256);
@@ -252,11 +252,12 @@ int main()
         //Run the program using the specified shader
         meshShader->UseShader();
 
-        std::cout << "Current direction: " << camera.GetDirection().x << ", " << camera.GetDirection().y << ", " << camera.GetDirection().z << ", " << std::endl;
-        cameraSpotLight->SetDirection(camera.GetDirection());
+        // std::cout << "Current direction: " << camera.GetDirection().x << ", " << camera.GetDirection().y << ", " << camera.GetDirection().z << ", " << std::endl;
+        // cameraSpotLight->SetDirection(camera.GetDirection());
+        // cameraSpotLight->SetPosition(camera.GetPosition());
 
-        meshShader->SetDirectionalLight(&mainLight);
-        meshShader->SetPointLights(pointLights);
+        // meshShader->SetDirectionalLight(&mainLight);
+        // meshShader->SetPointLights(pointLights);
         meshShader->SetSpotLights(spotLights);
 
         uniformModel = meshShader->GetModelLocation();

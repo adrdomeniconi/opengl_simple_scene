@@ -117,12 +117,18 @@ vec4 CalcSpotLight(SpotLight spotLight)
 {
     vec4 spotLightFactor = vec4(0.0f, 0.0f, 0.0f, 0.0f);
 
-    vec3 fragmentToLight = normalize(spotLight.pointLight.position - WorldPosition.xyz);
-    float directionFactor = dot(fragmentToLight, normalize(spotLight.direction));
+    vec3 lightToFragment = normalize(WorldPosition.xyz - spotLight.pointLight.position);
+    float directionFactor = dot(lightToFragment, normalize(spotLight.direction));
 
-    if(directionFactor < spotLight.coneAngle)
-    {
-        spotLightFactor += CalcLightByDirection(spotLight.pointLight.light, spotLight.direction);
+    // if(directionFactor > spotLight.coneAngle)
+    // {
+    //     spotLightFactor += CalcPointLight(spotLight.pointLight);
+    // }
+
+    if (directionFactor > spotLight.coneAngle) {
+        spotLightFactor = vec4(1.0, 0.0, 0.0, 1.0); // Debug: Red for inside the cone
+    } else {
+        spotLightFactor = vec4(0.0, 0.0, 1.0, 1.0); // Debug: Blue for outside the cone
     }
 
     return spotLightFactor;
@@ -130,7 +136,10 @@ vec4 CalcSpotLight(SpotLight spotLight)
                                                                             
 void main()                                                                 
 {                              
-    vec4 lightColour = CalcDirectionalLight();
+    vec4 lightColour = vec4(0.0f, 0.0f, 0.0f, 0.0f);
+
+    lightColour += CalcDirectionalLight();
+
     for(int i = 0; i < pointLightsCount; i++)
     {
         lightColour += CalcPointLight(pointLights[i]);
