@@ -21,6 +21,7 @@
 #include "Texture.h"
 #include "DirectionalLight.h"
 #include "PointLight.h"
+#include "SpotLight.h"
 #include "Material.h"
 #include "Line.h"
 
@@ -38,7 +39,8 @@ Texture dirtTexture;
 Texture floorTexture;
 
 DirectionalLight mainLight;
-std::vector<PointLight> pointLights;
+std::vector<std::shared_ptr<PointLight>> pointLights;
+std::vector<std::shared_ptr<SpotLight>> spotLights;
 
 Material shinyMaterial;
 Material dullMaterial;
@@ -187,8 +189,10 @@ int main()
     CreatePyramid();
     CreatePyramid();
     CreateFloor();
+
     meshShader = new MeshShader(vertexShader, fragmentShader);
     lineShader = new LineShader(vertexLineShader, fragmentLineShader);
+
     camera = Camera(glm::vec3(0.0f, 0.5f, 2.0f), glm::vec3(0.0f, 1.0f, 0.0f), -90.0f, 0.0f, 5.0f, 0.1f);
 
     brickTexture = Texture("../textures/brick.png");
@@ -202,8 +206,11 @@ int main()
 
     mainLight = DirectionalLight(0.0f, 1.0f, 0.0f, 0.2f, 0.5f, -1.0f, 1.5f, 0.4f);
 
-    PointLight pointLight1 = PointLight(1.0f, 0.0f, 0.0f, 0.2f, 0.7f, 2.0f, 1.5f, 2.0f, 0.3f, 0.2f, 0.1f);
+    auto pointLight1 = std::make_shared<PointLight>(1.0f, 0.0f, 0.0f, 0.2f, 0.7f, 2.0f, 1.5f, 2.0f, 0.1f, 0.2f, 0.3f);
     pointLights.push_back(pointLight1);
+
+    auto cameraSpotLight = std::make_shared<SpotLight>(1.0f, 1.0f, 1.0f, 0.0f, 0.9f, 0.0f, 0.0f, 0.0f, .1f, .2f, .3f, 0.0f, 0.0f, 0.0f, 45);
+    spotLights.push_back(cameraSpotLight);
 
     shinyMaterial = Material(4.0f, 256);
     dullMaterial = Material(0.3f, 4);
@@ -245,8 +252,12 @@ int main()
         //Run the program using the specified shader
         meshShader->UseShader();
 
+        std::cout << "Current direction: " << camera.GetDirection().x << ", " << camera.GetDirection().y << ", " << camera.GetDirection().z << ", " << std::endl;
+        cameraSpotLight->SetDirection(camera.GetDirection());
+
         meshShader->SetDirectionalLight(&mainLight);
         meshShader->SetPointLights(pointLights);
+        meshShader->SetSpotLights(spotLights);
 
         uniformModel = meshShader->GetModelLocation();
         uniformProjection = meshShader->GetProjectionLocation();

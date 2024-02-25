@@ -87,15 +87,15 @@ void MeshShader::SetDirectionalLight(DirectionalLight *directionalLight)
     directionalLight->UseLight(uniformDirectionalLight.ambientIntesity, uniformDirectionalLight.ambientColour, uniformDirectionalLight.diffuseIntesity, uniformDirectionalLight.direction);
 }
 
-void MeshShader::SetPointLights(const std::vector<PointLight>& pointLights)
+void MeshShader::SetPointLights(const std::vector<std::shared_ptr<PointLight>> &pointLights)
 {
     if(pointLights.size() > MAX_POINT_LIGHTS_COUNT) 
         throw std::runtime_error("Max point light count reached. Cannot add nother point light.");
     
     unsigned int idx = 0;
-    for(const PointLight pointLight : pointLights)
+    for(const std::shared_ptr<PointLight>& pointLight : pointLights)
     {
-        pointLight.UseLight(uniformPointLights[idx].ambientIntesity, 
+        pointLight->UseLight(uniformPointLights[idx].ambientIntesity, 
                             uniformPointLights[idx].ambientColour, 
                             uniformPointLights[idx].diffuseIntesity, 
                             uniformPointLights[idx].position, 
@@ -110,15 +110,15 @@ void MeshShader::SetPointLights(const std::vector<PointLight>& pointLights)
     glUniform1i(uniformPointLightsCount, pointLightsCount);
 }
 
-void MeshShader::SetSpotLights(const std::vector<SpotLight> &spotLights)
+void MeshShader::SetSpotLights(const std::vector<std::shared_ptr<SpotLight>> &spotLights)
 {
     if(spotLights.size() > MAX_SPOT_LIGHTS_COUNT) 
         throw std::runtime_error("Max Spotlights count reached. Cannot add nother spotlight.");
     
     unsigned int idx = 0;
-    for(const SpotLight spotLight : spotLights)
+    for(const std::shared_ptr<SpotLight>& spotLight : spotLights)
     {
-        spotLight.UseLight(uniformSpotLights[idx].ambientIntesity, 
+        spotLight->UseLight(uniformSpotLights[idx].ambientIntesity, 
                             uniformSpotLights[idx].ambientColour, 
                             uniformSpotLights[idx].diffuseIntesity, 
                             uniformSpotLights[idx].position, 

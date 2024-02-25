@@ -28,8 +28,8 @@ public:
     GLuint GetSpecularShininessLocation();
 
     void SetDirectionalLight(DirectionalLight *directionalLight);
-    void SetPointLights(const std::vector<PointLight>& pointLights);
-    void SetSpotLights(const std::vector<SpotLight>& spotLights);
+    void SetPointLights(const std::vector<std::shared_ptr<PointLight>>& pointLights);
+    void SetSpotLights(const std::vector<std::shared_ptr<SpotLight>>& spotLights);
 
     void UseShader();
     void ClearShader();

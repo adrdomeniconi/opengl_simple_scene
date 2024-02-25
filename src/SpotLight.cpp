@@ -12,6 +12,27 @@ SpotLight::SpotLight(GLfloat red, GLfloat green, GLfloat blue, GLfloat ambientIn
 
 void SpotLight::UseLight(GLuint ambientIntensityLocation, GLuint ambientColourLocation, GLuint diffuseIntensityLocation, GLuint positionLocation, GLuint constantLocation, GLuint linearLocation, GLuint exponentLocation, GLuint directionLocation, GLuint coneAngleLocation) const
 {
+    // std::cout << "SpotLight!" << std::endl;
+    // std::cout << "ambientIntensityLocation: " << ambientIntensityLocation << std::endl;
+    // std::cout << "ambientColourLocation: " << ambientColourLocation << std::endl;
+    // std::cout << "diffuseIntensityLocation: " << diffuseIntensityLocation << std::endl;
+    // std::cout << "positionLocation: " << positionLocation << std::endl;
+    // std::cout << "constantLocation: " << constantLocation << std::endl;
+    // std::cout << "linearLocation: " << linearLocation << std::endl;
+    // std::cout << "exponentLocation: " << exponentLocation << std::endl;
+    // std::cout << "directionLocation: " << directionLocation << std::endl;
+    // std::cout << "coneAngleLocation: " << coneAngleLocation << std::endl;
+
+    std::cout << "colour: " << colour.x << ", " << colour.y << ", " << colour.z << ", " << std::endl;
+    std::cout << "ambientIntensity: " << ambientIntensity << std::endl;
+    std::cout << "diffuseIntensity: " << diffuseIntensity << std::endl;
+    std::cout << "position: " << position.x << ", " << position.y << ", " << position.z << ", " << std::endl;
+    std::cout << "constant: " << constant << std::endl;
+    std::cout << "linear: " << linear << std::endl;
+    std::cout << "exponent: " << exponent << std::endl;
+    std::cout << "direction: " << direction.x << ", " << direction.y << ", " << direction.z << ", " << std::endl;
+    std::cout << "coneAngleProcessed: " << coneAngleProcessed << std::endl;
+
     PointLight::UseLight(ambientIntensityLocation, ambientColourLocation, diffuseIntensityLocation, positionLocation, constantLocation, linearLocation, exponentLocation);
     glUniform3f(directionLocation, direction.x, direction.y, direction.z);
     glUniform1f(coneAngleLocation, coneAngleProcessed);

@@ -17,6 +17,7 @@ public:
     void mouseControl(GLfloat deltaX, GLfloat deltaY);
 
     glm::vec3 GetPosition();
+    glm::vec3 GetDirection();
 
     glm::mat4 calculateViewMatrix();
 
