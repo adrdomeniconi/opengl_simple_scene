@@ -1,6 +1,6 @@
-#include "LineShader.h"
+#include "ShaderLine.h"
 
-LineShader::LineShader(const char *vertexShaderLocation, const char *fragmentShaderLocation): 
+ShaderLine::ShaderLine(const char *vertexShaderLocation, const char *fragmentShaderLocation): 
     Shader(),
     uniformModel(0), 
     uniformProjection(0)
@@ -18,13 +18,13 @@ LineShader::LineShader(const char *vertexShaderLocation, const char *fragmentSha
     uniformView = glGetUniformLocation(shaderID, "view");
 }
 
-GLuint LineShader::GetProjectionLocation() { return uniformProjection; }
+GLuint ShaderLine::GetProjectionLocation() { return uniformProjection; }
 
-GLuint LineShader::GetModelLocation() { return uniformModel; }
+GLuint ShaderLine::GetModelLocation() { return uniformModel; }
 
-GLuint LineShader::GetViewLocation() { return uniformView; }
+GLuint ShaderLine::GetViewLocation() { return uniformView; }
 
-LineShader::~LineShader()
+ShaderLine::~ShaderLine()
 {
     ClearShader();
 }

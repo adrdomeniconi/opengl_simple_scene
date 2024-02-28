@@ -9,16 +9,16 @@
 
 #include "Shader.h"
 
-class LineShader : public Shader
+class ShaderLine : public Shader
 {
 public:
-    LineShader(const char* vertexShaderLocation, const char* fragmentShaderLocation);
+    ShaderLine(const char* vertexShaderLocation, const char* fragmentShaderLocation);
 
     GLuint GetProjectionLocation();
     GLuint GetModelLocation();
     GLuint GetViewLocation();
 
-    ~LineShader();
+    ~ShaderLine();
 
 private:
     GLuint uniformProjection, uniformModel, uniformView;

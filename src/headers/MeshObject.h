@@ -3,20 +3,20 @@
 #include <GLM/glm.hpp>
 
 #include "Mesh.h"
-#include "Shader.h"
+#include "ShaderMesh.h"
 #include "Material.h"
 #include "Texture.h"
 // #include "Transform.h"
 
-class Object
+class MeshObject
 {
 public:
 
-    Object(Mesh *mesh, Shader *shader, Material material, Texture texture);
+    MeshObject(Mesh *mesh, ShaderMesh *shader, Material material, Texture texture);
 
     void Render();
 
-    ~Object();
+    ~MeshObject();
 
 private:
     Mesh* _mesh;

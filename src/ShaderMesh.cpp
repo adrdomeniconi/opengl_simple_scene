@@ -1,6 +1,6 @@
-#include "MeshShader.h"
+#include "ShaderMesh.h"
 
-MeshShader::MeshShader(const char* vertexShaderLocation, const char* fragmentShaderLocation): 
+ShaderMesh::ShaderMesh(const char* vertexShaderLocation, const char* fragmentShaderLocation): 
     Shader(),
     uniformModel(0), 
     uniformProjection(0),
@@ -26,7 +26,7 @@ MeshShader::MeshShader(const char* vertexShaderLocation, const char* fragmentSha
     getSpotLightUniformLocations();
 }
 
-void MeshShader::getDirectionalLightUniformLocations()
+void ShaderMesh::getDirectionalLightUniformLocations()
 {
     uniformDirectionalLight.ambientColour = glGetUniformLocation(shaderID, "directionalLight.light.colour");
     uniformDirectionalLight.ambientIntesity = glGetUniformLocation(shaderID, "directionalLight.light.ambientIntensity");
@@ -34,7 +34,7 @@ void MeshShader::getDirectionalLightUniformLocations()
     uniformDirectionalLight.direction = glGetUniformLocation(shaderID, "directionalLight.direction");
 }
 
-void MeshShader::getPointLightUniformLocations()
+void ShaderMesh::getPointLightUniformLocations()
 {
     for (size_t i = 0; i < MAX_POINT_LIGHTS_COUNT; i++)
     {
@@ -49,7 +49,7 @@ void MeshShader::getPointLightUniformLocations()
     uniformPointLightsCount = glGetUniformLocation(shaderID, "pointLightsCount");
 }
 
-void MeshShader::getSpotLightUniformLocations()
+void ShaderMesh::getSpotLightUniformLocations()
 {
     for (size_t i = 0; i < MAX_SPOT_LIGHTS_COUNT; i++)
     {
@@ -66,24 +66,24 @@ void MeshShader::getSpotLightUniformLocations()
     uniformSpotLightsCount = glGetUniformLocation(shaderID, "spotLightsCount");
 }
 
-GLuint MeshShader::GetProjectionLocation() { return uniformProjection; }
+GLuint ShaderMesh::GetProjectionLocation() { return uniformProjection; }
 
-GLuint MeshShader::GetModelLocation() { return uniformModel; }
+GLuint ShaderMesh::GetModelLocation() { return uniformModel; }
 
-GLuint MeshShader::GetViewLocation() { return uniformView; }
+GLuint ShaderMesh::GetViewLocation() { return uniformView; }
 
-GLuint MeshShader::GetCameraPositionLocation() { return uniformCameraPosition; }
+GLuint ShaderMesh::GetCameraPositionLocation() { return uniformCameraPosition; }
 
-GLuint MeshShader::GetSpecularIntensityLocation() { return uniformSpecularIntensity; }
+GLuint ShaderMesh::GetSpecularIntensityLocation() { return uniformSpecularIntensity; }
 
-GLuint MeshShader::GetSpecularShininessLocation() { return uniformSpecularShininess; }
+GLuint ShaderMesh::GetSpecularShininessLocation() { return uniformSpecularShininess; }
 
-void MeshShader::SetDirectionalLight(DirectionalLight *directionalLight)
+void ShaderMesh::SetDirectionalLight(DirectionalLight *directionalLight)
 {
     directionalLight->UseLight(uniformDirectionalLight.ambientIntesity, uniformDirectionalLight.ambientColour, uniformDirectionalLight.diffuseIntesity, uniformDirectionalLight.direction);
 }
 
-void MeshShader::SetPointLights(const std::vector<std::shared_ptr<PointLight>> &pointLights)
+void ShaderMesh::SetPointLights(const std::vector<std::shared_ptr<PointLight>> &pointLights)
 {
     if(pointLights.size() > MAX_POINT_LIGHTS_COUNT) 
         throw std::runtime_error("Max point light count reached. Cannot add nother point light.");
@@ -106,7 +106,7 @@ void MeshShader::SetPointLights(const std::vector<std::shared_ptr<PointLight>> &
     glUniform1i(uniformPointLightsCount, pointLightsCount);
 }
 
-void MeshShader::SetSpotLights(const std::vector<std::shared_ptr<SpotLight>> &spotLights)
+void ShaderMesh::SetSpotLights(const std::vector<std::shared_ptr<SpotLight>> &spotLights)
 {
     if(spotLights.size() > MAX_SPOT_LIGHTS_COUNT) 
         throw std::runtime_error("Max Spotlights count reached. Cannot add nother spotlight.");
@@ -132,7 +132,7 @@ void MeshShader::SetSpotLights(const std::vector<std::shared_ptr<SpotLight>> &sp
     glUniform1i(uniformSpotLightsCount, spotLightsCount);
 }
 
-MeshShader::~MeshShader()
+ShaderMesh::~ShaderMesh()
 {
     ClearShader();
 }

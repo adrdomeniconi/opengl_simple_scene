@@ -12,13 +12,13 @@
 #include "PointLight.h"
 #include "SpotLight.h"
 
-class MeshShader : public Shader
+class ShaderMesh : public Shader
 {
 public:
     static const unsigned int MAX_POINT_LIGHTS_COUNT = 3;
     static const unsigned int MAX_SPOT_LIGHTS_COUNT = 3;
 
-    MeshShader(const char* vertexShaderLocation, const char* fragmentShaderLocation);
+    ShaderMesh(const char* vertexShaderLocation, const char* fragmentShaderLocation);
 
     GLuint GetProjectionLocation();
     GLuint GetModelLocation();
@@ -31,7 +31,7 @@ public:
     void SetPointLights(const std::vector<std::shared_ptr<PointLight>>& pointLights);
     void SetSpotLights(const std::vector<std::shared_ptr<SpotLight>>& spotLights);
 
-~MeshShader();
+~ShaderMesh();
 
 private:
     unsigned int pointLightsCount;

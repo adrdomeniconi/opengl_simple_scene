@@ -15,8 +15,8 @@
 
 #include "MainWindow.h"
 #include "Mesh.h"
-#include "MeshShader.h"
-#include "LineShader.h"
+#include "ShaderMesh.h"
+#include "ShaderLine.h"
 #include "Camera.h"
 #include "Texture.h"
 #include "DirectionalLight.h"
@@ -30,8 +30,8 @@ const float toRadians = 3.14159265 / 180.0f;
 MainWindow mainWindow;
 std::vector<Mesh*> meshList;
 std::vector<std::vector<Line*>> normalsList;
-MeshShader *meshShader;
-LineShader *lineShader;
+ShaderMesh *meshShader;
+ShaderLine *lineShader;
 Camera camera;
 
 Texture brickTexture;
@@ -50,8 +50,8 @@ GLfloat lastTime = 0.0f;
 
 static const char* vertexShader = "Shaders/shader.vert";
 static const char* fragmentShader = "Shaders/shader.frag";
-static const char* vertexLineShader = "Shaders/line_shader.vert";
-static const char* fragmentLineShader = "Shaders/line_shader.frag";
+static const char* vertexShaderLine = "Shaders/line_shader.vert";
+static const char* fragmentShaderLine = "Shaders/line_shader.frag";
 
 void accumulateVerticeNormal(GLfloat *vertices, unsigned int verticeIdx, glm::vec3 normal, unsigned int normalOffset)
 {
@@ -190,8 +190,8 @@ int main()
     CreatePyramid();
     CreateFloor();
 
-    meshShader = new MeshShader(vertexShader, fragmentShader);
-    lineShader = new LineShader(vertexLineShader, fragmentLineShader);
+    meshShader = new ShaderMesh(vertexShader, fragmentShader);
+    lineShader = new ShaderLine(vertexShaderLine, fragmentShaderLine);
 
     camera = Camera(glm::vec3(0.0f, 0.5f, 2.0f), glm::vec3(0.0f, 1.0f, 0.0f), -90.0f, 0.0f, 5.0f, 0.1f);
 
