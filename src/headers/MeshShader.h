@@ -12,7 +12,7 @@
 #include "PointLight.h"
 #include "SpotLight.h"
 
-class MeshShader
+class MeshShader : public Shader
 {
 public:
     static const unsigned int MAX_POINT_LIGHTS_COUNT = 3;
@@ -31,13 +31,9 @@ public:
     void SetPointLights(const std::vector<std::shared_ptr<PointLight>>& pointLights);
     void SetSpotLights(const std::vector<std::shared_ptr<SpotLight>>& spotLights);
 
-    void UseShader();
-    void ClearShader();
-
 ~MeshShader();
 
 private:
-    Shader shader;
     unsigned int pointLightsCount;
     unsigned int spotLightsCount;
 

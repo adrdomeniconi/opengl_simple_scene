@@ -9,6 +9,7 @@ PointLight::PointLight(GLfloat red, GLfloat green, GLfloat blue, GLfloat ambient
     linear(linear), 
     exponent(exponent)
 {
+    //Do nothing
 }
 
 void PointLight::UseLight(GLuint ambientIntensityLocation, GLuint ambientColourLocation, GLuint diffuseIntensityLocation, GLuint positionLocation, GLuint constantLocation, GLuint linearLocation, GLuint exponentLocation) const

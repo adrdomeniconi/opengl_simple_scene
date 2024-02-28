@@ -1,8 +1,14 @@
 #include "MeshShader.h"
 
-MeshShader::MeshShader(const char* vertexShaderLocation, const char* fragmentShaderLocation): uniformModel(0), uniformProjection(0), shader(Shader()), pointLightsCount(0), spotLightsCount(0), shaderID(0)
+MeshShader::MeshShader(const char* vertexShaderLocation, const char* fragmentShaderLocation): 
+    Shader(),
+    uniformModel(0), 
+    uniformProjection(0),
+    pointLightsCount(0), 
+    spotLightsCount(0), 
+    shaderID(0)
 {
-    shaderID = shader.CreateFromFiles(vertexShaderLocation, fragmentShaderLocation);
+    shaderID = CreateFromFiles(vertexShaderLocation, fragmentShaderLocation);
     if(shaderID == 0)
     {
         throw std::runtime_error("Error creating shader.");
@@ -58,16 +64,6 @@ void MeshShader::getSpotLightUniformLocations()
         uniformSpotLights[i].coneAngle = glGetUniformLocation(shaderID, ("spotLights[" + std::to_string(i) + "].coneAngle").c_str());
     }
     uniformSpotLightsCount = glGetUniformLocation(shaderID, "spotLightsCount");
-}
-
-void MeshShader::UseShader()
-{
-    shader.UseShader();
-}
-
-void MeshShader::ClearShader()
-{
-    shader.ClearShader();
 }
 
 GLuint MeshShader::GetProjectionLocation() { return uniformProjection; }
