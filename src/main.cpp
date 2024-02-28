@@ -24,6 +24,7 @@
 #include "SpotLight.h"
 #include "Material.h"
 #include "Line.h"
+#include "MeshObject.h"
 
 const float toRadians = 3.14159265 / 180.0f;
 
@@ -233,6 +234,9 @@ int main()
     Line *line = new Line();
     line -> Create(lineVertices, 2);
 
+    // MeshObject* pyramidA = new MeshObject(meshList[0], meshShader, shinyMaterial, &brickTexture);
+    MeshObject* floorMesh = new MeshObject(meshList[2], meshShader, shinyMaterial, &dirtTexture);
+
     while(!mainWindow.getShouldClose())
     {
         GLfloat now = glfwGetTime();
@@ -319,16 +323,8 @@ int main()
         }
 
         // Floor
-        meshShader->UseShader();
-
-        model = glm::mat4(1.0f);     
-        model = glm::translate(model, glm::vec3(0.0f, -2.0f, 0.0f));
-
-        glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-        shinyMaterial.Use(uniformSpecularIntensity, uniformSpecularShininess);
-        dirtTexture.UseTexture();
-
-        meshList[2] -> RenderMesh();
+        floorMesh->Translate(0.0f, -2.0f, 0.0f);
+        floorMesh->Render();
 
         glUseProgram(0);
 

@@ -1,26 +1,32 @@
 #pragma once
 
 #include <GLM/glm.hpp>
+#include <GLM/gtc/type_ptr.hpp>
 
 #include "Mesh.h"
 #include "ShaderMesh.h"
 #include "Material.h"
 #include "Texture.h"
-// #include "Transform.h"
+#include "Transform.h"
 
 class MeshObject
 {
 public:
 
-    MeshObject(Mesh *mesh, ShaderMesh *shader, Material material, Texture texture);
+    MeshObject(Mesh *mesh, ShaderMesh *shader, Material material, Texture *texture);
+
+    void Translate(GLfloat x, GLfloat y, GLfloat z);
+    void Rotate(GLfloat x, GLfloat y, GLfloat z);
+    void Scale(GLfloat x, GLfloat y, GLfloat z);
 
     void Render();
 
     ~MeshObject();
 
 private:
+    Transform _transform;
     Mesh* _mesh;
-    Shader* _shader;
+    ShaderMesh* _shader;
     Material _material;
-    Texture _texture;
+    Texture* _texture;
 };
