@@ -256,8 +256,8 @@ int main()
         cameraSpotLight->SetDirection(camera.GetDirection());
         cameraSpotLight->SetPosition(camera.GetPosition());
 
-        // meshShader->SetDirectionalLight(&mainLight);
-        // meshShader->SetPointLights(pointLights);
+        meshShader->SetDirectionalLight(&mainLight);
+        meshShader->SetPointLights(pointLights);
         meshShader->SetSpotLights(spotLights);
 
         uniformModel = meshShader->GetModelLocation();
