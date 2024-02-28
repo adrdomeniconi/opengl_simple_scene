@@ -34,6 +34,7 @@ Mesh::Mesh()
 
 void Mesh::CreateMesh(GLfloat *vertices, unsigned int *indices, unsigned int vertexDataCount, unsigned int indexCount, unsigned int vertexLength, unsigned int normalsOffset)
 {
+    _vertices = vertices;
     _indexCount = indexCount;
     _vertexDataCount = vertexDataCount;
     _vertexLength = vertexLength;
@@ -114,21 +115,26 @@ void Mesh::ClearMesh()
     _indexCount = 0;
 }
 
-std::vector<GLfloat> Mesh::GetNormals()
+std::vector<std::array<GLfloat, 6>> Mesh::GetNormals()
 {
-    // const unsigned int verticesCount = _vertexDataCount/_vertexLength;
+    const unsigned int verticesCount = _vertexDataCount/_vertexLength;
+    std::vector<std::array<GLfloat, 6>> normals;
 
-    std::vector<GLfloat> normals;
-    // for(int i = 0; i < verticesCount; i ++)
-    // {
-    //     int baseIdx = i * VERTICES_LENGTH;
-    //     normals.push_back(&vertices[baseIdx]);
-    //     normals.push_back(&vertices[baseIdx + 1]);
-    //     normals.push_back(&vertices[baseIdx + 2]);
-    //     normals.push_back(&vertices[baseIdx] + vertices[baseIdx + NORMALS_OFFSET]);
-    //     normals.push_back(&vertices[baseIdx + 1] + vertices[baseIdx + 1 + NORMALS_OFFSET]);
-    //     normals.push_back(&vertices[baseIdx + 2] + vertices[baseIdx + 2 + NORMALS_OFFSET]);
-    // }
+    std::cout << "Start getting normals: " << std::endl;
+    for(int i = 0; i < verticesCount; i ++)
+    {
+        int baseIdx = i * _vertexLength;
+        std::array<GLfloat, 6> normalVertices = {
+            _vertices[baseIdx],
+            _vertices[baseIdx + 1],
+            _vertices[baseIdx + 2],
+            _vertices[baseIdx] + _vertices[baseIdx + _normalsOffset],
+            _vertices[baseIdx + 1] + _vertices[baseIdx + 1 + _normalsOffset],
+            _vertices[baseIdx + 2] + _vertices[baseIdx + 2 + _normalsOffset]
+        };
+
+        normals.push_back(normalVertices);
+    }
 
     return normals;
 }

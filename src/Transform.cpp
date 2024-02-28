@@ -13,7 +13,7 @@ Transform::Transform() :
 void Transform::Translate(GLfloat x, GLfloat y, GLfloat z)
 {
     _translate = glm::vec3(x, y, z);
-    std::cout << _translate.x << ", " << _translate.y << ", " << _translate.z << std::endl;
+    // std::cout << _translate.x << ", " << _translate.y << ", " << _translate.z << std::endl;
 }
 
 void Transform::Rotate(GLfloat x, GLfloat y, GLfloat z)

@@ -137,26 +137,20 @@ void CreatePyramid()
     calculateAverageNormals(indices, indicesCount, vertices, verticesDataCount, VERTEX_LENGTH, NORMALS_OFFSET);
 
     Mesh *mesh = new Mesh();
-    mesh -> CreateMesh(vertices, indices, verticesDataCount, indicesCount, VERTEX_LENGTH, NORMALS_OFFSET);
-    meshList.push_back(mesh);
+    mesh->CreateMesh(vertices, indices, verticesDataCount, indicesCount, VERTEX_LENGTH, NORMALS_OFFSET);
 
-    std::vector<Line*> normals;
-    for(int i = 0; i < verticesCount; i ++)
+    std::vector<Line*> normalLines;
+
+    std::vector<std::array<GLfloat, 6>> normals = mesh->GetNormals();
+    for(size_t i = 0 ; i < normals.size() ; i++)
     {
-        int baseIdx = i * VERTEX_LENGTH;
-        GLfloat normalVertices[] = {
-            vertices[baseIdx], 
-            vertices[baseIdx + 1], 
-            vertices[baseIdx + 2],
-            vertices[baseIdx] + vertices[baseIdx + NORMALS_OFFSET], 
-            vertices[baseIdx + 1] + vertices[baseIdx + 1 + NORMALS_OFFSET], 
-            vertices[baseIdx + 2] + vertices[baseIdx + 2 + NORMALS_OFFSET] 
-        };
         Line *line = new Line();
-        line->Create(normalVertices, 2);
-        normals.push_back(line);
+        line->Create(normals[i].data(), 2);
+        normalLines.push_back(line);
     }
-    normalsList.push_back(normals);
+
+    meshList.push_back(mesh);
+    normalsList.push_back(normalLines);
 }
 
 void CreateFloor()

@@ -2,6 +2,7 @@
 
 #include <GL/glew.h>
 #include <vector>
+#include <iostream>
 
 class Mesh
 {
@@ -13,12 +14,13 @@ void UnbindAll();
 void RenderMesh();
 void ClearMesh();
 
-std::vector<GLfloat> GetNormals();
+std::vector<std::array<GLfloat, 6>> GetNormals();
 
 ~Mesh();
 
 private:
     GLuint VAO, VBO, IBO;
+    GLfloat* _vertices;
     GLsizei _indexCount;
     GLsizei _vertexDataCount;
     GLsizei _vertexLength;
