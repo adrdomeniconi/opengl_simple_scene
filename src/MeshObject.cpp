@@ -29,10 +29,6 @@ void MeshObject::Render()
 {     
     _shader->UseShader();
     _transform.Apply(_shader->GetModelLocation());
-
-    // glm::mat4 model(1.0f);
-    // glUniformMatrix4fv(_shader->GetModelLocation(), 1, GL_FALSE, glm::value_ptr(model));
-
     _material.Use(_shader->GetSpecularIntensityLocation(), _shader->GetSpecularShininessLocation());
     _texture->UseTexture();
     

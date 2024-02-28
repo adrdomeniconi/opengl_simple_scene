@@ -26,12 +26,18 @@ Mesh::Mesh()
     //Data: The actual indices (usually unsigned integers) that tell OpenGL how to construct primitives (triangles, lines, etc.) from the vertex data are stored here.
     IBO = 0;
 
-    indexCount = 0;
+    _indexCount = 0;
+    _vertexDataCount = 0;
+    _vertexLength = 0;
+    _normalsOffset = 0;
 }
 
-void Mesh::CreateMesh(GLfloat *vertices, unsigned int *indices, unsigned int numOfVertices, unsigned int numOfIndices)
+void Mesh::CreateMesh(GLfloat *vertices, unsigned int *indices, unsigned int vertexDataCount, unsigned int indexCount, unsigned int vertexLength, unsigned int normalsOffset)
 {
-    indexCount = numOfIndices;
+    _indexCount = indexCount;
+    _vertexDataCount = vertexDataCount;
+    _vertexLength = vertexLength;
+    _normalsOffset = normalsOffset;
     
     int VERTEX_LENGTH = 8;
 
@@ -49,11 +55,11 @@ void Mesh::CreateMesh(GLfloat *vertices, unsigned int *indices, unsigned int num
 
     glGenBuffers(1, &IBO);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IBO);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices[0]) * numOfIndices, indices, GL_STATIC_DRAW); //Copy the data to the GPU
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices[0]) * _indexCount, indices, GL_STATIC_DRAW); //Copy the data to the GPU
 
     glGenBuffers(1, &VBO);
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices[0]) * numOfVertices, vertices, GL_STATIC_DRAW);  //Copy the data to the GPU
+    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices[0]) * vertexDataCount, vertices, GL_STATIC_DRAW);  //Copy the data to the GPU
     
     configureVerticesAttribute(0, POS_LENGTH, vertices, VERTEX_LENGTH, POS_OFFSET);
     configureVerticesAttribute(1, TEXTURE_LENGTH, vertices, VERTEX_LENGTH, TEXTURE_OFFSET);
@@ -77,11 +83,11 @@ void Mesh::configureVerticesAttribute(unsigned int index, unsigned int vertexAtt
 
 void Mesh::RenderMesh()
 {
-    if(indexCount > 0)
+    if(_indexCount > 0)
     {
         glBindVertexArray(VAO);
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IBO);
-        glDrawElements(GL_TRIANGLES, indexCount, GL_UNSIGNED_INT, 0);
+        glDrawElements(GL_TRIANGLES, _indexCount, GL_UNSIGNED_INT, 0);
         glBindVertexArray(0);
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
     }
@@ -105,7 +111,26 @@ void Mesh::ClearMesh()
         VAO = 0;
     }
 
-    indexCount = 0;
+    _indexCount = 0;
+}
+
+std::vector<GLfloat> Mesh::GetNormals()
+{
+    // const unsigned int verticesCount = _vertexDataCount/_vertexLength;
+
+    std::vector<GLfloat> normals;
+    // for(int i = 0; i < verticesCount; i ++)
+    // {
+    //     int baseIdx = i * VERTICES_LENGTH;
+    //     normals.push_back(&vertices[baseIdx]);
+    //     normals.push_back(&vertices[baseIdx + 1]);
+    //     normals.push_back(&vertices[baseIdx + 2]);
+    //     normals.push_back(&vertices[baseIdx] + vertices[baseIdx + NORMALS_OFFSET]);
+    //     normals.push_back(&vertices[baseIdx + 1] + vertices[baseIdx + 1 + NORMALS_OFFSET]);
+    //     normals.push_back(&vertices[baseIdx + 2] + vertices[baseIdx + 2 + NORMALS_OFFSET]);
+    // }
+
+    return normals;
 }
 
 Mesh::~Mesh()

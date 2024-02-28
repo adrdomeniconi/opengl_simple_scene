@@ -51,15 +51,15 @@ void Transform::Apply(GLuint modelLocation)
 
     _model = glm::scale(_model, _scale);
 
-    std::cout << "Model:" << std::endl;
-    for(int i = 0 ; i < 4 ; i++)
-    {
-        for(int j = 0 ; j < 4 ; j++)
-        {
-            std::cout << _model[j][i] << " ";
-        }
-        std::cout << std::endl;
-    }
+    // std::cout << "Model:" << std::endl;
+    // for(int i = 0 ; i < 4 ; i++)
+    // {
+    //     for(int j = 0 ; j < 4 ; j++)
+    //     {
+    //         std::cout << _model[j][i] << " ";
+    //     }
+    //     std::cout << std::endl;
+    // }
 
     glUniformMatrix4fv(modelLocation, 1, GL_FALSE, glm::value_ptr(_model));
 }

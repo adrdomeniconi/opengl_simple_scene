@@ -130,20 +130,20 @@ void CreatePyramid()
 
     const unsigned int indicesCount = sizeof(indices)/sizeof(indices[0]);
     const unsigned int verticesDataCount = sizeof(vertices)/sizeof(vertices[0]);
-    const unsigned int VERTICES_LENGTH = 8;
+    const unsigned int VERTEX_LENGTH = 8;
     const unsigned int NORMALS_OFFSET = 5;
-    const unsigned int verticesCount = verticesDataCount/VERTICES_LENGTH;
+    const unsigned int verticesCount = verticesDataCount/VERTEX_LENGTH;
 
-    calculateAverageNormals(indices, indicesCount, vertices, verticesDataCount, VERTICES_LENGTH, NORMALS_OFFSET);
+    calculateAverageNormals(indices, indicesCount, vertices, verticesDataCount, VERTEX_LENGTH, NORMALS_OFFSET);
 
     Mesh *mesh = new Mesh();
-    mesh -> CreateMesh(vertices, indices, verticesDataCount, indicesCount);
+    mesh -> CreateMesh(vertices, indices, verticesDataCount, indicesCount, VERTEX_LENGTH, NORMALS_OFFSET);
     meshList.push_back(mesh);
 
     std::vector<Line*> normals;
     for(int i = 0; i < verticesCount; i ++)
     {
-        int baseIdx = i * VERTICES_LENGTH;
+        int baseIdx = i * VERTEX_LENGTH;
         GLfloat normalVertices[] = {
             vertices[baseIdx], 
             vertices[baseIdx + 1], 
@@ -178,7 +178,7 @@ void CreateFloor()
     const unsigned int verticesDataCount = sizeof(vertices)/sizeof(unsigned int);
 
     Mesh *mesh = new Mesh();
-    mesh -> CreateMesh(vertices, indices, verticesDataCount, indicesCount);
+    mesh -> CreateMesh(vertices, indices, verticesDataCount, indicesCount, 8, 5);
     meshList.push_back(mesh);
 }
 
@@ -271,6 +271,7 @@ int main()
         glUniformMatrix4fv(uniformView, 1, GL_FALSE, glm::value_ptr(camera.calculateViewMatrix()));
         glUniform3f(uniformCameraPosition, camera.GetPosition().x, camera.GetPosition().y, camera.GetPosition().z);
       
+        //First pyramid
         pyramidA->Scale(0.4f, 0.4f, 0.4f);
         pyramidA->Render();
 
