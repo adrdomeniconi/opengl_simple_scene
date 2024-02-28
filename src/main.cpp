@@ -219,9 +219,7 @@ int main()
     GLuint uniformProjection = 0, 
            uniformModel = 0, 
            uniformView = 0, 
-           uniformCameraPosition = 0,
-           uniformSpecularIntensity = 0,
-           uniformSpecularShininess = 0;
+           uniformCameraPosition = 0;
 
     glm::mat4 projection = glm::perspective(45.0f, (GLfloat)mainWindow.getBufferWidth()/(GLfloat)mainWindow.getBufferHeight(), 0.1f, 100.0f);
 
@@ -234,7 +232,8 @@ int main()
     Line *line = new Line();
     line -> Create(lineVertices, 2);
 
-    // MeshObject* pyramidA = new MeshObject(meshList[0], meshShader, shinyMaterial, &brickTexture);
+    MeshObject* pyramidA = new MeshObject(meshList[0], meshShader, shinyMaterial, &brickTexture);
+    MeshObject* pyramidB = new MeshObject(meshList[1], meshShader, dullMaterial, &dirtTexture);
     MeshObject* floorMesh = new MeshObject(meshList[2], meshShader, shinyMaterial, &dirtTexture);
 
     while(!mainWindow.getShouldClose())
@@ -253,13 +252,12 @@ int main()
         glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        //Run the program using the specified shader
-        meshShader->UseShader();
-
         // std::cout << "Current direction: " << camera.GetDirection().x << ", " << camera.GetDirection().y << ", " << camera.GetDirection().z << ", " << std::endl;
         cameraSpotLight->SetDirection(camera.GetDirection());
         cameraSpotLight->SetPosition(camera.GetPosition());
 
+        //Configure the shader
+        meshShader->UseShader();
         meshShader->SetDirectionalLight(&mainLight);
         meshShader->SetPointLights(pointLights);
         meshShader->SetSpotLights(spotLights);
@@ -268,24 +266,16 @@ int main()
         uniformProjection = meshShader->GetProjectionLocation();
         uniformView = meshShader->GetViewLocation();
         uniformCameraPosition = meshShader->GetCameraPositionLocation();
-        uniformSpecularIntensity = meshShader->GetSpecularIntensityLocation();
-        uniformSpecularShininess = meshShader->GetSpecularShininessLocation();
 
         glUniformMatrix4fv(uniformProjection, 1, GL_FALSE, glm::value_ptr(projection));
         glUniformMatrix4fv(uniformView, 1, GL_FALSE, glm::value_ptr(camera.calculateViewMatrix()));
         glUniform3f(uniformCameraPosition, camera.GetPosition().x, camera.GetPosition().y, camera.GetPosition().z);
-
-        glm::mat4 model(1.0f);       
-        model = glm::translate(model, glm::vec3(0.0f, 0.0, 0.0f));
-        model = glm::scale(model, glm::vec3(0.4f, 0.4f, 0.4f));
-
-        glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-        shinyMaterial.Use(uniformSpecularIntensity, uniformSpecularShininess);
-        brickTexture.UseTexture();
-
-        meshList[0] -> RenderMesh();
+      
+        pyramidA->Scale(0.4f, 0.4f, 0.4f);
+        pyramidA->Render();
 
         // Normals
+        glm::mat4 model(1.0f); 
         lineShader->UseShader();
 
         glUniformMatrix4fv(lineShader->GetProjectionLocation(), 1, GL_FALSE, glm::value_ptr(projection));
@@ -298,17 +288,9 @@ int main()
         }
 
         // Second Pyramid
-        meshShader->UseShader();
-
-        model = glm::mat4(1.0f);     
-        model = glm::translate(model, glm::vec3(0.0f, .3, -1.5f));
-        model = glm::scale(model, glm::vec3(0.2f, 0.2f, 0.2f));
-
-        glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-        dullMaterial.Use(uniformSpecularIntensity, uniformSpecularShininess);
-        dirtTexture.UseTexture();
-
-        meshList[1] -> RenderMesh();
+        pyramidB->Translate(0.0f, .3, -1.5f);
+        pyramidB->Scale(0.2f, 0.2f, 0.2f);
+        pyramidB->Render();
 
         // Normals
         lineShader->UseShader();
