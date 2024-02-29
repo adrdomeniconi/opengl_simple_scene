@@ -215,13 +215,13 @@ int main()
     Line *line = new Line();
     line -> Create(lineVertices, 2);
 
-    MeshObject* pyramidA = new MeshObject(meshList[0], meshShader, shinyMaterial, &brickTexture);
-    MeshObject* pyramidB = new MeshObject(meshList[1], meshShader, dullMaterial, &dirtTexture);
-    MeshObject* floorMesh = new MeshObject(meshList[2], meshShader, shinyMaterial, &dirtTexture);
+    MeshObject pyramidA = MeshObject(meshList[0], meshShader, shinyMaterial, &brickTexture);
+    MeshObject pyramidB = MeshObject(meshList[1], meshShader, dullMaterial, &dirtTexture);
+    MeshObject floorMesh = MeshObject(meshList[2], meshShader, shinyMaterial, &dirtTexture);
 
-    NormalsVisualizer pyramidANormalsVisualizer(pyramidA);
-    NormalsVisualizer pyramidBNormalsVisualizer(pyramidB);
-    NormalsVisualizer floorNormalsVisualizer(floorMesh);
+    NormalsVisualizer pyramidANormalsVisualizer(&pyramidA);
+    NormalsVisualizer pyramidBNormalsVisualizer(&pyramidB);
+    NormalsVisualizer floorNormalsVisualizer(&floorMesh);
 
     while(!mainWindow.getShouldClose())
     {
@@ -258,19 +258,19 @@ int main()
         glUniformMatrix4fv(lineShader->GetViewLocation(), 1, GL_FALSE, glm::value_ptr(camera.calculateViewMatrix()));
       
         //First pyramid
-        pyramidA->Scale(0.4f, 0.4f, 0.4f);
-        pyramidA->Render();
+        pyramidA.Scale(0.4f, 0.4f, 0.4f);
+        pyramidA.Render();
         pyramidANormalsVisualizer.Render(lineShader);
 
         // Second Pyramid
-        pyramidB->Translate(0.0f, .3, -1.5f);
-        pyramidB->Scale(0.2f, 0.2f, 0.2f);
-        pyramidB->Render();
+        pyramidB.Translate(0.0f, .3, -1.5f);
+        pyramidB.Scale(0.2f, 0.2f, 0.2f);
+        pyramidB.Render();
         pyramidBNormalsVisualizer.Render(lineShader);
 
         // Floor
-        floorMesh->Translate(0.0f, -2.0f, 0.0f);
-        floorMesh->Render();
+        floorMesh.Translate(0.0f, -2.0f, 0.0f);
+        floorMesh.Render();
         floorNormalsVisualizer.Render(lineShader);
 
         glUseProgram(0);
