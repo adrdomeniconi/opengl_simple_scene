@@ -21,7 +21,7 @@
 #include "DirectionalLight.h"
 #include "PointLight.h"
 #include "SpotLight.h"
-#include "Material.h"
+// #include "Material.h"
 #include "Line.h"
 #include "MeshObject.h"
 #include "NormalsVisualizer.h"
@@ -40,8 +40,8 @@ DirectionalLight mainLight;
 std::vector<std::shared_ptr<PointLight>> pointLights;
 std::vector<std::shared_ptr<SpotLight>> spotLights;
 
-Material shinyMaterial;
-Material dullMaterial;
+// Material shinyMaterial;
+// Material dullMaterial;
 
 GLfloat deltaTime = 0.0f;
 GLfloat lastTime = 0.0f;
@@ -128,8 +128,8 @@ int main()
     auto cameraSpotLight = std::make_shared<SpotLight>(1.0f, 1.0f, 1.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.1f, 0.2f, 0.0f, 0.0f, -1.0f, 0.0f, 20);
     spotLights.push_back(cameraSpotLight);
 
-    shinyMaterial = Material(4.0f, 256);
-    dullMaterial = Material(0.3f, 4);
+    // shinyMaterial = Material(4.0f, 256);
+    // dullMaterial = Material(0.3f, 4);
 
     GLuint uniformProjection = 0, 
            uniformModel = 0, 
@@ -140,9 +140,9 @@ int main()
 
     SampleScene* scene = new SampleScene();
 
-    MeshObject pyramidA = MeshObject(meshList[0], meshShader, shinyMaterial, scene->textureLibrary.GetTexture(TextureLibrary::TextureType::Brick));
-    MeshObject pyramidB = MeshObject(meshList[1], meshShader, dullMaterial, scene->textureLibrary.GetTexture(TextureLibrary::TextureType::Dirt));
-    MeshObject floorMesh = MeshObject(meshList[2], meshShader, shinyMaterial, scene->textureLibrary.GetTexture(TextureLibrary::TextureType::Floor));
+    MeshObject pyramidA = MeshObject(meshList[0], meshShader, scene->materialLibrary.GetMaterial(MaterialLibrary::MaterialType::Shiny), scene->textureLibrary.GetTexture(TextureLibrary::TextureType::Brick));
+    MeshObject pyramidB = MeshObject(meshList[1], meshShader, scene->materialLibrary.GetMaterial(MaterialLibrary::MaterialType::Dull), scene->textureLibrary.GetTexture(TextureLibrary::TextureType::Dirt));
+    MeshObject floorMesh = MeshObject(meshList[2], meshShader, scene->materialLibrary.GetMaterial(MaterialLibrary::MaterialType::Shiny), scene->textureLibrary.GetTexture(TextureLibrary::TextureType::Floor));
 
     NormalsVisualizer pyramidANormalsVisualizer = NormalsVisualizer(&pyramidA);
     NormalsVisualizer pyramidBNormalsVisualizer = NormalsVisualizer(&pyramidB);

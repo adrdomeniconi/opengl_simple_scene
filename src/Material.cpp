@@ -6,7 +6,6 @@ Material::Material(GLfloat specularIntensity, GLfloat shininess) :
     specularIntensity(specularIntensity),
     shininess(shininess)
 {
-
 }
 
 Material::~Material()

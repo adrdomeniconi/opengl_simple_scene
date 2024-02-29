@@ -8,6 +8,7 @@
 #include "ShaderLine.h"
 #include "Texture.h"
 #include "TextureLibrary.h"
+#include "MaterialLibrary.h"
 
 //TODO: Temp solution
 inline constexpr const char* VERTEX_SHADER_FILE = "Shaders/shader.vert";
@@ -27,6 +28,7 @@ public:
     ~SampleScene();
 
     TextureLibrary textureLibrary;
+    MaterialLibrary materialLibrary;
 
 private:
     std::vector<MeshObject> _objects;

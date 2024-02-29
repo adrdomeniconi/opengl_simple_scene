@@ -1,6 +1,8 @@
 #include "Scenes/SampleScene.h"
 
-SampleScene::SampleScene() : textureLibrary(TextureLibrary())
+SampleScene::SampleScene() : 
+    textureLibrary(TextureLibrary()),
+    materialLibrary(MaterialLibrary())
 {   
     //TODO: Should be transfer to a ShaderFactory
     // meshShader = new ShaderMesh(VERTEX_SHADER_FILE, FRAGMENT_SHADER_FILE);
@@ -13,9 +15,6 @@ SampleScene::SampleScene() : textureLibrary(TextureLibrary())
 
     // auto cameraSpotLight = std::make_shared<SpotLight>(1.0f, 1.0f, 1.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.1f, 0.2f, 0.0f, 0.0f, -1.0f, 0.0f, 20);
     // spotLights.push_back(cameraSpotLight);
-
-    // shinyMaterial = Material(4.0f, 256);
-    // dullMaterial = Material(0.3f, 4);
 
     // MeshObject pyramidA = MeshObject(meshList[0], meshShader, shinyMaterial, &brickTexture);
     // MeshObject pyramidB = MeshObject(meshList[1], meshShader, dullMaterial, &dirtTexture);
