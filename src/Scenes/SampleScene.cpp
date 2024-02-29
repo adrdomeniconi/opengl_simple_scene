@@ -2,7 +2,8 @@
 
 SampleScene::SampleScene() : 
     textureLibrary(TextureLibrary()),
-    materialLibrary(MaterialLibrary())
+    materialLibrary(MaterialLibrary()),
+    shaderLibrary(ShaderLibrary())
 {   
     //TODO: Should be transfer to a ShaderFactory
     // meshShader = new ShaderMesh(VERTEX_SHADER_FILE, FRAGMENT_SHADER_FILE);

@@ -20,7 +20,7 @@ public:
     void UseShader();
     void ClearShader();
 
-    ~Shader();
+    virtual ~Shader();
 
 private:
     GLuint shaderID;

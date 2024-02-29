@@ -15,13 +15,10 @@
 
 #include "MainWindow.h"
 #include "Mesh.h"
-#include "ShaderMesh.h"
-#include "ShaderLine.h"
 #include "Camera.h"
 #include "DirectionalLight.h"
 #include "PointLight.h"
 #include "SpotLight.h"
-// #include "Material.h"
 #include "Line.h"
 #include "MeshObject.h"
 #include "NormalsVisualizer.h"
@@ -32,16 +29,11 @@ const float toRadians = 3.14159265 / 180.0f;
 
 MainWindow mainWindow;
 std::vector<Mesh*> meshList;
-ShaderMesh *meshShader;
-ShaderLine *lineShader;
 Camera camera;
 
 DirectionalLight mainLight;
 std::vector<std::shared_ptr<PointLight>> pointLights;
 std::vector<std::shared_ptr<SpotLight>> spotLights;
-
-// Material shinyMaterial;
-// Material dullMaterial;
 
 GLfloat deltaTime = 0.0f;
 GLfloat lastTime = 0.0f;
@@ -115,9 +107,6 @@ int main()
     CreatePyramid();
     CreateFloor();
 
-    meshShader = new ShaderMesh(vertexShader, fragmentShader);
-    lineShader = new ShaderLine(vertexShaderLine, fragmentShaderLine);
-
     camera = Camera(glm::vec3(0.0f, 0.5f, 2.0f), glm::vec3(0.0f, 1.0f, 0.0f), -90.0f, 0.0f, 5.0f, 0.1f);
 
     mainLight = DirectionalLight(0.0f, 1.0f, 0.0f, 0.2f, 0.5f, -1.0f, 1.5f, 0.4f);
@@ -128,9 +117,6 @@ int main()
     auto cameraSpotLight = std::make_shared<SpotLight>(1.0f, 1.0f, 1.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.1f, 0.2f, 0.0f, 0.0f, -1.0f, 0.0f, 20);
     spotLights.push_back(cameraSpotLight);
 
-    // shinyMaterial = Material(4.0f, 256);
-    // dullMaterial = Material(0.3f, 4);
-
     GLuint uniformProjection = 0, 
            uniformModel = 0, 
            uniformView = 0, 
@@ -139,6 +125,9 @@ int main()
     glm::mat4 projection = glm::perspective(45.0f, (GLfloat)mainWindow.getBufferWidth()/(GLfloat)mainWindow.getBufferHeight(), 0.1f, 100.0f);
 
     SampleScene* scene = new SampleScene();
+
+    ShaderMesh* meshShader = dynamic_cast<ShaderMesh*>(scene->shaderLibrary.GetShader(ShaderLibrary::ShaderType::Mesh));
+    ShaderLine* lineShader = dynamic_cast<ShaderLine*>(scene->shaderLibrary.GetShader(ShaderLibrary::ShaderType::Line));
 
     MeshObject pyramidA = MeshObject(meshList[0], meshShader, scene->materialLibrary.GetMaterial(MaterialLibrary::MaterialType::Shiny), scene->textureLibrary.GetTexture(TextureLibrary::TextureType::Brick));
     MeshObject pyramidB = MeshObject(meshList[1], meshShader, scene->materialLibrary.GetMaterial(MaterialLibrary::MaterialType::Dull), scene->textureLibrary.GetTexture(TextureLibrary::TextureType::Dirt));

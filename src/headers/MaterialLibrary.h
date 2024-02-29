@@ -21,5 +21,5 @@ public:
     ~MaterialLibrary();
 
 private:
-    std::map<MaterialType, Material> materials;
+    std::map<MaterialType, Material> _materials;
 };

@@ -9,12 +9,7 @@
 #include "Texture.h"
 #include "TextureLibrary.h"
 #include "MaterialLibrary.h"
-
-//TODO: Temp solution
-inline constexpr const char* VERTEX_SHADER_FILE = "Shaders/shader.vert";
-inline constexpr const char* FRAGMENT_SHADER_FILE = "Shaders/shader.frag";
-inline constexpr const char* VERTEX_SHADER_LINE_FILE = "Shaders/line_shader.vert";
-inline constexpr const char* FRAGMENT_SHADER_LINE_FILE = "Shaders/line_shader.frag";
+#include "ShaderLibrary.h"
 
 class SampleScene
 {
@@ -29,6 +24,7 @@ public:
 
     TextureLibrary textureLibrary;
     MaterialLibrary materialLibrary;
+    ShaderLibrary shaderLibrary;
 
 private:
     std::vector<MeshObject> _objects;

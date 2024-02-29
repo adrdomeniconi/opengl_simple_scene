@@ -21,5 +21,5 @@ public:
 
 
 private:
-    std::map<TextureType, Texture*> textures;
+    std::map<TextureType, Texture*> _textures;
 };
