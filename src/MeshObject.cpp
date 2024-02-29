@@ -1,6 +1,6 @@
 #include "MeshObject.h"
 
-MeshObject::MeshObject(Mesh *mesh, ShaderMesh *shader, Material material, Texture *texture) : 
+MeshObject::MeshObject(Mesh *mesh, ShaderMesh *shader, Material material, Texture* texture) :
     _mesh(mesh), 
     _shader(shader), 
     _material(material), 

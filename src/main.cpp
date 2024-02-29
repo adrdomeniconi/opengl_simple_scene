@@ -18,7 +18,6 @@
 #include "ShaderMesh.h"
 #include "ShaderLine.h"
 #include "Camera.h"
-#include "Texture.h"
 #include "DirectionalLight.h"
 #include "PointLight.h"
 #include "SpotLight.h"
@@ -27,6 +26,7 @@
 #include "MeshObject.h"
 #include "NormalsVisualizer.h"
 #include "AverageNormalsCalculator.h"
+#include "Scenes/SampleScene.h"
 
 const float toRadians = 3.14159265 / 180.0f;
 
@@ -35,10 +35,6 @@ std::vector<Mesh*> meshList;
 ShaderMesh *meshShader;
 ShaderLine *lineShader;
 Camera camera;
-
-Texture brickTexture;
-Texture dirtTexture;
-Texture floorTexture;
 
 DirectionalLight mainLight;
 std::vector<std::shared_ptr<PointLight>> pointLights;
@@ -124,15 +120,6 @@ int main()
 
     camera = Camera(glm::vec3(0.0f, 0.5f, 2.0f), glm::vec3(0.0f, 1.0f, 0.0f), -90.0f, 0.0f, 5.0f, 0.1f);
 
-    brickTexture = Texture("../textures/brick.png");
-    brickTexture.LoadTexture();
-
-    dirtTexture = Texture("../textures/dirt.png");
-    dirtTexture.LoadTexture();
-
-    floorTexture = Texture("../textures/plain.png");
-    floorTexture.LoadTexture();
-
     mainLight = DirectionalLight(0.0f, 1.0f, 0.0f, 0.2f, 0.5f, -1.0f, 1.5f, 0.4f);
 
     auto pointLight1 = std::make_shared<PointLight>(1.0f, 0.0f, 0.0f, 0.2f, 0.7f, 2.0f, 1.5f, 2.0f, 0.1f, 0.2f, 0.3f);
@@ -151,18 +138,11 @@ int main()
 
     glm::mat4 projection = glm::perspective(45.0f, (GLfloat)mainWindow.getBufferWidth()/(GLfloat)mainWindow.getBufferHeight(), 0.1f, 100.0f);
 
-    GLfloat lineVertices[] = {
-    //   x      y      z    
-        0.0f, 0.0f, 0.0f,
-        0.0f, 0.9f, 0.0f
-    };
+    SampleScene* scene = new SampleScene();
 
-    Line *line = new Line();
-    line -> Create(lineVertices, 2);
-
-    MeshObject pyramidA = MeshObject(meshList[0], meshShader, shinyMaterial, &brickTexture);
-    MeshObject pyramidB = MeshObject(meshList[1], meshShader, dullMaterial, &dirtTexture);
-    MeshObject floorMesh = MeshObject(meshList[2], meshShader, shinyMaterial, &dirtTexture);
+    MeshObject pyramidA = MeshObject(meshList[0], meshShader, shinyMaterial, scene->textureLibrary.GetTexture(TextureLibrary::TextureType::Brick));
+    MeshObject pyramidB = MeshObject(meshList[1], meshShader, dullMaterial, scene->textureLibrary.GetTexture(TextureLibrary::TextureType::Dirt));
+    MeshObject floorMesh = MeshObject(meshList[2], meshShader, shinyMaterial, scene->textureLibrary.GetTexture(TextureLibrary::TextureType::Floor));
 
     NormalsVisualizer pyramidANormalsVisualizer = NormalsVisualizer(&pyramidA);
     NormalsVisualizer pyramidBNormalsVisualizer = NormalsVisualizer(&pyramidB);

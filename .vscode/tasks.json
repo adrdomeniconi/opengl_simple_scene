@@ -28,6 +28,7 @@
 
                 "-g",
                 "${workspaceFolder}/src/*.cpp",
+                "${workspaceFolder}/src/scenes/*.cpp",
                 "-o",
                 "${fileDirname}/${fileBasenameNoExtension}"
             ],
