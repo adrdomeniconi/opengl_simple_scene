@@ -3,18 +3,22 @@
 #include <vector>
 #include <GL/glew.h>
 
-#include "Mesh.h"
+#include "MeshObject.h"
+#include "Line.h"
+#include "ShaderLine.h"
 
 class NormalsVisualizer
 {
 public:
 
-    NormalsVisualizer(Mesh *mesh);
+    NormalsVisualizer(MeshObject *meshObject);
 
-    void Render();
+    void Render(ShaderLine *shaderLine, glm::mat4 projection, glm::mat4 cameraViewMatrix);
 
     ~NormalsVisualizer();
 
 private:
-    Mesh* _mesh;
+    MeshObject* _meshObject;
+    std::vector<Line*> _normalLines;
+
 };

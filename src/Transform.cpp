@@ -2,24 +2,24 @@
 
 Transform::Transform() : 
     _model(glm::mat4(1.0f)),
-    _translate(glm::vec3(0.0f, 0.0f, 0.0f)),
-    _rotate(glm::vec3(0.0f, 0.0f, 0.0f)),
+    _translation(glm::vec3(0.0f, 0.0f, 0.0f)),
+    _rotation(glm::vec3(0.0f, 0.0f, 0.0f)),
     _scale(glm::vec3(1.0f, 1.0f, 1.0f)),
-    _rotateRadians(glm::vec3(0.0f, 0.0f, 0.0f))
+    _rotationRadians(glm::vec3(0.0f, 0.0f, 0.0f))
 {
     //Do nothing
 }
 
 void Transform::Translate(GLfloat x, GLfloat y, GLfloat z)
 {
-    _translate = glm::vec3(x, y, z);
+    _translation = glm::vec3(x, y, z);
     // std::cout << _translate.x << ", " << _translate.y << ", " << _translate.z << std::endl;
 }
 
 void Transform::Rotate(GLfloat x, GLfloat y, GLfloat z)
 {
-    _rotate = glm::vec3(x, y, z);
-    _rotateRadians = glm::vec3(glm::radians(x), glm::radians(y), glm::radians(z));
+    _rotation = glm::vec3(x, y, z);
+    _rotationRadians = glm::vec3(glm::radians(x), glm::radians(y), glm::radians(z));
 }
 
 void Transform::Scale(GLfloat x, GLfloat y, GLfloat z)
@@ -32,21 +32,36 @@ void Transform::Scale(GLfloat factor)
     _scale = glm::vec3(factor, factor, factor);
 }
 
+glm::vec3 Transform::Translation()
+{
+    return _translation;
+}
+
+glm::vec3 Transform::Rotation()
+{
+    return _rotationRadians;
+}
+
+glm::vec3 Transform::Scale()
+{
+    return _scale;
+}
+
 void Transform::Apply(GLuint modelLocation)
 {
     _model = glm::mat4(1.0f);
-    _model = glm::translate(_model, _translate);
+    _model = glm::translate(_model, _translation);
 
-    if(_rotateRadians.x != 0.0f) {
-        _model = glm::rotate(_model, _rotateRadians.x, glm::vec3(1.0f, 0.0f, 0.0f));
+    if(_rotationRadians.x != 0.0f) {
+        _model = glm::rotate(_model, _rotationRadians.x, glm::vec3(1.0f, 0.0f, 0.0f));
     }
 
-    if(_rotateRadians.y != 0.0f) {
-        _model = glm::rotate(_model, _rotateRadians.y, glm::vec3(0.0f, 1.0f, 0.0f));
+    if(_rotationRadians.y != 0.0f) {
+        _model = glm::rotate(_model, _rotationRadians.y, glm::vec3(0.0f, 1.0f, 0.0f));
     }
 
-    if(_rotateRadians.z != 0.0f) {
-        _model = glm::rotate(_model, _rotateRadians.z, glm::vec3(0.0f, 0.0f, 1.0f));
+    if(_rotationRadians.z != 0.0f) {
+        _model = glm::rotate(_model, _rotationRadians.z, glm::vec3(0.0f, 0.0f, 1.0f));
     }
 
     _model = glm::scale(_model, _scale);

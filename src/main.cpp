@@ -25,12 +25,13 @@
 #include "Material.h"
 #include "Line.h"
 #include "MeshObject.h"
+#include "NormalsVisualizer.h"
 
 const float toRadians = 3.14159265 / 180.0f;
 
 MainWindow mainWindow;
 std::vector<Mesh*> meshList;
-std::vector<std::vector<Line*>> normalsList;
+// std::vector<std::vector<Line*>> normalsList;
 ShaderMesh *meshShader;
 ShaderLine *lineShader;
 Camera camera;
@@ -139,28 +140,28 @@ void CreatePyramid()
     Mesh *mesh = new Mesh();
     mesh->CreateMesh(vertices, indices, verticesDataCount, indicesCount, VERTEX_LENGTH, NORMALS_OFFSET);
 
-    std::vector<Line*> normalLines;
-    std::vector<std::array<GLfloat, 3>> verticesPos = mesh->GetVerticesPos();
-    std::vector<std::array<GLfloat, 3>> normals = mesh->GetNormals();
+    // std::vector<Line*> normalLines;
+    // std::vector<std::array<GLfloat, 3>> verticesPos = mesh->GetVerticesPos();
+    // std::vector<std::array<GLfloat, 3>> normals = mesh->GetNormals();
 
-    for(size_t i = 0 ; i < normals.size() ; i++)
-    {
-        std::array<GLfloat, 6> normalsData = {
-            verticesPos[i][0],
-            verticesPos[i][1],
-            verticesPos[i][2],
-            verticesPos[i][0] + normals[i][0],
-            verticesPos[i][1] + normals[i][1],
-            verticesPos[i][2] + normals[i][2]
-        };
+    // for(size_t i = 0 ; i < normals.size() ; i++)
+    // {
+    //     std::array<GLfloat, 6> normalsData = {
+    //         verticesPos[i][0],
+    //         verticesPos[i][1],
+    //         verticesPos[i][2],
+    //         verticesPos[i][0] + normals[i][0],
+    //         verticesPos[i][1] + normals[i][1],
+    //         verticesPos[i][2] + normals[i][2]
+    //     };
 
-        Line *line = new Line();
-        line->Create(normalsData.data(), 2);
-        normalLines.push_back(line);
-    }
+    //     Line *line = new Line();
+    //     line->Create(normalsData.data(), 2);
+    //     normalLines.push_back(line);
+    // }
 
+    // normalsList.push_back(normalLines);
     meshList.push_back(mesh);
-    normalsList.push_back(normalLines);
 }
 
 void CreateFloor()
@@ -240,6 +241,10 @@ int main()
     MeshObject* pyramidB = new MeshObject(meshList[1], meshShader, dullMaterial, &dirtTexture);
     MeshObject* floorMesh = new MeshObject(meshList[2], meshShader, shinyMaterial, &dirtTexture);
 
+    NormalsVisualizer pyramidANormalsVisualizer(pyramidA);
+    NormalsVisualizer pyramidBNormalsVisualizer(pyramidB);
+    NormalsVisualizer floorNormalsVisualizer(floorMesh);
+
     while(!mainWindow.getShouldClose())
     {
         GLfloat now = glfwGetTime();
@@ -278,40 +283,18 @@ int main()
         //First pyramid
         pyramidA->Scale(0.4f, 0.4f, 0.4f);
         pyramidA->Render();
-
-        // Normals
-        glm::mat4 model(1.0f); 
-        lineShader->UseShader();
-
-        glUniformMatrix4fv(lineShader->GetProjectionLocation(), 1, GL_FALSE, glm::value_ptr(projection));
-        glUniformMatrix4fv(lineShader->GetViewLocation(), 1, GL_FALSE, glm::value_ptr(camera.calculateViewMatrix()));
-        glUniformMatrix4fv(lineShader->GetModelLocation(), 1, GL_FALSE, glm::value_ptr(model));
-
-        for(Line *normal : normalsList[0])
-        {
-            normal->Render();
-        }
+        pyramidANormalsVisualizer.Render(lineShader, projection, camera.calculateViewMatrix());
 
         // Second Pyramid
         pyramidB->Translate(0.0f, .3, -1.5f);
         pyramidB->Scale(0.2f, 0.2f, 0.2f);
         pyramidB->Render();
-
-        // Normals
-        lineShader->UseShader();
-
-        glUniformMatrix4fv(lineShader->GetProjectionLocation(), 1, GL_FALSE, glm::value_ptr(projection));
-        glUniformMatrix4fv(lineShader->GetViewLocation(), 1, GL_FALSE, glm::value_ptr(camera.calculateViewMatrix()));
-        glUniformMatrix4fv(lineShader->GetModelLocation(), 1, GL_FALSE, glm::value_ptr(model));
-
-        for(Line *normal : normalsList[1])
-        {
-            normal->Render();
-        }
+        pyramidBNormalsVisualizer.Render(lineShader, projection, camera.calculateViewMatrix());
 
         // Floor
         floorMesh->Translate(0.0f, -2.0f, 0.0f);
         floorMesh->Render();
+        floorNormalsVisualizer.Render(lineShader, projection, camera.calculateViewMatrix());
 
         glUseProgram(0);
 

@@ -25,6 +25,21 @@ void MeshObject::Scale(GLfloat x, GLfloat y, GLfloat z)
     _transform.Scale(x, y, z);
 }
 
+glm::vec3 MeshObject::Translation()
+{
+    return _transform.Translation();
+}
+
+glm::vec3 MeshObject::Rotation()
+{
+    return _transform.Rotation();
+}
+
+glm::vec3 MeshObject::Scale()
+{
+    return _transform.Scale();
+}
+
 void MeshObject::Render()
 {     
     _shader->UseShader();
@@ -33,6 +48,11 @@ void MeshObject::Render()
     _texture->UseTexture();
     
     _mesh -> RenderMesh();
+}
+
+Mesh *MeshObject::GetMesh()
+{
+    return _mesh;
 }
 
 MeshObject::~MeshObject()
