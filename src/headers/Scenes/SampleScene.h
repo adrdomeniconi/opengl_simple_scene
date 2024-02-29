@@ -10,41 +10,33 @@
 #include "TextureLibrary.h"
 #include "MaterialLibrary.h"
 #include "ShaderLibrary.h"
+#include "Mesh.h"
 
 class SampleScene
 {
     
 public:
-
     SampleScene();
 
+
     std::vector<MeshObject> GetStageObjects();
+    MeshObject& GetStageObjects(unsigned int index);
 
     ~SampleScene();
 
-    TextureLibrary textureLibrary;
-    MaterialLibrary materialLibrary;
     ShaderLibrary shaderLibrary;
 
 private:
+    TextureLibrary _textureLibrary;
+    MaterialLibrary _materialLibrary;
     std::vector<MeshObject> _objects;
-    std::vector<Light> _lights;
-    std::vector<Shader> _shaders;
-    std::vector<Texture> _textures;
-
-    //TODO: Temporary variables (POC)
-    // ShaderMesh *meshShader;
-    // ShaderLine *lineShader;
 
     // DirectionalLight mainLight;
     // std::vector<std::shared_ptr<PointLight>> pointLights;
     // std::vector<std::shared_ptr<SpotLight>> spotLights;
-    
-    // Material shinyMaterial;
-    // Material dullMaterial;
-    //
 
-    void createFloor();
-    void createPyramid();
+    Mesh* createFloorMesh();
+    Mesh* createPyramidMesh();
+    void createObjects();
 
 };

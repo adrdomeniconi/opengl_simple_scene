@@ -1,8 +1,8 @@
 #include "NormalsVisualizer.h"
 
-NormalsVisualizer::NormalsVisualizer(MeshObject *meshObject) : _meshObject(meshObject)
+NormalsVisualizer::NormalsVisualizer(MeshObject &meshObject) : _meshObject(meshObject)
 {
-    Mesh* mesh = meshObject->GetMesh();
+    Mesh* mesh = meshObject.GetMesh();
 
     std::vector<std::array<GLfloat, 3>> verticesPos = mesh->GetVerticesPos();
     std::vector<std::array<GLfloat, 3>> normals = mesh->GetNormals();
@@ -29,11 +29,11 @@ void NormalsVisualizer::Render(ShaderLine *shaderLine)
     shaderLine->UseShader();
 
     glm::mat4 model(1.0f);
-    model = glm::translate(model, _meshObject->Translation());
-    model = glm::rotate(model, _meshObject->Rotation().x, glm::vec3(1.0f, 0.0f, 0.0f));
-    model = glm::rotate(model, _meshObject->Rotation().y, glm::vec3(0.0f, 1.0f, 0.0f));
-    model = glm::rotate(model, _meshObject->Rotation().z, glm::vec3(0.0f, 0.0f, 1.0f));
-    model = glm::scale(model, _meshObject->Scale());
+    model = glm::translate(model, _meshObject.Translation());
+    model = glm::rotate(model, _meshObject.Rotation().x, glm::vec3(1.0f, 0.0f, 0.0f));
+    model = glm::rotate(model, _meshObject.Rotation().y, glm::vec3(0.0f, 1.0f, 0.0f));
+    model = glm::rotate(model, _meshObject.Rotation().z, glm::vec3(0.0f, 0.0f, 1.0f));
+    model = glm::scale(model, _meshObject.Scale());
 
     glUniformMatrix4fv(shaderLine->GetModelLocation(), 1, GL_FALSE, glm::value_ptr(model));
 

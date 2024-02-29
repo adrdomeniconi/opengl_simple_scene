@@ -46,7 +46,6 @@ void MeshObject::Render()
     _transform.Apply(_shader->GetModelLocation());
     _material.Use(_shader->GetSpecularIntensityLocation(), _shader->GetSpecularShininessLocation());
     _texture->UseTexture();
-    
     _mesh -> RenderMesh();
 }
 
