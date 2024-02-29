@@ -31,7 +31,6 @@ const float toRadians = 3.14159265 / 180.0f;
 
 MainWindow mainWindow;
 std::vector<Mesh*> meshList;
-// std::vector<std::vector<Line*>> normalsList;
 ShaderMesh *meshShader;
 ShaderLine *lineShader;
 Camera camera;
@@ -140,27 +139,6 @@ void CreatePyramid()
     Mesh *mesh = new Mesh();
     mesh->CreateMesh(vertices, indices, verticesDataCount, indicesCount, VERTEX_LENGTH, NORMALS_OFFSET);
 
-    // std::vector<Line*> normalLines;
-    // std::vector<std::array<GLfloat, 3>> verticesPos = mesh->GetVerticesPos();
-    // std::vector<std::array<GLfloat, 3>> normals = mesh->GetNormals();
-
-    // for(size_t i = 0 ; i < normals.size() ; i++)
-    // {
-    //     std::array<GLfloat, 6> normalsData = {
-    //         verticesPos[i][0],
-    //         verticesPos[i][1],
-    //         verticesPos[i][2],
-    //         verticesPos[i][0] + normals[i][0],
-    //         verticesPos[i][1] + normals[i][1],
-    //         verticesPos[i][2] + normals[i][2]
-    //     };
-
-    //     Line *line = new Line();
-    //     line->Create(normalsData.data(), 2);
-    //     normalLines.push_back(line);
-    // }
-
-    // normalsList.push_back(normalLines);
     meshList.push_back(mesh);
 }
 
