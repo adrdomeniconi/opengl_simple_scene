@@ -26,6 +26,7 @@
 #include "Line.h"
 #include "MeshObject.h"
 #include "NormalsVisualizer.h"
+#include "AverageNormalsCalculator.h"
 
 const float toRadians = 3.14159265 / 180.0f;
 
@@ -54,62 +55,6 @@ static const char* fragmentShader = "Shaders/shader.frag";
 static const char* vertexShaderLine = "Shaders/line_shader.vert";
 static const char* fragmentShaderLine = "Shaders/line_shader.frag";
 
-void accumulateVerticeNormal(GLfloat *vertices, unsigned int verticeIdx, glm::vec3 normal, unsigned int normalOffset)
-{
-    unsigned int verticeNormalsIdx = verticeIdx + normalOffset;
-    vertices[verticeNormalsIdx] += normal.x;
-    vertices[verticeNormalsIdx + 1] += normal.y;
-    vertices[verticeNormalsIdx + 2] += normal.z;
-}
-
-void updateVerticeNormal(GLfloat *vertices, unsigned int verticeIdx, glm::vec3 normal, unsigned int normalOffset)
-{
-    unsigned int verticeNormalsIdx = verticeIdx + normalOffset;
-    vertices[verticeNormalsIdx] = normal.x;
-    vertices[verticeNormalsIdx + 1] = normal.y;
-    vertices[verticeNormalsIdx + 2] = normal.z;
-}
-
-void normalizeVerticesNormals(GLfloat *vertices, unsigned int verticesCount, unsigned int verticesLength, unsigned int normalOffset)
-{
-    for(size_t i = 0; i < verticesCount/verticesLength; i++)
-    {
-        unsigned int verticeNormalsIdx = i * verticesLength + normalOffset;
-
-        glm::vec3 normal(vertices[verticeNormalsIdx], vertices[verticeNormalsIdx + 1], vertices[verticeNormalsIdx + 2]);
-        normal = glm::normalize(normal);
-
-        updateVerticeNormal(vertices, i * verticesLength, normal, normalOffset);
-    }
-}
-
-void calculateAverageNormals(unsigned int *indices, unsigned int indicesCount, GLfloat *vertices, unsigned int verticesCount, unsigned int verticesLength, unsigned int normalOffset)
-{
-    //For each verex the normals are calculated as the average of the triangles of the surfaces that the vertex is part.
-    for(size_t i = 0; i < indicesCount; i += 3)
-    {
-        unsigned int vertice0Idx = indices[i] * verticesLength;
-        unsigned int vertice1Idx = indices[i+1] * verticesLength;
-        unsigned int vertice2Idx = indices[i+2] * verticesLength;
-
-        glm::vec3 vertice0_pos(vertices[vertice0Idx], vertices[vertice0Idx + 1], vertices[vertice0Idx + 2]);
-        glm::vec3 vertice1Pos(vertices[vertice1Idx], vertices[vertice1Idx + 1], vertices[vertice1Idx + 2]);
-        glm::vec3 vertice2Pos(vertices[vertice2Idx], vertices[vertice2Idx + 1], vertices[vertice2Idx + 2]);
-
-        glm::vec3 edge1 = vertice1Pos - vertice0_pos;
-        glm::vec3 edge2 = vertice2Pos - vertice0_pos;
-
-        glm::vec3 normal = glm::cross(edge1, edge2);
-        normal = glm::normalize(normal);
-
-        accumulateVerticeNormal(vertices, vertice0Idx, normal, normalOffset);
-        accumulateVerticeNormal(vertices, vertice1Idx, normal, normalOffset);
-        accumulateVerticeNormal(vertices, vertice2Idx, normal, normalOffset);
-    }
-
-    normalizeVerticesNormals(vertices, verticesCount, verticesLength, normalOffset);
-}
-
 void CreatePyramid()
 {
     unsigned int indices[] = {
@@ -134,7 +79,7 @@ void CreatePyramid()
     const unsigned int NORMALS_OFFSET = 5;
     const unsigned int verticesCount = verticesDataCount/VERTEX_LENGTH;
 
-    calculateAverageNormals(indices, indicesCount, vertices, verticesDataCount, VERTEX_LENGTH, NORMALS_OFFSET);
+    AverageNormalsCalculator::Calculate(indices, indicesCount, vertices, verticesDataCount, VERTEX_LENGTH, NORMALS_OFFSET);
 
     Mesh *mesh = new Mesh();
     mesh->CreateMesh(vertices, indices, verticesDataCount, indicesCount, VERTEX_LENGTH, NORMALS_OFFSET);
@@ -219,9 +164,9 @@ int main()
     MeshObject pyramidB = MeshObject(meshList[1], meshShader, dullMaterial, &dirtTexture);
     MeshObject floorMesh = MeshObject(meshList[2], meshShader, shinyMaterial, &dirtTexture);
 
-    NormalsVisualizer pyramidANormalsVisualizer(&pyramidA);
-    NormalsVisualizer pyramidBNormalsVisualizer(&pyramidB);
-    NormalsVisualizer floorNormalsVisualizer(&floorMesh);
+    NormalsVisualizer pyramidANormalsVisualizer = NormalsVisualizer(&pyramidA);
+    NormalsVisualizer pyramidBNormalsVisualizer = NormalsVisualizer(&pyramidB);
+    NormalsVisualizer floorNormalsVisualizer = NormalsVisualizer(&floorMesh);
 
     while(!mainWindow.getShouldClose())
     {
