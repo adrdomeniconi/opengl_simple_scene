@@ -13,7 +13,7 @@ public:
 
     NormalsVisualizer(MeshObject *meshObject);
 
-    void Render(ShaderLine *shaderLine, glm::mat4 projection, glm::mat4 cameraViewMatrix);
+    void Render(ShaderLine *shaderLine);
 
     ~NormalsVisualizer();
 

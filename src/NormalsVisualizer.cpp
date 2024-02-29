@@ -24,12 +24,9 @@ NormalsVisualizer::NormalsVisualizer(MeshObject *meshObject) : _meshObject(meshO
     }
 }
 
-void NormalsVisualizer::Render(ShaderLine *shaderLine, glm::mat4 projection, glm::mat4 cameraViewMatrix)
+void NormalsVisualizer::Render(ShaderLine *shaderLine)
 {
     shaderLine->UseShader();
-
-    glUniformMatrix4fv(shaderLine->GetProjectionLocation(), 1, GL_FALSE, glm::value_ptr(projection));
-    glUniformMatrix4fv(shaderLine->GetViewLocation(), 1, GL_FALSE, glm::value_ptr(cameraViewMatrix));
 
     glm::mat4 model(1.0f);
     model = glm::translate(model, _meshObject->Translation());

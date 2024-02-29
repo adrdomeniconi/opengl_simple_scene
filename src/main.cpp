@@ -261,40 +261,39 @@ int main()
         glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        // std::cout << "Current direction: " << camera.GetDirection().x << ", " << camera.GetDirection().y << ", " << camera.GetDirection().z << ", " << std::endl;
         cameraSpotLight->SetDirection(camera.GetDirection());
         cameraSpotLight->SetPosition(camera.GetPosition());
 
-        //Configure the shader
+        //Configure the Mesh shader
         meshShader->UseShader();
         meshShader->SetDirectionalLight(&mainLight);
         meshShader->SetPointLights(pointLights);
         meshShader->SetSpotLights(spotLights);
 
-        uniformModel = meshShader->GetModelLocation();
-        uniformProjection = meshShader->GetProjectionLocation();
-        uniformView = meshShader->GetViewLocation();
-        uniformCameraPosition = meshShader->GetCameraPositionLocation();
+        glUniformMatrix4fv(meshShader->GetProjectionLocation(), 1, GL_FALSE, glm::value_ptr(projection));
+        glUniformMatrix4fv(meshShader->GetViewLocation(), 1, GL_FALSE, glm::value_ptr(camera.calculateViewMatrix()));
+        glUniform3f(meshShader->GetCameraPositionLocation(), camera.GetPosition().x, camera.GetPosition().y, camera.GetPosition().z);
 
-        glUniformMatrix4fv(uniformProjection, 1, GL_FALSE, glm::value_ptr(projection));
-        glUniformMatrix4fv(uniformView, 1, GL_FALSE, glm::value_ptr(camera.calculateViewMatrix()));
-        glUniform3f(uniformCameraPosition, camera.GetPosition().x, camera.GetPosition().y, camera.GetPosition().z);
+        //Configure the Line shader
+        lineShader->UseShader();
+        glUniformMatrix4fv(lineShader->GetProjectionLocation(), 1, GL_FALSE, glm::value_ptr(projection));
+        glUniformMatrix4fv(lineShader->GetViewLocation(), 1, GL_FALSE, glm::value_ptr(camera.calculateViewMatrix()));
       
         //First pyramid
         pyramidA->Scale(0.4f, 0.4f, 0.4f);
         pyramidA->Render();
-        pyramidANormalsVisualizer.Render(lineShader, projection, camera.calculateViewMatrix());
+        pyramidANormalsVisualizer.Render(lineShader);
 
         // Second Pyramid
         pyramidB->Translate(0.0f, .3, -1.5f);
         pyramidB->Scale(0.2f, 0.2f, 0.2f);
         pyramidB->Render();
-        pyramidBNormalsVisualizer.Render(lineShader, projection, camera.calculateViewMatrix());
+        pyramidBNormalsVisualizer.Render(lineShader);
 
         // Floor
         floorMesh->Translate(0.0f, -2.0f, 0.0f);
         floorMesh->Render();
-        floorNormalsVisualizer.Render(lineShader, projection, camera.calculateViewMatrix());
+        floorNormalsVisualizer.Render(lineShader);
 
         glUseProgram(0);
 
