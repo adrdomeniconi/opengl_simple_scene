@@ -140,12 +140,22 @@ void CreatePyramid()
     mesh->CreateMesh(vertices, indices, verticesDataCount, indicesCount, VERTEX_LENGTH, NORMALS_OFFSET);
 
     std::vector<Line*> normalLines;
+    std::vector<std::array<GLfloat, 3>> verticesPos = mesh->GetVerticesPos();
+    std::vector<std::array<GLfloat, 3>> normals = mesh->GetNormals();
 
-    std::vector<std::array<GLfloat, 6>> normals = mesh->GetNormals();
     for(size_t i = 0 ; i < normals.size() ; i++)
     {
+        std::array<GLfloat, 6> normalsData = {
+            verticesPos[i][0],
+            verticesPos[i][1],
+            verticesPos[i][2],
+            verticesPos[i][0] + normals[i][0],
+            verticesPos[i][1] + normals[i][1],
+            verticesPos[i][2] + normals[i][2]
+        };
+
         Line *line = new Line();
-        line->Create(normals[i].data(), 2);
+        line->Create(normalsData.data(), 2);
         normalLines.push_back(line);
     }
 

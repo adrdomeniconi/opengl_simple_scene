@@ -32,14 +32,16 @@ Mesh::Mesh()
     _normalsOffset = 0;
 }
 
-void Mesh::CreateMesh(GLfloat *vertices, unsigned int *indices, unsigned int vertexDataCount, unsigned int indexCount, unsigned int vertexLength, unsigned int normalsOffset)
+void Mesh::CreateMesh(GLfloat *verticesData, unsigned int *indices, unsigned int vertexDataCount, unsigned int indexCount, unsigned int vertexLength, unsigned int normalsOffset)
 {
-    _vertices = vertices;
+    _verticesData = std::make_unique<GLfloat[]>(vertexDataCount);
+    std::copy(verticesData, verticesData + vertexDataCount, _verticesData.get());
+    
     _indexCount = indexCount;
     _vertexDataCount = vertexDataCount;
     _vertexLength = vertexLength;
     _normalsOffset = normalsOffset;
-    
+
     int VERTEX_LENGTH = 8;
 
     int POS_OFFSET = 0;
@@ -60,11 +62,11 @@ void Mesh::CreateMesh(GLfloat *vertices, unsigned int *indices, unsigned int ver
 
     glGenBuffers(1, &VBO);
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices[0]) * vertexDataCount, vertices, GL_STATIC_DRAW);  //Copy the data to the GPU
+    glBufferData(GL_ARRAY_BUFFER, sizeof(verticesData[0]) * vertexDataCount, verticesData, GL_STATIC_DRAW);  //Copy the data to the GPU
     
-    configureVerticesAttribute(0, POS_LENGTH, vertices, VERTEX_LENGTH, POS_OFFSET);
-    configureVerticesAttribute(1, TEXTURE_LENGTH, vertices, VERTEX_LENGTH, TEXTURE_OFFSET);
-    configureVerticesAttribute(2, NORMALS_LENGTH, vertices, VERTEX_LENGTH, NORMALS_OFFSET);
+    configureVerticesAttribute(0, POS_LENGTH, verticesData, VERTEX_LENGTH, POS_OFFSET);
+    configureVerticesAttribute(1, TEXTURE_LENGTH, verticesData, VERTEX_LENGTH, TEXTURE_OFFSET);
+    configureVerticesAttribute(2, NORMALS_LENGTH, verticesData, VERTEX_LENGTH, NORMALS_OFFSET);
 
     UnbindAll();
 }
@@ -76,9 +78,9 @@ void Mesh::UnbindAll()
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 }
 
-void Mesh::configureVerticesAttribute(unsigned int index, unsigned int vertexAttributesLength, GLfloat *vertices, int VERTEX_LENGTH, unsigned int offset)
+void Mesh::configureVerticesAttribute(unsigned int index, unsigned int vertexAttributesLength, GLfloat *verticesData, int VERTEX_LENGTH, unsigned int offset)
 {
-    glVertexAttribPointer(index, vertexAttributesLength, GL_FLOAT, GL_FALSE, sizeof(vertices[0]) * VERTEX_LENGTH, (void *)(sizeof(vertices[0]) * offset));
+    glVertexAttribPointer(index, vertexAttributesLength, GL_FLOAT, GL_FALSE, sizeof(verticesData[0]) * VERTEX_LENGTH, (void *)(sizeof(verticesData[0]) * offset));
     glEnableVertexAttribArray(index);
 }
 
@@ -115,22 +117,18 @@ void Mesh::ClearMesh()
     _indexCount = 0;
 }
 
-std::vector<std::array<GLfloat, 6>> Mesh::GetNormals()
+std::vector<std::array<GLfloat, 3>> Mesh::GetNormals()
 {
     const unsigned int verticesCount = _vertexDataCount/_vertexLength;
-    std::vector<std::array<GLfloat, 6>> normals;
+    std::vector<std::array<GLfloat, 3>> normals;
 
-    std::cout << "Start getting normals: " << std::endl;
     for(int i = 0; i < verticesCount; i ++)
     {
         int baseIdx = i * _vertexLength;
-        std::array<GLfloat, 6> normalVertices = {
-            _vertices[baseIdx],
-            _vertices[baseIdx + 1],
-            _vertices[baseIdx + 2],
-            _vertices[baseIdx] + _vertices[baseIdx + _normalsOffset],
-            _vertices[baseIdx + 1] + _vertices[baseIdx + 1 + _normalsOffset],
-            _vertices[baseIdx + 2] + _vertices[baseIdx + 2 + _normalsOffset]
+        std::array<GLfloat, 3> normalVertices = {
+            _verticesData[baseIdx + _normalsOffset],
+            _verticesData[baseIdx + 1 + _normalsOffset],
+            _verticesData[baseIdx + 2 + _normalsOffset]
         };
 
         normals.push_back(normalVertices);
@@ -138,6 +136,27 @@ std::vector<std::array<GLfloat, 6>> Mesh::GetNormals()
 
     return normals;
 }
+
+std::vector<std::array<GLfloat, 3>> Mesh::GetVerticesPos()
+{
+    const unsigned int verticesCount = _vertexDataCount/_vertexLength;
+    std::vector<std::array<GLfloat, 3>> onlyVertices;
+
+    for(int i = 0; i < verticesCount; i ++)
+    {
+        int baseIdx = i * _vertexLength;
+        std::array<GLfloat, 3> normalVertices = {
+            _verticesData[baseIdx],
+            _verticesData[baseIdx + 1],
+            _verticesData[baseIdx + 2]
+        };
+
+        onlyVertices.push_back(normalVertices);
+    }
+
+    return onlyVertices;
+}
+
 
 Mesh::~Mesh()
 {

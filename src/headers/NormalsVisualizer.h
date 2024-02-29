@@ -10,8 +10,11 @@ class NormalsVisualizer
 public:
 
     NormalsVisualizer(Mesh *mesh);
+
+    void Render();
+
     ~NormalsVisualizer();
 
 private:
-    std::vector<GLfloat> _normals;
+    Mesh* _mesh;
 };

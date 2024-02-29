@@ -3,24 +3,27 @@
 #include <GL/glew.h>
 #include <vector>
 #include <iostream>
+#include <memory>
+
 
 class Mesh
 {
 public:
     Mesh();
 
-void CreateMesh(GLfloat *vertices, unsigned int *indices, unsigned int vertexDataCount, unsigned int indexCount, unsigned int vertexLength, unsigned int normalsOffset);
+void CreateMesh(GLfloat *verticesData, unsigned int *indices, unsigned int vertexDataCount, unsigned int indexCount, unsigned int vertexLength, unsigned int normalsOffset);
 void UnbindAll();
 void RenderMesh();
 void ClearMesh();
 
-std::vector<std::array<GLfloat, 6>> GetNormals();
+std::vector<std::array<GLfloat, 3>> GetNormals();
+std::vector<std::array<GLfloat, 3>> GetVerticesPos();
 
 ~Mesh();
 
 private:
     GLuint VAO, VBO, IBO;
-    GLfloat* _vertices;
+    std::unique_ptr<GLfloat[]> _verticesData;
     GLsizei _indexCount;
     GLsizei _vertexDataCount;
     GLsizei _vertexLength;
