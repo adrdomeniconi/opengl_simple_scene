@@ -19,7 +19,7 @@ class SampleScene
 {
     
 public:
-    SampleScene();
+    SampleScene(TextureLibrary* textureLibrary, MaterialLibrary* materialLibrary, ShaderLibrary* shaderLibrary);
 
     std::vector<MeshObject> GetStageObjects();
 
@@ -28,20 +28,22 @@ public:
 
     ~SampleScene();
 
-    ShaderLibrary shaderLibrary;
+private:
+    std::vector<MeshObject> _objects;
+    ShaderMesh* _shaderMesh; 
+    
+    TextureLibrary* _textureLibrary;
+    MaterialLibrary* _materialLibrary;
+    ShaderLibrary* _shaderLibrary;
+
     DirectionalLight mainLight;
     std::vector<PointLight> pointLights;
     std::vector<SpotLight> spotLights;
 
-private:
-    TextureLibrary _textureLibrary;
-    MaterialLibrary _materialLibrary;
-    std::vector<MeshObject> _objects;
-    ShaderMesh* _shaderMesh; 
-
-
     Mesh* createFloorMesh();
     Mesh* createPyramidMesh();
+
     void createObjects();
+    void createLights();
 
 };
