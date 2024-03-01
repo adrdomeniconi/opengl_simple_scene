@@ -14,12 +14,8 @@
 #include <GLM/gtc/type_ptr.hpp>
 
 #include "MainWindow.h"
-#include "Mesh.h"
 #include "Camera.h"
-#include "Line.h"
-#include "MeshObject.h"
 #include "NormalsVisualizer.h"
-#include "AverageNormalsCalculator.h"
 #include "Scenes/SampleScene.h"
 #include "ShaderLibrary.h"
 #include "TextureLibrary.h"

@@ -6,7 +6,8 @@
                 "${workspaceFolder}/**",
                 "${workspaceFolder}/include",
                 "${workspaceFolder}/dependencies/glew/2.2.0_1/include/GL",
-                "${workspaceFolder}/dependencies/glm/include"
+                "${workspaceFolder}/dependencies/glm/include",
+                "${workspaceFolder}/dependencies/stb_image"
             ],
             "defines": [],
             "macFrameworkPath": [
