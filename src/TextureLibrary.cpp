@@ -2,9 +2,9 @@
 
 TextureLibrary::TextureLibrary()
 {
-    _textures[TextureType::Brick] = new Texture("../textures/brick.png");
-    _textures[TextureType::Dirt] = new Texture("../textures/dirt.png");
-    _textures[TextureType::Floor] = new Texture("../textures/plain.png");
+    _textures[TextureType::Brick] = new Texture("../resources/textures/brick.png");
+    _textures[TextureType::Dirt] = new Texture("../resources/textures/dirt.png");
+    _textures[TextureType::Floor] = new Texture("../resources/textures/plain.png");
 
     //TODO: Can be improved to load only the textures that will be used
     for (auto texturePair : _textures) {
