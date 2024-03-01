@@ -12,7 +12,7 @@
                 "-I${workspaceFolder}/dependencies/glew/2.2.0_1/include",
                 "-I${workspaceFolder}/dependencies/glfw/3.3.9/include",
                 "-I${workspaceFolder}/dependencies/glm/include",
-                "-I${workspaceFolder}/src/headers",
+                "-I${workspaceFolder}/include",
 
                 // Libraries
                 "-L${workspaceFolder}/dependencies/glew/2.2.0_1/lib",

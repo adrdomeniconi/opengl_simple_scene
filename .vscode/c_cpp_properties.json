@@ -4,7 +4,7 @@
             "name": "Mac",
             "includePath": [
                 "${workspaceFolder}/**",
-                "${workspaceFolder}/src/headers",
+                "${workspaceFolder}/include",
                 "${workspaceFolder}/dependencies/glew/2.2.0_1/include/GL",
                 "${workspaceFolder}/dependencies/glm/include"
             ],

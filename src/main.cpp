@@ -24,13 +24,18 @@
 #include "ShaderLibrary.h"
 #include "TextureLibrary.h"
 #include "MaterialLibrary.h"
-#include "main.h"
 
 MainWindow mainWindow;
 Camera camera;
 
 GLfloat deltaTime = 0.0f;
 GLfloat lastTime = 0.0f;
+
+void ClearWindow()
+{
+    glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+}
 
 int main() 
 {
@@ -81,10 +86,4 @@ int main()
     }
 
     return 0;
-}
-
-void ClearWindow()
-{
-    glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
