@@ -33,4 +33,4 @@
 
 src/main
 src/main.dSYM/*
-build/*.*
+build/
