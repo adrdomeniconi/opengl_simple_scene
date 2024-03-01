@@ -16,9 +16,9 @@
 #include "MainWindow.h"
 #include "Mesh.h"
 #include "Camera.h"
-#include "DirectionalLight.h"
-#include "PointLight.h"
-#include "SpotLight.h"
+// #include "DirectionalLight.h"
+// #include "PointLight.h"
+// #include "SpotLight.h"
 #include "Line.h"
 #include "MeshObject.h"
 #include "NormalsVisualizer.h"
@@ -28,9 +28,9 @@
 MainWindow mainWindow;
 Camera camera;
 
-DirectionalLight mainLight;
-std::vector<std::shared_ptr<PointLight>> pointLights;
-std::vector<std::shared_ptr<SpotLight>> spotLights;
+// DirectionalLight mainLight;
+// std::vector<PointLight> pointLights;
+// std::vector<SpotLight> spotLights;
 
 GLfloat deltaTime = 0.0f;
 GLfloat lastTime = 0.0f;
@@ -42,13 +42,9 @@ int main()
 
     camera = Camera(glm::vec3(0.0f, 0.5f, 2.0f), glm::vec3(0.0f, 1.0f, 0.0f), -90.0f, 0.0f, 5.0f, 0.1f);
 
-    mainLight = DirectionalLight(0.0f, 1.0f, 0.0f, 0.2f, 0.5f, -1.0f, 1.5f, 0.4f);
-
-    auto pointLight1 = std::make_shared<PointLight>(1.0f, 0.0f, 0.0f, 0.2f, 0.7f, 2.0f, 1.5f, 2.0f, 0.1f, 0.2f, 0.3f);
-    pointLights.push_back(pointLight1);
-
-    auto cameraSpotLight = std::make_shared<SpotLight>(1.0f, 1.0f, 1.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.1f, 0.2f, 0.0f, 0.0f, -1.0f, 0.0f, 20);
-    spotLights.push_back(cameraSpotLight);
+    // mainLight = DirectionalLight(0.0f, 1.0f, 0.0f, 0.2f, 0.5f, -1.0f, 1.5f, 0.4f);
+    // pointLights.push_back(PointLight(1.0f, 0.0f, 0.0f, 0.2f, 0.7f, 2.0f, 1.5f, 2.0f, 0.1f, 0.2f, 0.3f));
+    // spotLights.push_back(SpotLight(1.0f, 1.0f, 1.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.1f, 0.2f, 0.0f, 0.0f, -1.0f, 0.0f, 20));
 
     glm::mat4 projection = glm::perspective(45.0f, (GLfloat)mainWindow.getBufferWidth()/(GLfloat)mainWindow.getBufferHeight(), 0.1f, 100.0f);
 
@@ -77,18 +73,9 @@ int main()
         glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        cameraSpotLight->SetDirection(camera.GetDirection());
-        cameraSpotLight->SetPosition(camera.GetPosition());
-
-        //Configure the Mesh shader
-        meshShader->UseShader();
-        meshShader->SetDirectionalLight(&mainLight);
-        meshShader->SetPointLights(pointLights);
-        meshShader->SetSpotLights(spotLights);
-
-        glUniformMatrix4fv(meshShader->GetProjectionLocation(), 1, GL_FALSE, glm::value_ptr(projection));
-        glUniformMatrix4fv(meshShader->GetViewLocation(), 1, GL_FALSE, glm::value_ptr(camera.calculateViewMatrix()));
-        glUniform3f(meshShader->GetCameraPositionLocation(), camera.GetPosition().x, camera.GetPosition().y, camera.GetPosition().z);
+        // spotLights[0].SetDirection(camera.GetDirection());
+        // spotLights[0].SetPosition(camera.GetPosition());
+        scene->Update(camera, projection);
 
         //Configure the Line shader
         lineShader->UseShader();

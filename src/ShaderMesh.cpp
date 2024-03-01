@@ -78,20 +78,20 @@ GLuint ShaderMesh::GetSpecularIntensityLocation() { return uniformSpecularIntens
 
 GLuint ShaderMesh::GetSpecularShininessLocation() { return uniformSpecularShininess; }
 
-void ShaderMesh::SetDirectionalLight(DirectionalLight *directionalLight)
+void ShaderMesh::SetDirectionalLight(DirectionalLight directionalLight)
 {
-    directionalLight->UseLight(uniformDirectionalLight.ambientIntesity, uniformDirectionalLight.ambientColour, uniformDirectionalLight.diffuseIntesity, uniformDirectionalLight.direction);
+    directionalLight.UseLight(uniformDirectionalLight.ambientIntesity, uniformDirectionalLight.ambientColour, uniformDirectionalLight.diffuseIntesity, uniformDirectionalLight.direction);
 }
 
-void ShaderMesh::SetPointLights(const std::vector<std::shared_ptr<PointLight>> &pointLights)
+void ShaderMesh::SetPointLights(const std::vector<PointLight> pointLights)
 {
     if(pointLights.size() > MAX_POINT_LIGHTS_COUNT) 
         throw std::runtime_error("Max point light count reached. Cannot add nother point light.");
     
     unsigned int idx = 0;
-    for(const std::shared_ptr<PointLight>& pointLight : pointLights)
+    for(const PointLight pointLight : pointLights)
     {
-        pointLight->UseLight(uniformPointLights[idx].ambientIntesity, 
+        pointLight.UseLight(uniformPointLights[idx].ambientIntesity, 
                             uniformPointLights[idx].ambientColour, 
                             uniformPointLights[idx].diffuseIntesity, 
                             uniformPointLights[idx].position, 
@@ -106,15 +106,15 @@ void ShaderMesh::SetPointLights(const std::vector<std::shared_ptr<PointLight>> &
     glUniform1i(uniformPointLightsCount, pointLightsCount);
 }
 
-void ShaderMesh::SetSpotLights(const std::vector<std::shared_ptr<SpotLight>> &spotLights)
+void ShaderMesh::SetSpotLights(const std::vector<SpotLight> spotLights)
 {
     if(spotLights.size() > MAX_SPOT_LIGHTS_COUNT) 
         throw std::runtime_error("Max Spotlights count reached. Cannot add nother spotlight.");
     
     unsigned int idx = 0;
-    for(const std::shared_ptr<SpotLight>& spotLight : spotLights)
+    for(const SpotLight spotLight : spotLights)
     {
-        spotLight->UseLight(uniformSpotLights[idx].ambientIntesity, 
+        spotLight.UseLight(uniformSpotLights[idx].ambientIntesity, 
                             uniformSpotLights[idx].ambientColour, 
                             uniformSpotLights[idx].diffuseIntesity, 
                             uniformSpotLights[idx].position, 
