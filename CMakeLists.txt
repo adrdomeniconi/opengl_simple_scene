@@ -12,9 +12,11 @@ add_executable(${PROJECT_NAME} ${SOURCES})
 if(APPLE)
     set(GLEW_INCLUDE_DIR "${PROJECT_SOURCE_DIR}/dependencies/osx/glew/include")
     set(GLFW_INCLUDE_DIR "${PROJECT_SOURCE_DIR}/dependencies/osx/glfw/include")
+    set(ASSIMP_PATH "${PROJECT_SOURCE_DIR}/dependencies/osx/assimp/include")
 elseif(WIN32)
     set(GLEW_INCLUDE_DIR "${PROJECT_SOURCE_DIR}/dependencies/win/glew-2.1.0/include")
     set(GLFW_INCLUDE_DIR "${PROJECT_SOURCE_DIR}/dependencies/win/glfw-3.4/include")
+    set(ASSIMP_PATH "${PROJECT_SOURCE_DIR}/dependencies/win/assimp/include")
 endif()
 
 target_include_directories(${PROJECT_NAME} PRIVATE
@@ -22,23 +24,27 @@ target_include_directories(${PROJECT_NAME} PRIVATE
     dependencies/glm/include
     ${GLEW_INCLUDE_DIR}
     ${GLFW_INCLUDE_DIR}
+    ${ASSIMP_PATH}
     dependencies/stb_image/include
 )
 
-# find_library use relative paths from the project source directory
 if(APPLE)
     set(GLEW_PATH "${PROJECT_SOURCE_DIR}/dependencies/osx/glew")
     set(GLFW_PATH "${PROJECT_SOURCE_DIR}/dependencies/osx/glfw")
+    set(ASSIMP_PATH "${PROJECT_SOURCE_DIR}/dependencies/osx/assimp")
 elseif(WIN32)
     set(GLEW_PATH "${PROJECT_SOURCE_DIR}/dependencies/win/glew-2.1.0")
     set(GLFW_PATH "${PROJECT_SOURCE_DIR}/dependencies/win/glfw-3.4")
+    set(ASSIMP_PATH "${PROJECT_SOURCE_DIR}/dependencies/win/assimp")
 endif()
 
 find_library(GLEW_LIBRARY NAMES GLEW32 GLEW glew32s PATHS ${GLEW_PATH}/lib NO_DEFAULT_PATH)
-find_library(GLFW_LIBRARY NAMES glfw3 glfw PATHS ${GLFW_PATH}/lib NO_DEFAULT_PATH)
+find_library(GLFW_LIBRARY NAMES glfw3 glfw PATHS ${GLFW_PATH}/lib NO_DEFAULT_PATH) 
 
-message(STATUS ${GLEW_PATH})
-message(STATUS ${GLFW_PATH}) 
+if(WIN32)
+    set(ASSIMP_LIBRARY "${ASSIMP_PATH}/lib/assimp-vc143-mt.lib")
+endif()
+
 
 # Linking against the OpenGL framework on macOS
 if(APPLE)
@@ -50,6 +56,7 @@ endif()
 target_link_libraries(${PROJECT_NAME}
     ${GLEW_LIBRARY}
     ${GLFW_LIBRARY}
+    ${ASSIMP_LIBRARY}
     ${OPENGL_LINK}
 )
 

@@ -9,7 +9,7 @@ TextureLibrary::TextureLibrary()
     //TODO: Can be improved to load only the textures that will be used
     for (auto texturePair : _textures) {
         std::cout << static_cast<int>(texturePair.first) << ": " << texturePair.second << std::endl;
-        texturePair.second->LoadTexture();
+        texturePair.second->LoadTextureAlpha();
     }
 }
 
