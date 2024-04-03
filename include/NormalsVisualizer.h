@@ -2,6 +2,7 @@
 
 #include <vector>
 #include <GL/glew.h>
+#include <array>
 
 #include "MeshObject.h"
 #include "Line.h"
