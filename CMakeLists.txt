@@ -8,6 +8,10 @@ set(CMAKE_CXX_STANDARD_REQUIRED True)
 file(GLOB_RECURSE SOURCES "src/*.cpp")
 add_executable(${PROJECT_NAME} ${SOURCES})
 
+if(APPLE)
+    message(FATAL_ERROR "Assimp dependency is not available for Mac yet. Please add the required dependency first.")
+endif()
+
 # Using target_include_directories for specifying include directories
 if(APPLE)
     set(GLEW_INCLUDE_DIR "${PROJECT_SOURCE_DIR}/dependencies/osx/glew/include")
