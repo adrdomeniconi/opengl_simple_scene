@@ -6,10 +6,10 @@
 #include <memory>
 #include <array>
 
-class Mesh
+class MeshRenderer
 {
 public:
-    Mesh();
+    MeshRenderer();
 
 void CreateMesh(GLfloat *verticesData, unsigned int *indices, unsigned int vertexDataCount, unsigned int indexCount, unsigned int vertexLength, unsigned int normalsOffset);
 void UnbindAll();
@@ -19,7 +19,7 @@ void ClearMesh();
 std::vector<std::array<GLfloat, 3>> GetNormals();
 std::vector<std::array<GLfloat, 3>> GetVerticesPos();
 
-~Mesh();
+~MeshRenderer();
 
 private:
     GLuint VAO, VBO, IBO;

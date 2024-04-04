@@ -40,8 +40,8 @@ private:
     std::vector<PointLight> pointLights;
     std::vector<SpotLight> spotLights;
 
-    Mesh* createFloorMesh();
-    Mesh* createPyramidMesh();
+    MeshRenderer* createFloorMesh();
+    MeshRenderer* createPyramidMesh();
 
     void createObjects();
     void createLights();

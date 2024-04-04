@@ -2,7 +2,7 @@
 
 NormalsVisualizer::NormalsVisualizer(MeshObject &meshObject) : _meshObject(meshObject)
 {
-    Mesh* mesh = meshObject.GetMesh();
+    MeshRenderer* mesh = meshObject.GetMesh();
 
     std::vector<std::array<GLfloat, 3>> verticesPos = mesh->GetVerticesPos();
     std::vector<std::array<GLfloat, 3>> normals = mesh->GetNormals();

@@ -42,7 +42,7 @@ MeshObject& SampleScene::GetStageObjects(unsigned int index)
     return _objects[index];
 }
 
-Mesh *SampleScene::createPyramidMesh()
+MeshRenderer *SampleScene::createPyramidMesh()
 {
     unsigned int indices[] = {
         4, 1, 0,
@@ -67,13 +67,13 @@ Mesh *SampleScene::createPyramidMesh()
 
     AverageNormalsCalculator::Calculate(indices, indicesCount, vertices, verticesDataCount, VERTEX_LENGTH, NORMALS_OFFSET);
 
-    Mesh *mesh = new Mesh();
+    MeshRenderer *mesh = new MeshRenderer();
     mesh->CreateMesh(vertices, indices, verticesDataCount, indicesCount, VERTEX_LENGTH, NORMALS_OFFSET);
 
     return mesh;
 }
 
-Mesh* SampleScene::createFloorMesh()
+MeshRenderer* SampleScene::createFloorMesh()
 {
     unsigned int indices[] = {
         0, 1, 3,
@@ -91,7 +91,7 @@ Mesh* SampleScene::createFloorMesh()
     const unsigned int indicesCount = sizeof(indices)/sizeof(GLfloat);
     const unsigned int verticesDataCount = sizeof(vertices)/sizeof(unsigned int);
 
-    Mesh *mesh = new Mesh();
+    MeshRenderer *mesh = new MeshRenderer();
     mesh -> CreateMesh(vertices, indices, verticesDataCount, indicesCount, 8, 5);
 
     return mesh;

@@ -1,4 +1,4 @@
-#include "Mesh.h"
+#include "MeshRenderer.h"
 
 /*
 Rendering Workflow Summary
@@ -7,7 +7,7 @@ During Rendering: Binding the VAO (which indirectly binds the VBO and IBO accord
 After Rendering: Unbinding the VAO (and optionally the IBO) ensures that subsequent OpenGL operations do not inadvertently modify or use these objects.
 */
 
-Mesh::Mesh()
+MeshRenderer::MeshRenderer()
 {
     // Identifiers provided by OpenGL that will be used subsequently in OpenGL calls to refer to these objects. The relevant configuration and data are stored on the GPU. These IDs are used to bind the corresponding GPU-stored objects to the OpenGL context. When you operate on these IDs (binding, setting data, drawing, etc.), you're instructing OpenGL to use the data and configurations associated with these IDs that are stored in GPU memory.
 
@@ -32,7 +32,7 @@ Mesh::Mesh()
     _normalsOffset = 0;
 }
 
-void Mesh::CreateMesh(GLfloat *verticesData, unsigned int *indices, unsigned int vertexDataCount, unsigned int indexCount, unsigned int vertexLength, unsigned int normalsOffset)
+void MeshRenderer::CreateMesh(GLfloat *verticesData, unsigned int *indices, unsigned int vertexDataCount, unsigned int indexCount, unsigned int vertexLength, unsigned int normalsOffset)
 {
     _verticesData = std::make_unique<GLfloat[]>(vertexDataCount);
     std::copy(verticesData, verticesData + vertexDataCount, _verticesData.get());
@@ -71,20 +71,20 @@ void Mesh::CreateMesh(GLfloat *verticesData, unsigned int *indices, unsigned int
     UnbindAll();
 }
 
-void Mesh::UnbindAll()
+void MeshRenderer::UnbindAll()
 {
     glBindVertexArray(0);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 }
 
-void Mesh::configureVerticesAttribute(unsigned int index, unsigned int vertexAttributesLength, GLfloat *verticesData, int VERTEX_LENGTH, unsigned int offset)
+void MeshRenderer::configureVerticesAttribute(unsigned int index, unsigned int vertexAttributesLength, GLfloat *verticesData, int VERTEX_LENGTH, unsigned int offset)
 {
     glVertexAttribPointer(index, vertexAttributesLength, GL_FLOAT, GL_FALSE, sizeof(verticesData[0]) * VERTEX_LENGTH, (void *)(sizeof(verticesData[0]) * offset));
     glEnableVertexAttribArray(index);
 }
 
-void Mesh::RenderMesh()
+void MeshRenderer::RenderMesh()
 {
     if(_indexCount > 0)
     {
@@ -96,7 +96,7 @@ void Mesh::RenderMesh()
     }
 }
 
-void Mesh::ClearMesh()
+void MeshRenderer::ClearMesh()
 {
     if(IBO != 0)
     {
@@ -117,7 +117,7 @@ void Mesh::ClearMesh()
     _indexCount = 0;
 }
 
-std::vector<std::array<GLfloat, 3>> Mesh::GetNormals()
+std::vector<std::array<GLfloat, 3>> MeshRenderer::GetNormals()
 {
     const unsigned int verticesCount = _vertexDataCount/_vertexLength;
     std::vector<std::array<GLfloat, 3>> normals;
@@ -137,7 +137,7 @@ std::vector<std::array<GLfloat, 3>> Mesh::GetNormals()
     return normals;
 }
 
-std::vector<std::array<GLfloat, 3>> Mesh::GetVerticesPos()
+std::vector<std::array<GLfloat, 3>> MeshRenderer::GetVerticesPos()
 {
     const unsigned int verticesCount = _vertexDataCount/_vertexLength;
     std::vector<std::array<GLfloat, 3>> onlyVertices;
@@ -158,7 +158,7 @@ std::vector<std::array<GLfloat, 3>> Mesh::GetVerticesPos()
 }
 
 
-Mesh::~Mesh()
+MeshRenderer::~MeshRenderer()
 {
     ClearMesh();
 }

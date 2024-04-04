@@ -1,6 +1,6 @@
 #include "MeshObject.h"
 
-MeshObject::MeshObject(Mesh *mesh, ShaderMesh *shader, Material material, Texture* texture) :
+MeshObject::MeshObject(MeshRenderer *mesh, ShaderMesh *shader, Material material, Texture* texture) :
     _mesh(mesh), 
     _shader(shader), 
     _material(material), 
@@ -48,11 +48,12 @@ void MeshObject::Render()
     _transform.Apply(_shader->GetModelLocation());
 
     _material.Use(_shader->GetSpecularIntensityLocation(), _shader->GetSpecularShininessLocation());
+    
     _texture->UseTexture();
     _mesh -> RenderMesh();
 }
 
-Mesh *MeshObject::GetMesh()
+MeshRenderer *MeshObject::GetMesh()
 {
     return _mesh;
 }

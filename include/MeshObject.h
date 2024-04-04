@@ -3,17 +3,18 @@
 #include <GLM/glm.hpp>
 #include <GLM/gtc/type_ptr.hpp>
 
-#include "Mesh.h"
+#include "MeshRenderer.h"
 #include "ShaderMesh.h"
 #include "Material.h"
 #include "Texture.h"
 #include "Transform.h"
+#include "TextureLibrary.h"
 
 class MeshObject
 {
 public:
 
-    MeshObject(Mesh *mesh, ShaderMesh *shader, Material material, Texture* texture);
+    MeshObject(MeshRenderer *mesh, ShaderMesh *shader, Material material, Texture* texture);
 
     void Translate(GLfloat x, GLfloat y, GLfloat z);
     void Rotate(GLfloat x, GLfloat y, GLfloat z);
@@ -25,13 +26,13 @@ public:
 
     void Render();
 
-    Mesh* GetMesh();
+    MeshRenderer* GetMesh();
 
     ~MeshObject();
 
 private:
     Transform _transform;
-    Mesh* _mesh;
+    MeshRenderer* _mesh;
     ShaderMesh* _shader;
     Material _material;
     Texture* _texture;
