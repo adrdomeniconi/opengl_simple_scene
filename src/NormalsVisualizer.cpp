@@ -10,9 +10,12 @@ NormalsVisualizer::NormalsVisualizer(MeshObject &meshObject) : _meshObject(meshO
     for(size_t i = 0 ; i < normals.size() ; i++)
     {
         std::array<GLfloat, 6> normalsData = {
+            //Line origin (x, y, z)
             verticesPos[i][0],
             verticesPos[i][1],
             verticesPos[i][2],
+
+            //Line end (x, y, z)
             verticesPos[i][0] + normals[i][0],
             verticesPos[i][1] + normals[i][1],
             verticesPos[i][2] + normals[i][2]

@@ -10,7 +10,7 @@ out vec2 TexCoord;
 out vec3 Normal;
 out vec4 WorldPosition;
 
-//Uniform variables are hadled equaly for all the vertices.
+//Uniform variables are handled equaly for all the vertices.
 uniform mat4 model;                                                         
 uniform mat4 projection;                                                         
 uniform mat4 view;                                                         

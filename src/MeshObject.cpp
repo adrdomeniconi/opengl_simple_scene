@@ -43,7 +43,10 @@ glm::vec3 MeshObject::Scale()
 void MeshObject::Render()
 {     
     _shader->UseShader();
+
+    //In the case of having a parent model, the transform should be calculated considering the parent transform.
     _transform.Apply(_shader->GetModelLocation());
+
     _material.Use(_shader->GetSpecularIntensityLocation(), _shader->GetSpecularShininessLocation());
     _texture->UseTexture();
     _mesh -> RenderMesh();

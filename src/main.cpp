@@ -55,8 +55,6 @@ int main()
     NormalsVisualizer pyramidBNormalsVisualizer = NormalsVisualizer(scene->GetStageObjects(1));
     NormalsVisualizer floorNormalsVisualizer = NormalsVisualizer(scene->GetStageObjects(2));
 
-    Assimp::Importer importer = Assimp::Importer();
-
     while(!mainWindow.getShouldClose())
     {
         GLfloat now = glfwGetTime();

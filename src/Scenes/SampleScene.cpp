@@ -64,7 +64,6 @@ Mesh *SampleScene::createPyramidMesh()
     const unsigned int verticesDataCount = sizeof(vertices)/sizeof(vertices[0]);
     const unsigned int VERTEX_LENGTH = 8;
     const unsigned int NORMALS_OFFSET = 5;
-    const unsigned int verticesCount = verticesDataCount/VERTEX_LENGTH;
 
     AverageNormalsCalculator::Calculate(indices, indicesCount, vertices, verticesDataCount, VERTEX_LENGTH, NORMALS_OFFSET);
 
