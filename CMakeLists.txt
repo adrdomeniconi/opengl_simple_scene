@@ -64,4 +64,6 @@ target_link_libraries(${PROJECT_NAME}
 add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy_directory
     ${CMAKE_SOURCE_DIR}/resources ${CMAKE_BINARY_DIR}/resources
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different
+    "${ASSIMP_PATH}/bin/assimp-vc143-mt.dll" ${CMAKE_BINARY_DIR}/Release 
 )
