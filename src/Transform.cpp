@@ -1,7 +1,7 @@
 #include "Transform.h"
 
 Transform::Transform() : 
-    _model(glm::mat4(1.0f)),
+    _transformationMatrix(glm::mat4(1.0f)),
     _translation(glm::vec3(0.0f, 0.0f, 0.0f)),
     _rotation(glm::vec3(0.0f, 0.0f, 0.0f)),
     _scale(glm::vec3(1.0f, 1.0f, 1.0f)),
@@ -47,81 +47,48 @@ glm::vec3 Transform::Scale()
     return _scale;
 }
 
-glm::mat4 Transform::Model()
+glm::mat4 Transform::TransformationMatrix()
 {
-    updateModel();
-    return _model;
-}
+    glm::mat4 tMatrix = glm::mat4(1.0f);
 
-void Transform::Apply(GLuint modelLocation)
-{
-    updateModel();
-
-    // std::cout << "Model:" << std::endl;
-    // for(int i = 0 ; i < 4 ; i++)
-    // {
-    //     for(int j = 0 ; j < 4 ; j++)
-    //     {
-    //         std::cout << _model[j][i] << " ";
-    //     }
-    //     std::cout << std::endl;
-    // }
-
-    glUniformMatrix4fv(modelLocation, 1, GL_FALSE, glm::value_ptr(_model));
-}
-
-void Transform::updateModel()
-{
-    _model = glm::translate(_model, _translation);
+    tMatrix = glm::translate(tMatrix, _translation);
 
     if (_rotationRadians.x != 0.0f)
     {
-        _model = glm::rotate(_model, _rotationRadians.x, glm::vec3(1.0f, 0.0f, 0.0f));
+        tMatrix = glm::rotate(tMatrix, _rotationRadians.x, glm::vec3(1.0f, 0.0f, 0.0f));
     }
 
     if (_rotationRadians.y != 0.0f)
     {
-        _model = glm::rotate(_model, _rotationRadians.y, glm::vec3(0.0f, 1.0f, 0.0f));
+        tMatrix = glm::rotate(tMatrix, _rotationRadians.y, glm::vec3(0.0f, 1.0f, 0.0f));
     }
 
     if (_rotationRadians.z != 0.0f)
     {
-        _model = glm::rotate(_model, _rotationRadians.z, glm::vec3(0.0f, 0.0f, 1.0f));
+        tMatrix = glm::rotate(tMatrix, _rotationRadians.z, glm::vec3(0.0f, 0.0f, 1.0f));
     }
 
-    _model = glm::scale(_model, _scale);
+    tMatrix = glm::scale(tMatrix, _scale);
+
+    return tMatrix;
 }
 
 void Transform::Apply(GLuint modelLocation, const glm::mat4 parentMatrix)
 {
-    _model = parentMatrix;
-    _model = glm::translate(_model, _translation);
+    _transformationMatrix = parentMatrix * TransformationMatrix();
+    glUniformMatrix4fv(modelLocation, 1, GL_FALSE, glm::value_ptr(_transformationMatrix));
+}
 
-    if(_rotationRadians.x != 0.0f) {
-        _model = glm::rotate(_model, _rotationRadians.x, glm::vec3(1.0f, 0.0f, 0.0f));
+void Transform::printMatrix(const glm::mat4 matrix)
+{
+    for(int i = 0 ; i < 4 ; i++)
+    {
+        for(int j = 0 ; j < 4 ; j++)
+        {
+            std::cout << matrix[j][i] << " ";
+        }
+        std::cout << std::endl;
     }
-
-    if(_rotationRadians.y != 0.0f) {
-        _model = glm::rotate(_model, _rotationRadians.y, glm::vec3(0.0f, 1.0f, 0.0f));
-    }
-
-    if(_rotationRadians.z != 0.0f) {
-        _model = glm::rotate(_model, _rotationRadians.z, glm::vec3(0.0f, 0.0f, 1.0f));
-    }
-
-    _model = glm::scale(_model, _scale);
-
-    // std::cout << "Model:" << std::endl;
-    // for(int i = 0 ; i < 4 ; i++)
-    // {
-    //     for(int j = 0 ; j < 4 ; j++)
-    //     {
-    //         std::cout << _model[j][i] << " ";
-    //     }
-    //     std::cout << std::endl;
-    // }
-
-    glUniformMatrix4fv(modelLocation, 1, GL_FALSE, glm::value_ptr(_model));
 }
 
 Transform::~Transform()

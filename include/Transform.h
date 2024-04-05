@@ -19,16 +19,17 @@ public:
     glm::vec3 Translation();
     glm::vec3 Rotation();
     glm::vec3 Scale();
-    glm::mat4 Model();
+    glm::mat4 TransformationMatrix();
 
-    void Apply(GLuint modelLocation);
-    void updateModel();
     void Apply(GLuint modelLocation, const glm::mat4 parentMatrix);
 
     ~Transform();
 
 private:
-    glm::mat4 _model; 
+
+    void printMatrix(const glm::mat4 matrix);
+
+    glm::mat4 _transformationMatrix; 
     glm::vec3 _translation;
     glm::vec3 _rotation;
     glm::vec3 _rotationRadians;

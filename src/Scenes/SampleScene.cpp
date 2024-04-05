@@ -35,8 +35,9 @@ void SampleScene::createModels()
         _textureLibrary->GetTexture(TextureLibrary::TextureType::Floor)
     );
 
-    model->Scale(0.25f, 0.25f, 0.25f);
-    model->Translate(3.0f, 0.0f, 0.0f);
+    model->Scale(0.025f, 0.025f, 0.025f);
+    model->Translate(5.0f, 0.0f, 0.0f);
+
     if(model->Load("../resources/models/SeaHawk/Seahawk.obj", "../resources/models/SeaHawk/Textures"))
     {
         _models.push_back(std::move(model));

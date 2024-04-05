@@ -53,6 +53,7 @@ void Model::Clear()
 
 void Model::Translate(GLfloat x, GLfloat y, GLfloat z)
 {
+    std::cout << "Calling model translate..." << std::endl;
     _transform.Translate(x, y, z);
 }
 
@@ -122,7 +123,7 @@ void Model::loadMesh(aiMesh *mesh, const aiScene *scene)
         texture = _default_texture;
     }
 
-    auto meshObject = std::make_unique<MeshObject>(std::move(meshRenderer), _shaderMesh, _material, texture, _transform.Model());
+    auto meshObject = std::make_unique<MeshObject>(std::move(meshRenderer), _shaderMesh, _material, texture, _transform.TransformationMatrix());
     _meshObjects.push_back(std::move(meshObject));
 }
 
