@@ -45,7 +45,8 @@ private:
     std::unique_ptr<MeshRenderer> createFloorMesh();
     std::unique_ptr<MeshRenderer> createPyramidMesh();
 
-    void createObjects();
+    void createMeshObjects();
+    void createModels();
     void createLights();
 
 };

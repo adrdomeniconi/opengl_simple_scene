@@ -6,11 +6,12 @@ SampleScene::SampleScene(TextureLibrary* textureLibrary, MaterialLibrary* materi
     _shaderLibrary(shaderLibrary),
     _shaderMesh(dynamic_cast<ShaderMesh*>(shaderLibrary->GetShader(ShaderLibrary::ShaderType::Mesh)))
 {  
-    createObjects();
+    createMeshObjects();
+    createModels();
     createLights();
 }
 
-void SampleScene::createObjects()
+void SampleScene::createMeshObjects()
 {
     auto pyramidA = std::make_unique<MeshObject>(std::move(createPyramidMesh()), _shaderMesh, _materialLibrary->GetMaterial(MaterialLibrary::MaterialType::Shiny), _textureLibrary->GetTexture(TextureLibrary::TextureType::Brick));
     pyramidA->Scale(0.4f, 0.4f, 0.4f);
@@ -24,6 +25,17 @@ void SampleScene::createObjects()
     auto floor = std::make_unique<MeshObject>(std::move(createFloorMesh()), _shaderMesh, _materialLibrary->GetMaterial(MaterialLibrary::MaterialType::Shiny), _textureLibrary->GetTexture(TextureLibrary::TextureType::Floor));
     floor->Translate(0.0f, -2.0f, 0.0f);
     _meshObjects.push_back(std::move(floor));
+}
+
+void SampleScene::createModels()
+{
+    auto model = std::make_unique<Model>(
+        _shaderMesh, 
+        _materialLibrary->GetMaterial(MaterialLibrary::MaterialType::Shiny), 
+        _textureLibrary->GetTexture(TextureLibrary::TextureType::Floor)
+    );
+
+    _models.push_back(std::move(model));
 }
 
 void SampleScene::createLights()
@@ -123,6 +135,11 @@ void SampleScene::Update(Camera camera, glm::mat4 projection)
     for(auto &meshObject : _meshObjects)
     {
         meshObject->Render();
+    }
+
+    for(auto &model : _models)
+    {
+        model->Render();
     }
 }
 

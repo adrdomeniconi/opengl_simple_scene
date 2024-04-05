@@ -3,6 +3,7 @@
 #include <vector>
 #include <string>
 #include <iostream>
+#include <filesystem>
 
 #include "MeshObject.h"
 #include "Transform.h"
@@ -21,7 +22,7 @@ public:
     Model(ShaderMesh* shaderMesh, Material material, Texture* default_texture);
     ~Model();
 
-    bool Load(const std::string& filename);
+    bool Load(const std::string& filename, const std::string& texturesPath);
     void Render();
     void Clear();
 
@@ -31,7 +32,7 @@ private:
     void loadMesh(aiMesh *mesh, const aiScene *scene);
     void getIndices(aiMesh *mesh, std::vector<unsigned int> &indices);
     void getVertices(aiMesh *mesh, std::vector<GLfloat> &vertices);
-    void loadTexturesFromScene(const aiScene *scene);
+    void loadTexturesFromScene(const aiScene *scene, const std::string &texturesPath);
     Texture* getTexture(unsigned int textureId);
     
     /* In this case the MeshObject lifetime should be attached to the Model lifetime.*/

@@ -14,7 +14,7 @@ Model::~Model()
     Clear();
 }
 
-bool Model::Load(const std::string &filename)
+bool Model::Load(const std::string &filename, const std::string &texturesPath)
 {
     Assimp::Importer importer;
     const aiScene *scene = importer.ReadFile(filename, aiProcess_Triangulate | aiProcess_FlipUVs | aiProcess_GenSmoothNormals | aiProcess_JoinIdenticalVertices);
@@ -25,8 +25,8 @@ bool Model::Load(const std::string &filename)
         return false;
     }
 
+    loadTexturesFromScene(scene, texturesPath);
     loadNode(scene-> mRootNode, scene);
-    loadTexturesFromScene(scene);
 
     return true;
 }
@@ -114,7 +114,7 @@ void Model::getVertices(aiMesh *mesh, std::vector<GLfloat> &vertices)
     }
 }
 
-void Model::loadTexturesFromScene(const aiScene *scene)
+void Model::loadTexturesFromScene(const aiScene *scene, const std::string &texturesPath)
 {
     _textures.resize(scene->mNumMaterials);
 
@@ -131,9 +131,18 @@ void Model::loadTexturesFromScene(const aiScene *scene)
                 int idx = std::string(path.data).rfind("\\");
                 std::string filename = std::string(path.data).substr(idx + 1);
 
-                std::string texturePath = std::string("Textures/") + filename;
+                std::string rawPath = texturesPath + "/" + filename;
+                std::filesystem::path texturePath = rawPath;
 
-                _textures[textureId] = std::make_unique<Texture>(texturePath.c_str());
+                if (std::filesystem::exists(texturePath)) 
+                {
+                    _textures[textureId] = std::make_unique<Texture>(rawPath.c_str());
+                } 
+                else
+                {
+                    std::cout << "The file " << texturePath << " does not exist.\n";
+                }
+
             } 
             else 
             {
