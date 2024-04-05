@@ -12,8 +12,9 @@
 #include "TextureLibrary.h"
 #include "MaterialLibrary.h"
 #include "ShaderLibrary.h"
-#include "Mesh.h"
+#include "MeshRenderer.h"
 #include "Camera.h"
+#include "Model.h"
 
 class SampleScene
 {
@@ -21,15 +22,16 @@ class SampleScene
 public:
     SampleScene(TextureLibrary* textureLibrary, MaterialLibrary* materialLibrary, ShaderLibrary* shaderLibrary);
 
-    std::vector<MeshObject> GetStageObjects();
+    std::vector<MeshObject*> GetStageObjects();
+    MeshObject* GetStageObjects(unsigned int index);
 
-    MeshObject& GetStageObjects(unsigned int index);
     void Update(Camera camera, glm::mat4 projection);
 
     ~SampleScene();
 
 private:
-    std::vector<MeshObject> _objects;
+    std::vector<std::unique_ptr<MeshObject>> _meshObjects;
+    std::vector<std::unique_ptr<Model>> _models;
     ShaderMesh* _shaderMesh; 
     
     TextureLibrary* _textureLibrary;
@@ -40,8 +42,8 @@ private:
     std::vector<PointLight> pointLights;
     std::vector<SpotLight> spotLights;
 
-    MeshRenderer* createFloorMesh();
-    MeshRenderer* createPyramidMesh();
+    std::unique_ptr<MeshRenderer> createFloorMesh();
+    std::unique_ptr<MeshRenderer> createPyramidMesh();
 
     void createObjects();
     void createLights();

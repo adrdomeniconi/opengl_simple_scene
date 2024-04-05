@@ -12,18 +12,18 @@ SampleScene::SampleScene(TextureLibrary* textureLibrary, MaterialLibrary* materi
 
 void SampleScene::createObjects()
 {
-    MeshObject pyramidA = MeshObject(createPyramidMesh(), _shaderMesh, _materialLibrary->GetMaterial(MaterialLibrary::MaterialType::Shiny), _textureLibrary->GetTexture(TextureLibrary::TextureType::Brick));
-    pyramidA.Scale(0.4f, 0.4f, 0.4f);
-    _objects.push_back(pyramidA);
+    auto pyramidA = std::make_unique<MeshObject>(std::move(createPyramidMesh()), _shaderMesh, _materialLibrary->GetMaterial(MaterialLibrary::MaterialType::Shiny), _textureLibrary->GetTexture(TextureLibrary::TextureType::Brick));
+    pyramidA->Scale(0.4f, 0.4f, 0.4f);
+    _meshObjects.push_back(std::move(pyramidA));
 
-    MeshObject pyramidB = MeshObject(createPyramidMesh(), _shaderMesh, _materialLibrary->GetMaterial(MaterialLibrary::MaterialType::Dull), _textureLibrary->GetTexture(TextureLibrary::TextureType::Dirt));
-    pyramidB.Translate(0.0f, .3, -1.5f);
-    pyramidB.Scale(0.2f, 0.2f, 0.2f);
-    _objects.push_back(pyramidB);
+    auto pyramidB = std::make_unique<MeshObject>(std::move(createPyramidMesh()), _shaderMesh, _materialLibrary->GetMaterial(MaterialLibrary::MaterialType::Dull), _textureLibrary->GetTexture(TextureLibrary::TextureType::Dirt));
+    pyramidB->Translate(0.0f, .3, -1.5f);
+    pyramidB->Scale(0.2f, 0.2f, 0.2f);
+    _meshObjects.push_back(std::move(pyramidB));
 
-    MeshObject floor = MeshObject(createFloorMesh(), _shaderMesh, _materialLibrary->GetMaterial(MaterialLibrary::MaterialType::Shiny), _textureLibrary->GetTexture(TextureLibrary::TextureType::Floor));
-    floor.Translate(0.0f, -2.0f, 0.0f);
-    _objects.push_back(floor);
+    auto floor = std::make_unique<MeshObject>(std::move(createFloorMesh()), _shaderMesh, _materialLibrary->GetMaterial(MaterialLibrary::MaterialType::Shiny), _textureLibrary->GetTexture(TextureLibrary::TextureType::Floor));
+    floor->Translate(0.0f, -2.0f, 0.0f);
+    _meshObjects.push_back(std::move(floor));
 }
 
 void SampleScene::createLights()
@@ -32,17 +32,25 @@ void SampleScene::createLights()
     pointLights.push_back(PointLight(1.0f, 0.0f, 0.0f, 0.2f, 0.7f, 2.0f, 1.5f, 2.0f, 0.1f, 0.2f, 0.3f));
     spotLights.push_back(SpotLight(1.0f, 1.0f, 1.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.1f, 0.2f, 0.0f, 0.0f, -1.0f, 0.0f, 20));
 }
-std::vector<MeshObject> SampleScene::GetStageObjects()
-{
-    return _objects;
+std::vector<MeshObject*> SampleScene::GetStageObjects()
+{   
+    std::vector<MeshObject*> meshObjects;
+
+    for(auto &meshObject : _meshObjects)
+    {
+        meshObjects.push_back(meshObject.get());
+    }
+
+    return meshObjects;
 }
 
-MeshObject& SampleScene::GetStageObjects(unsigned int index)
-{
-    return _objects[index];
+MeshObject* SampleScene::GetStageObjects(unsigned int index)
+{    
+    MeshObject* meshObject = _meshObjects[index].get();
+    return meshObject;
 }
 
-MeshRenderer *SampleScene::createPyramidMesh()
+std::unique_ptr<MeshRenderer> SampleScene::createPyramidMesh()
 {
     unsigned int indices[] = {
         4, 1, 0,
@@ -67,13 +75,13 @@ MeshRenderer *SampleScene::createPyramidMesh()
 
     AverageNormalsCalculator::Calculate(indices, indicesCount, vertices, verticesDataCount, VERTEX_LENGTH, NORMALS_OFFSET);
 
-    MeshRenderer *mesh = new MeshRenderer();
+    auto mesh = std::make_unique<MeshRenderer>();
     mesh->CreateMesh(vertices, indices, verticesDataCount, indicesCount, VERTEX_LENGTH, NORMALS_OFFSET);
 
     return mesh;
 }
 
-MeshRenderer* SampleScene::createFloorMesh()
+std::unique_ptr<MeshRenderer> SampleScene::createFloorMesh()
 {
     unsigned int indices[] = {
         0, 1, 3,
@@ -91,7 +99,7 @@ MeshRenderer* SampleScene::createFloorMesh()
     const unsigned int indicesCount = sizeof(indices)/sizeof(GLfloat);
     const unsigned int verticesDataCount = sizeof(vertices)/sizeof(unsigned int);
 
-    MeshRenderer *mesh = new MeshRenderer();
+    auto mesh = std::make_unique<MeshRenderer>();
     mesh -> CreateMesh(vertices, indices, verticesDataCount, indicesCount, 8, 5);
 
     return mesh;
@@ -112,9 +120,9 @@ void SampleScene::Update(Camera camera, glm::mat4 projection)
     glUniformMatrix4fv(_shaderMesh->GetViewLocation(), 1, GL_FALSE, glm::value_ptr(camera.calculateViewMatrix()));
     glUniform3f(_shaderMesh->GetCameraPositionLocation(), camera.GetPosition().x, camera.GetPosition().y, camera.GetPosition().z);
 
-    for(auto meshObject : _objects)
+    for(auto &meshObject : _meshObjects)
     {
-        meshObject.Render();
+        meshObject->Render();
     }
 }
 

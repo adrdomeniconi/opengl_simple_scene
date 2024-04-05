@@ -12,14 +12,14 @@ class NormalsVisualizer
 {
 public:
 
-    NormalsVisualizer(MeshObject &meshObject);
+    NormalsVisualizer(MeshObject* meshObject);
 
-    void Render(ShaderLine *shaderLine);
+    void Render(ShaderLine* shaderLine);
 
     ~NormalsVisualizer();
 
 private:
-    MeshObject& _meshObject;
+    MeshObject* _meshObject;
     std::vector<Line*> _normalLines;
 
 };

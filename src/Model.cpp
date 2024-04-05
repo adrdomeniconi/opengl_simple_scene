@@ -22,11 +22,13 @@ bool Model::Load(const std::string &filename)
     if (!scene)
     {
         std::cout << "Error loading the model (" << filename << "): " << importer.GetErrorString();
-        return;
+        return false;
     }
 
     loadNode(scene-> mRootNode, scene);
     loadTexturesFromScene(scene);
+
+    return true;
 }
 
 void Model::Render()
@@ -78,7 +80,7 @@ void Model::loadMesh(aiMesh *mesh, const aiScene *scene)
     }
 
     auto meshObject = std::make_unique<MeshObject>(std::move(meshRenderer), _shaderMesh, _material, texture);
-    _meshObjects.push_back(meshObject);
+    _meshObjects.push_back(std::move(meshObject));
 }
 
 void Model::getIndices(aiMesh *mesh, std::vector<unsigned int> &indices)
