@@ -19,8 +19,11 @@ public:
     glm::vec3 Translation();
     glm::vec3 Rotation();
     glm::vec3 Scale();
+    glm::mat4 Model();
 
     void Apply(GLuint modelLocation);
+    void updateModel();
+    void Apply(GLuint modelLocation, const glm::mat4 parentMatrix);
 
     ~Transform();
 

@@ -25,6 +25,14 @@ public:
     bool Load(const std::string& filename, const std::string& texturesPath);
     void Render();
     void Clear();
+    
+    void Translate(GLfloat x, GLfloat y, GLfloat z);
+    void Rotate(GLfloat x, GLfloat y, GLfloat z);
+    void Scale(GLfloat x, GLfloat y, GLfloat z);
+
+    glm::vec3 Translation();
+    glm::vec3 Rotation();
+    glm::vec3 Scale();
 
 private:
 

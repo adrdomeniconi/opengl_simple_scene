@@ -47,9 +47,54 @@ glm::vec3 Transform::Scale()
     return _scale;
 }
 
+glm::mat4 Transform::Model()
+{
+    updateModel();
+    return _model;
+}
+
 void Transform::Apply(GLuint modelLocation)
 {
-    _model = glm::mat4(1.0f);
+    updateModel();
+
+    // std::cout << "Model:" << std::endl;
+    // for(int i = 0 ; i < 4 ; i++)
+    // {
+    //     for(int j = 0 ; j < 4 ; j++)
+    //     {
+    //         std::cout << _model[j][i] << " ";
+    //     }
+    //     std::cout << std::endl;
+    // }
+
+    glUniformMatrix4fv(modelLocation, 1, GL_FALSE, glm::value_ptr(_model));
+}
+
+void Transform::updateModel()
+{
+    _model = glm::translate(_model, _translation);
+
+    if (_rotationRadians.x != 0.0f)
+    {
+        _model = glm::rotate(_model, _rotationRadians.x, glm::vec3(1.0f, 0.0f, 0.0f));
+    }
+
+    if (_rotationRadians.y != 0.0f)
+    {
+        _model = glm::rotate(_model, _rotationRadians.y, glm::vec3(0.0f, 1.0f, 0.0f));
+    }
+
+    if (_rotationRadians.z != 0.0f)
+    {
+        _model = glm::rotate(_model, _rotationRadians.z, glm::vec3(0.0f, 0.0f, 1.0f));
+    }
+
+    _model = glm::scale(_model, _scale);
+}
+
+void Transform::Apply(GLuint modelLocation, const glm::mat4 parentMatrix)
+{
+    _model = parentMatrix;
     _model = glm::translate(_model, _translation);
 
     if(_rotationRadians.x != 0.0f) {

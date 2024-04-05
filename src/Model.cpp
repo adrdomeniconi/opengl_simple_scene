@@ -51,6 +51,36 @@ void Model::Clear()
 {
 }
 
+void Model::Translate(GLfloat x, GLfloat y, GLfloat z)
+{
+    _transform.Translate(x, y, z);
+}
+
+void Model::Rotate(GLfloat x, GLfloat y, GLfloat z)
+{
+    _transform.Rotate(x, y, z);
+}
+
+void Model::Scale(GLfloat x, GLfloat y, GLfloat z)
+{
+    _transform.Scale(x, y, z);
+}
+
+glm::vec3 Model::Translation()
+{
+    return _transform.Translation();
+}
+
+glm::vec3 Model::Rotation()
+{
+    return _transform.Rotation();
+}
+
+glm::vec3 Model::Scale()
+{
+    return _transform.Scale();
+}
+
 void Model::loadNode(aiNode *node, const aiScene *scene)
 {
     std::cout << "Loading "<< node->mName.C_Str() << " node. Number of meshes: " << node->mNumMeshes << std::endl;
@@ -92,7 +122,7 @@ void Model::loadMesh(aiMesh *mesh, const aiScene *scene)
         texture = _default_texture;
     }
 
-    auto meshObject = std::make_unique<MeshObject>(std::move(meshRenderer), _shaderMesh, _material, texture);
+    auto meshObject = std::make_unique<MeshObject>(std::move(meshRenderer), _shaderMesh, _material, texture, _transform.Model());
     _meshObjects.push_back(std::move(meshObject));
 }
 
@@ -193,3 +223,5 @@ Texture* Model::getTexture(unsigned int textureId)
 
     return nullptr;
 }
+
+

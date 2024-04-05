@@ -15,6 +15,7 @@ class MeshObject
 public:
 
     MeshObject(std::unique_ptr<MeshRenderer> meshRenderer, ShaderMesh *shader, Material material, Texture* texture);
+    MeshObject(std::unique_ptr<MeshRenderer> meshRenderer, ShaderMesh *shader, Material material, Texture* texture, const glm::mat4 parentMatrix);
 
     void Translate(GLfloat x, GLfloat y, GLfloat z);
     void Rotate(GLfloat x, GLfloat y, GLfloat z);
@@ -36,4 +37,5 @@ private:
     ShaderMesh* _shader;
     Material _material;
     Texture* _texture;
+    const glm::mat4 _parentMatrix;
 };

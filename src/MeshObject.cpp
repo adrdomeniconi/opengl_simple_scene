@@ -5,7 +5,19 @@ MeshObject::MeshObject(std::unique_ptr<MeshRenderer> meshRenderer, ShaderMesh *s
     _shader(shader), 
     _material(material), 
     _texture(texture),
-    _transform(Transform())
+    _transform(Transform()),
+    _parentMatrix(glm::mat4(1.0f))
+{
+    //Do nothing
+}
+
+MeshObject::MeshObject(std::unique_ptr<MeshRenderer> meshRenderer, ShaderMesh *shader, Material material, Texture *texture, const glm::mat4 parentMatrix) :
+    _meshRenderer(std::move(meshRenderer)), 
+    _shader(shader), 
+    _material(material), 
+    _texture(texture),
+    _transform(Transform()),
+    _parentMatrix(parentMatrix)
 {
     //Do nothing
 }
@@ -45,7 +57,7 @@ void MeshObject::Render()
     _shader->UseShader();
 
     //In the case of having a parent model, the transform should be calculated considering the parent transform.
-    _transform.Apply(_shader->GetModelLocation());
+    _transform.Apply(_shader->GetModelLocation(), _parentMatrix);
 
     _material.Use(_shader->GetSpecularIntensityLocation(), _shader->GetSpecularShininessLocation());
     
