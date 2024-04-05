@@ -26,43 +26,19 @@ bool Model::Load(const std::string &filename)
     }
 
     loadNode(scene-> mRootNode, scene);
-    loadMaterials(scene);
+    loadTexturesFromScene(scene);
 }
 
 void Model::Render()
 {
-    for (size_t i = 0; i < _meshRendererList.size(); i++)
+    for(auto& meshObject : _meshObjects)
     {
-        unsigned int materialIndex = _meshToTex[i];
-
-        if (materialIndex < _textureList.size() && _textureList[materialIndex])
-        {
-            _textureList[materialIndex] -> UseTexture();
-        }
-
-        _meshRendererList[i]->RenderMesh();
+        meshObject->Render();
     }
 }
 
 void Model::Clear()
 {
-    for (size_t i = 0; i < _meshRendererList.size(); i++)
-    {
-        if(_meshRendererList[i])
-        {
-            delete _meshRendererList[i];
-            _meshRendererList[i] = nullptr;
-        }
-    }
-
-    for (size_t i = 0; i < _textureList.size(); i++)
-    {
-        if(_textureList[i])
-        {
-            delete _textureList[i];
-            _textureList[i] = nullptr;
-        }
-    }
 }
 
 void Model::loadNode(aiNode *node, const aiScene *scene)
@@ -92,14 +68,17 @@ void Model::loadMesh(aiMesh *mesh, const aiScene *scene)
     const unsigned int VERTEX_LENGTH = 8;
     const unsigned int NORMALS_OFFSET = 5;
 
-    MeshRenderer* meshRenderer = new MeshRenderer();
+    auto meshRenderer = std::make_unique<MeshRenderer>();
     meshRenderer->CreateMesh(&vertices[0], &indices[0], vertices.size(), indices.size(), VERTEX_LENGTH, NORMALS_OFFSET);
 
-    Texture* texture = getTexture(mesh->mMaterialIndex, scene);
-    // if(texture)
+    Texture* texture = getTexture(mesh->mMaterialIndex);
+    if(!texture)
+    {
+        texture = _default_texture;
+    }
 
-    // MeshObject meshObject = MeshObject(meshRenderer, _shaderMesh, _material, )
-
+    auto meshObject = std::make_unique<MeshObject>(std::move(meshRenderer), _shaderMesh, _material, texture);
+    _meshObjects.push_back(meshObject);
 }
 
 void Model::getIndices(aiMesh *mesh, std::vector<unsigned int> &indices)
@@ -133,54 +112,45 @@ void Model::getVertices(aiMesh *mesh, std::vector<GLfloat> &vertices)
     }
 }
 
-// void Model::loadMaterials(const aiScene *scene)
-// {
-//     _textureList.resize(scene->mNumMaterials);
-
-//     for (size_t i = 0; i < scene->mNumMaterials; i++)
-//     {
-//         aiMaterial* mMaterial = scene->mMaterials[i];
-
-//         _textureList[i] = nullptr;
-
-//         if (mMaterial->GetTextureCount(aiTextureType_DIFFUSE))
-//         {
-//             aiString path;
-//             if (mMaterial->GetTexture(aiTextureType_DIFFUSE, 0, &path) == AI_SUCCESS)
-//             {
-//                 int idx = std::string(path.data).rfind("\\");
-//                 std::string filename = std::string(path.data).substr(idx + 1);
-
-//                 std::string texturePath = std::string("Textures/") + filename;
-
-//                 _textureList[i] == new Texture(texturePath.c_str());
-//             }
-//         }
-//     }
-// }
-
-Texture* Model::getTexture(unsigned int textureId, const aiScene *scene)
+void Model::loadTexturesFromScene(const aiScene *scene)
 {
-    aiMaterial* mMaterial = scene->mMaterials[textureId];
-    Texture* texture = _default_texture;
+    _textures.resize(scene->mNumMaterials);
 
-    if (mMaterial->GetTextureCount(aiTextureType_DIFFUSE))
+    for (size_t textureId = 0; textureId < scene->mNumMaterials; textureId++)
     {
-        aiString path;
-        if (mMaterial->GetTexture(aiTextureType_DIFFUSE, 0, &path) == AI_SUCCESS)
+        aiMaterial* mMaterial = scene->mMaterials[textureId];
+        _textures[textureId] = nullptr;
+
+        if (mMaterial->GetTextureCount(aiTextureType_DIFFUSE))
         {
-            int idx = std::string(path.data).rfind("\\");
-            std::string filename = std::string(path.data).substr(idx + 1);
+            aiString path;
+            if (mMaterial->GetTexture(aiTextureType_DIFFUSE, 0, &path) == AI_SUCCESS)
+            {
+                int idx = std::string(path.data).rfind("\\");
+                std::string filename = std::string(path.data).substr(idx + 1);
 
-            std::string texturePath = std::string("Textures/") + filename;
+                std::string texturePath = std::string("Textures/") + filename;
 
-            texture = new Texture(texturePath.c_str());
-        } else {
-            std::cout << "Error loading texture id (" << textureId << "). Loading default texture." << std::endl;
+                _textures[textureId] = std::make_unique<Texture>(texturePath.c_str());
+            } 
+            else 
+            {
+                std::cout << "Error loading texture id (" << textureId << "). Loading default texture." << std::endl;
+            }
         }
-    } else {
-        std::cout << "Texture not found for id (" << textureId << "). Loading default texture." << std::endl;
+        else 
+        {
+            std::cout << "Texture not found for id (" << textureId << "). Loading default texture." << std::endl;
+        }
+    }
+}
+
+Texture* Model::getTexture(unsigned int textureId)
+{
+    if(textureId < _textures.size())
+    {
+        return _textures[textureId].get();
     }
 
-    return texture;
+    return nullptr;
 }

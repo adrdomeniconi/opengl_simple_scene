@@ -14,7 +14,7 @@ class MeshObject
 {
 public:
 
-    MeshObject(MeshRenderer *mesh, ShaderMesh *shader, Material material, Texture* texture);
+    MeshObject(std::unique_ptr<MeshRenderer> meshRenderer, ShaderMesh *shader, Material material, Texture* texture);
 
     void Translate(GLfloat x, GLfloat y, GLfloat z);
     void Rotate(GLfloat x, GLfloat y, GLfloat z);
@@ -32,7 +32,7 @@ public:
 
 private:
     Transform _transform;
-    MeshRenderer* _mesh;
+    std::unique_ptr<MeshRenderer> _meshRenderer;
     ShaderMesh* _shader;
     Material _material;
     Texture* _texture;

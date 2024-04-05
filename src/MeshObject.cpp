@@ -1,7 +1,7 @@
 #include "MeshObject.h"
 
-MeshObject::MeshObject(MeshRenderer *mesh, ShaderMesh *shader, Material material, Texture* texture) :
-    _mesh(mesh), 
+MeshObject::MeshObject(std::unique_ptr<MeshRenderer> meshRenderer, ShaderMesh *shader, Material material, Texture* texture) :
+    _meshRenderer(std::move(meshRenderer)), 
     _shader(shader), 
     _material(material), 
     _texture(texture),
@@ -50,12 +50,12 @@ void MeshObject::Render()
     _material.Use(_shader->GetSpecularIntensityLocation(), _shader->GetSpecularShininessLocation());
     
     _texture->UseTexture();
-    _mesh -> RenderMesh();
+    _meshRenderer -> RenderMesh();
 }
 
-MeshRenderer *MeshObject::GetMesh()
+MeshRenderer* MeshObject::GetMesh()
 {
-    return _mesh;
+    return _meshRenderer.get();
 }
 
 MeshObject::~MeshObject()
