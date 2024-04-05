@@ -17,16 +17,24 @@ Model::~Model()
 bool Model::Load(const std::string &filename, const std::string &texturesPath)
 {
     Assimp::Importer importer;
+    if(!std::filesystem::exists(filename))
+    {
+        std::cout << "*ERROR*: Model file not found: " << filename << std::endl;
+        return false;
+    }
+
     const aiScene *scene = importer.ReadFile(filename, aiProcess_Triangulate | aiProcess_FlipUVs | aiProcess_GenSmoothNormals | aiProcess_JoinIdenticalVertices);
 
     if (!scene)
     {
-        std::cout << "Error loading the model (" << filename << "): " << importer.GetErrorString();
+        std::cout << "*ERROR*: Loading the model (" << filename << "): " << importer.GetErrorString();
         return false;
     }
 
     loadTexturesFromScene(scene, texturesPath);
     loadNode(scene-> mRootNode, scene);
+
+    std::cout << "Number of nodes " << scene->mRootNode->mNumMeshes << std::endl;
 
     return true;
 }
@@ -45,6 +53,8 @@ void Model::Clear()
 
 void Model::loadNode(aiNode *node, const aiScene *scene)
 {
+    std::cout << "Loading "<< node->mName.C_Str() << " node. Number of meshes: " << node->mNumMeshes << std::endl;
+
     for (size_t i = 0; i < node->mNumMeshes ; i++)
     {
         int meshId = node->mMeshes[i];
@@ -59,7 +69,9 @@ void Model::loadNode(aiNode *node, const aiScene *scene)
 }
 
 void Model::loadMesh(aiMesh *mesh, const aiScene *scene)
-{
+{   
+    std::cout << "Loading "<< mesh->mName.C_Str() << " mesh..." << std::endl;
+
     std::vector<GLfloat> vertices;
     std::vector<unsigned int> indices;
 
@@ -76,6 +88,7 @@ void Model::loadMesh(aiMesh *mesh, const aiScene *scene)
     Texture* texture = getTexture(mesh->mMaterialIndex);
     if(!texture)
     {
+        std::cout << "Texture not found for " << mesh->mName.C_Str() << ". Applying default texture..." << std::endl;
         texture = _default_texture;
     }
 
@@ -85,10 +98,13 @@ void Model::loadMesh(aiMesh *mesh, const aiScene *scene)
 
 void Model::getIndices(aiMesh *mesh, std::vector<unsigned int> &indices)
 {
+    // std::cout << "Getting indices of " << mesh->mName.C_Str() << std::endl;
+    // std::cout << "mNumFaces:" << mesh->mNumFaces << std::endl;
+
     for (size_t i = 0; i < mesh->mNumFaces; i++)
     {
         aiFace face = mesh->mFaces[i];
-        for (size_t j = 0; i < face.mNumIndices; j++)
+        for (size_t j = 0; j < face.mNumIndices; j++)
         {
             indices.push_back(face.mIndices[j]);
         }
@@ -97,26 +113,36 @@ void Model::getIndices(aiMesh *mesh, std::vector<unsigned int> &indices)
 
 void Model::getVertices(aiMesh *mesh, std::vector<GLfloat> &vertices)
 {
+    // std::cout << "Getting vertices of " << mesh->mName.C_Str() << std::endl;
+    // std::cout << "mNumVertices:" << mesh->mNumVertices << std::endl;
+
     for (size_t i = 0; i < mesh->mNumVertices; i++)
     {
         vertices.insert(vertices.end(), {mesh->mVertices[i].x, mesh->mVertices[i].y, mesh->mVertices[i].z});
+        // std::cout << "Inserting " << mesh->mVertices[i].x << ", " << mesh->mVertices[i].y << ", " << mesh->mVertices[i].z << std::endl;
 
         if (mesh->mTextureCoords[0])
         {
             vertices.insert(vertices.end(), {mesh->mTextureCoords[0][i].x, mesh->mTextureCoords[0][i].y});
+            // std::cout << "Inserting " << mesh->mTextureCoords[0][i].x << ", " << mesh->mTextureCoords[0][i].y << std::endl;
         }
         else
         {
             vertices.insert(vertices.end(), {0.0f, 0.0f});
+            // std::cout << "Inserting default 0.0f values" << std::endl;
         }
 
         vertices.insert(vertices.end(), {mesh->mNormals[i].x, mesh->mNormals[i].y, mesh->mNormals[i].z});
+        // std::cout << "Inserting " << mesh->mNormals[i].x << ", " << mesh->mNormals[i].y << ", " << mesh->mNormals[i].z << std::endl;
     }
+
+    // std::cout << "Final size " << vertices.size() << std::endl;
 }
 
 void Model::loadTexturesFromScene(const aiScene *scene, const std::string &texturesPath)
 {
     _textures.resize(scene->mNumMaterials);
+    std::cout << "Number of materials: " << scene->mNumMaterials << std::endl;
 
     for (size_t textureId = 0; textureId < scene->mNumMaterials; textureId++)
     {
@@ -131,33 +157,35 @@ void Model::loadTexturesFromScene(const aiScene *scene, const std::string &textu
                 int idx = std::string(path.data).rfind("\\");
                 std::string filename = std::string(path.data).substr(idx + 1);
 
-                std::string rawPath = texturesPath + "/" + filename;
-                std::filesystem::path texturePath = rawPath;
-
+                std::string texturePath = texturesPath + "/" + filename;
                 if (std::filesystem::exists(texturePath)) 
                 {
-                    _textures[textureId] = std::make_unique<Texture>(rawPath.c_str());
+                    _textures[textureId] = std::make_unique<Texture>(texturePath.c_str());
+                    std::cout << "Found texture (" << texturePath << ") for id: " << textureId << std::endl;
                 } 
                 else
                 {
-                    std::cout << "The file " << texturePath << " does not exist.\n";
+                    std::cout << "*ERROR*: The file " << texturePath << " does not exist.\n";
                 }
 
             } 
             else 
             {
-                std::cout << "Error loading texture id (" << textureId << "). Loading default texture." << std::endl;
+                std::cout << "*ERROR*: Loading texture id (" << textureId << ")." << std::endl;
             }
         }
         else 
         {
-            std::cout << "Texture not found for id (" << textureId << "). Loading default texture." << std::endl;
+            std::cout << "*WARNING*: Texture not found for id (" << textureId << ")." << std::endl;
         }
     }
 }
 
 Texture* Model::getTexture(unsigned int textureId)
 {
+    // std::cout << "Get texture(" << textureId << ")" << std::endl;
+    // std::cout << "_textures.size()" << _textures.size() << std::endl;
+
     if(textureId < _textures.size())
     {
         return _textures[textureId].get();

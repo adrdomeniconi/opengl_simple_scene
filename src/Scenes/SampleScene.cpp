@@ -35,7 +35,10 @@ void SampleScene::createModels()
         _textureLibrary->GetTexture(TextureLibrary::TextureType::Floor)
     );
 
-    _models.push_back(std::move(model));
+    if(model->Load("../resources/models/SeaHawk/Seahawk.obj", "../resources/models/SeaHawk/Textures"))
+    {
+        _models.push_back(std::move(model));
+    }
 }
 
 void SampleScene::createLights()

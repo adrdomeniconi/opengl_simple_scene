@@ -49,7 +49,11 @@ void MeshObject::Render()
 
     _material.Use(_shader->GetSpecularIntensityLocation(), _shader->GetSpecularShininessLocation());
     
-    _texture->UseTexture();
+    if(_texture)
+    {
+        _texture->UseTexture();
+    }
+
     _meshRenderer -> RenderMesh();
 }
 

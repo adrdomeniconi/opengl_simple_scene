@@ -6,6 +6,7 @@
     ],
     "settings": {
         "files.associations": {
+            "*.pyp": "python",
             "__bit_reference": "cpp",
             "__config": "cpp",
             "__debug": "cpp",
@@ -75,7 +76,30 @@
             "algorithm": "cpp",
             "filesystem": "cpp",
             "map": "cpp",
-            "__tree": "cpp"
+            "__tree": "cpp",
+            "format": "cpp",
+            "forward_list": "cpp",
+            "functional": "cpp",
+            "iterator": "cpp",
+            "list": "cpp",
+            "set": "cpp",
+            "unordered_set": "cpp",
+            "utility": "cpp",
+            "xfacet": "cpp",
+            "xhash": "cpp",
+            "xiosbase": "cpp",
+            "xlocale": "cpp",
+            "xlocbuf": "cpp",
+            "xlocinfo": "cpp",
+            "xlocmes": "cpp",
+            "xlocmon": "cpp",
+            "xlocnum": "cpp",
+            "xloctime": "cpp",
+            "xmemory": "cpp",
+            "xstring": "cpp",
+            "xtr1common": "cpp",
+            "xtree": "cpp",
+            "xutility": "cpp"
         }
     }
 }
