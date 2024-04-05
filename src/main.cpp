@@ -51,9 +51,17 @@ int main()
     SampleScene* scene = new SampleScene(textureLibrary, materialLibrary, shaderLibrary);
 
     ShaderLine* lineShader = dynamic_cast<ShaderLine*>(shaderLibrary->GetShader(ShaderLibrary::ShaderType::Line));
-    NormalsVisualizer pyramidANormalsVisualizer = NormalsVisualizer(scene->GetStageObjects(0));
-    NormalsVisualizer pyramidBNormalsVisualizer = NormalsVisualizer(scene->GetStageObjects(1));
-    NormalsVisualizer floorNormalsVisualizer = NormalsVisualizer(scene->GetStageObjects(2));
+    NormalsVisualizer pyramidANormalsVisualizer = NormalsVisualizer(scene->GetStageMeshObjects(0));
+    NormalsVisualizer pyramidBNormalsVisualizer = NormalsVisualizer(scene->GetStageMeshObjects(1));
+    NormalsVisualizer floorNormalsVisualizer = NormalsVisualizer(scene->GetStageMeshObjects(2));
+
+    // Model* stageModelObject = scene->GetStageModelObjects(0);
+    // std::vector<NormalsVisualizer> modelNormalsVisualizer;
+
+    // for(MeshObject* mesh : stageModelObject->GetMeshObjects())
+    // {
+    //     modelNormalsVisualizer.push_back(NormalsVisualizer(mesh));
+    // }
 
     while(!mainWindow.getShouldClose())
     {
@@ -77,6 +85,11 @@ int main()
         pyramidANormalsVisualizer.Render(lineShader);
         pyramidBNormalsVisualizer.Render(lineShader);
         floorNormalsVisualizer.Render(lineShader);
+
+        // for(NormalsVisualizer nv : modelNormalsVisualizer)
+        // {
+        //     nv.Render(lineShader);
+        // }
 
         glUseProgram(0);
 

@@ -62,10 +62,16 @@ std::vector<MeshObject*> SampleScene::GetStageObjects()
     return meshObjects;
 }
 
-MeshObject* SampleScene::GetStageObjects(unsigned int index)
+MeshObject* SampleScene::GetStageMeshObjects(unsigned int index)
 {    
     MeshObject* meshObject = _meshObjects[index].get();
     return meshObject;
+}
+
+Model* SampleScene::GetStageModelObjects(unsigned int index)
+{    
+    Model* model = _models[index].get();
+    return model;
 }
 
 std::unique_ptr<MeshRenderer> SampleScene::createPyramidMesh()

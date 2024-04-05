@@ -34,7 +34,7 @@ bool Model::Load(const std::string &filename, const std::string &texturesPath)
     loadTexturesFromScene(scene, texturesPath);
     loadNode(scene-> mRootNode, scene);
 
-    std::cout << "Number of nodes " << scene->mRootNode->mNumMeshes << std::endl;
+    // std::cout << "Number of nodes " << scene->mRootNode->mNumMeshes << std::endl;
 
     return true;
 }
@@ -53,7 +53,6 @@ void Model::Clear()
 
 void Model::Translate(GLfloat x, GLfloat y, GLfloat z)
 {
-    std::cout << "Calling model translate..." << std::endl;
     _transform.Translate(x, y, z);
 }
 
@@ -82,9 +81,20 @@ glm::vec3 Model::Scale()
     return _transform.Scale();
 }
 
+std::vector<MeshObject *> Model::GetMeshObjects()
+{
+    std::vector<MeshObject *> meshList;
+    for(auto &mesh : _meshObjects)
+    {
+        meshList.push_back(mesh.get());
+    }
+
+    return meshList;
+}
+
 void Model::loadNode(aiNode *node, const aiScene *scene)
 {
-    std::cout << "Loading "<< node->mName.C_Str() << " node. Number of meshes: " << node->mNumMeshes << std::endl;
+    // std::cout << "Loading "<< node->mName.C_Str() << " node. Number of meshes: " << node->mNumMeshes << std::endl;
 
     for (size_t i = 0; i < node->mNumMeshes ; i++)
     {
@@ -101,7 +111,7 @@ void Model::loadNode(aiNode *node, const aiScene *scene)
 
 void Model::loadMesh(aiMesh *mesh, const aiScene *scene)
 {   
-    std::cout << "Loading "<< mesh->mName.C_Str() << " mesh..." << std::endl;
+    // std::cout << "Loading "<< mesh->mName.C_Str() << " mesh..." << std::endl;
 
     std::vector<GLfloat> vertices;
     std::vector<unsigned int> indices;
@@ -193,6 +203,13 @@ void Model::loadTexturesFromScene(const aiScene *scene, const std::string &textu
                 {
                     _textures[textureId] = std::make_unique<Texture>(texturePath.c_str());
                     std::cout << "Found texture (" << texturePath << ") for id: " << textureId << std::endl;
+                    
+                    //Temporary because the model I'm trying is a jpeg, so that it doesn't have alpha channel.
+                    if(!_textures[textureId]->LoadTexture())
+                    {
+                        std::cout << "*ERROR*: Error loading the texture: " << texturePath << std::endl;
+                        _textures[textureId] = nullptr;
+                    }
                 } 
                 else
                 {

@@ -34,6 +34,8 @@ public:
     glm::vec3 Rotation();
     glm::vec3 Scale();
 
+    std::vector<MeshObject*> GetMeshObjects();
+
 private:
 
     void loadNode(aiNode *node, const aiScene *scene);

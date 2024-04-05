@@ -23,7 +23,8 @@ public:
     SampleScene(TextureLibrary* textureLibrary, MaterialLibrary* materialLibrary, ShaderLibrary* shaderLibrary);
 
     std::vector<MeshObject*> GetStageObjects();
-    MeshObject* GetStageObjects(unsigned int index);
+    MeshObject* GetStageMeshObjects(unsigned int index);
+    Model* GetStageModelObjects(unsigned int index);
 
     void Update(Camera camera, glm::mat4 projection);
 

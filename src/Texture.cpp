@@ -1,7 +1,15 @@
 #include "Texture.h"
 #include <iostream>
 
-Texture::Texture(): textureID(0), width(0), height(0), bitDepth(0), fileLocation("") {}
+Texture::Texture(): 
+    textureID(0), 
+    width(0), 
+    height(0), 
+    bitDepth(0), 
+    fileLocation("") 
+{
+    //Do nothing.
+}
 
 Texture::Texture(std::string fileLoc): Texture::Texture()
 {
@@ -26,8 +34,8 @@ bool Texture::LoadTextureAlpha()
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, texData);
-    glGenerateMipmap(GL_TEXTURE_2D);
 
+    glGenerateMipmap(GL_TEXTURE_2D);
     glBindTexture(GL_TEXTURE_2D, 0);
 
     stbi_image_free(texData);
@@ -52,6 +60,7 @@ bool Texture::LoadTexture()
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 
+    glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, texData);
     glGenerateMipmap(GL_TEXTURE_2D);
 

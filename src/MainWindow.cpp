@@ -1,6 +1,18 @@
 #include <MainWindow.h>
 #include <iostream>
 
+
+void APIENTRY openglCallbackFunction(GLenum source,
+                                     GLenum type,
+                                     GLuint id,
+                                     GLenum severity,
+                                     GLsizei length,
+                                     const GLchar* message,
+                                     const void* userParam) 
+{
+    // std::cerr << "OpenGL Message: " << message << std::endl;
+}
+
 MainWindow::MainWindow() : MainWindow(800, 600) {}
 
 MainWindow::MainWindow(GLint width, GLint height) : width(width), height(height) 
@@ -28,12 +40,18 @@ int MainWindow::Initialize()
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 
+    //Set debug context for logs
+    glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GL_TRUE);
+
     // Setting the core profile to not allow backwards compatibility
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
     // Allow forward compatibility
     glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
-    
+
+    glEnable(GL_DEBUG_OUTPUT);
+    glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
+
     std::cout << "width: " << width << " height: " << height << std::endl;
 
     mainWindow = glfwCreateWindow(width, height, "Test Window", NULL, NULL);
@@ -70,6 +88,8 @@ int MainWindow::Initialize()
 
     //Set the current window on the GLFW
     glfwSetWindowUserPointer(mainWindow, this);
+    
+    glDebugMessageCallback(openglCallbackFunction, nullptr);
 
     return 0;
 }

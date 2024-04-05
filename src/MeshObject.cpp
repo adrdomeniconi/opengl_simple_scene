@@ -65,10 +65,6 @@ void MeshObject::Render()
     {
         _texture->UseTexture();
     }
-    else
-    {
-        std::cout << "Not applying texture in the MeshObject" << std::endl;
-    }
 
     _meshRenderer -> RenderMesh();
 }
