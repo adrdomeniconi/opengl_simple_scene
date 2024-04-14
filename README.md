@@ -51,7 +51,7 @@ Dependencies already included on the repository:
     Once the build system is generated, compile the project:
 
     ```sh
-    cmake --build .
+    cmake --build build --config Release --target ALL_BUILD -j 14 --
     ```
 
 ## Running the Application
